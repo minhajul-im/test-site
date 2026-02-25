@@ -17,27 +17,32 @@ export const Social = () => {
   return showSocialLinks ? (
     <div className="flex items-center gap-4">
       <div className="flex gap-3">
-        <Link
+        <Link 
+        target="_blank"
           to={facebookLink as string}
           className="hover:bg-primary border duration-75 p-2 rounded-full transition-colors">
           <Facebook className="w-4 h-4" />
         </Link>
-        <Link
+        <Link 
+        target="_blank"
           to={twitterLink as string}
           className="hover:bg-primary border duration-75 p-2 rounded-full transition-colors">
           <Twitter className="w-4 h-4" />
         </Link>
-        <Link
+        <Link 
+        target="_blank"
           to={instagramLink as string}
           className="hover:bg-primary border duration-75 p-2 rounded-full transition-colors">
           <Instagram className="w-4 h-4" />
         </Link>
-        <Link
+        <Link 
+        target="_blank"
           to={youtubeLink as string}
           className="hover:bg-primary border duration-75 p-2 rounded-full transition-colors">
           <Youtube className="w-4 h-4" />
         </Link>
-        <Link
+        <Link 
+        target="_blank"
           to={linkedinLink as string}
           className="hover:bg-primary border duration-75 p-2 rounded-full transition-colors">
           <Linkedin className="w-4 h-4" />

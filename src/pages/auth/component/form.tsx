@@ -14,11 +14,9 @@ import { useSignIn, useSignUp } from "@/controllers/authController";
 import { Spinner } from "@/components/ui/spinner";
 import { PhoneInput } from "@/components/common/phone-input";
 import { Input } from "@/components/ui/input";
-import { useTranslation } from "@/hooks/useTranslation";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export const SignInForm = () => {
-  const { getTranslation } = useTranslation();
   const { fnSignIn, isPending } = useSignIn();
   const [isPhoneValid, setIsPhoneValid] = useState(false);
 
@@ -30,16 +28,14 @@ export const SignInForm = () => {
           id="email"
           name="email"
           disabled={isPending}
-          label={getTranslation("phone") || "Phone"}
+          label="Phone"
           placeholder="01XXXXXXXXX"
           onValidationChange={(isValid) => setIsPhoneValid(isValid)}
         />
 
         <Password
           disabled={isPending}
-          placeholder={
-            getTranslation("enter_your_password") || "Enter your password"
-          }
+          placeholder={"Enter your password"}
           forgotPassword={true}
         />
 
@@ -51,7 +47,7 @@ export const SignInForm = () => {
             className="cursor-pointer"
           />
           <FieldLabel htmlFor="remember_me" className="cursor-pointer -mt-1">
-            {getTranslation("remember_me") || "Remember me"}
+            Remember me
           </FieldLabel>
         </div>
 
@@ -64,16 +60,16 @@ export const SignInForm = () => {
             {isPending ? (
               <>
                 <Spinner />
-                {getTranslation("processing") || "Processing..."}
+                "Processing..."
               </>
             ) : (
-              getTranslation("sign_in") || "Sign in"
+              "Sign in"
             )}
           </Button>
           <FieldDescription className="text-center">
-            {getTranslation("dont_have_an_account") || "Don't have an account?"}
+            Don't have an account?
             <Link to="/signup" className="text-primary ml-1   ">
-              {getTranslation("sign_up") || "Sign up"}
+              Sign up
             </Link>
           </FieldDescription>
         </Field>
@@ -85,7 +81,6 @@ export const SignInForm = () => {
 };
 
 export const SignUpForm = () => {
-  const { getTranslation } = useTranslation();
   const { fnSignUp, isPending } = useSignUp();
   const [isPhoneValid, setIsPhoneValid] = useState(false);
 
@@ -94,9 +89,7 @@ export const SignUpForm = () => {
       <input type="hidden" name="register_by" value="phone" />
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="name">
-            {getTranslation("full_name") || "Full Name"} *
-          </FieldLabel>
+          <FieldLabel htmlFor="name">Full Name *</FieldLabel>
           <Input
             className="h-10 "
             id="name"
@@ -104,24 +97,17 @@ export const SignUpForm = () => {
             type="text"
             required
             disabled={isPending}
-            placeholder={
-              getTranslation("enter_your_full_name") || "Enter your full name"
-            }
+            placeholder={"Enter your full name"}
           />
         </Field>
         <PhoneInput
           id="email_or_phone"
           name="email_or_phone"
-          label={getTranslation("phone") || "Phone"}
+          label="Phone"
           placeholder="01XXXXXXXXX or +881XXXXXXXXX"
           onValidationChange={(isValid) => setIsPhoneValid(isValid)}
         />
-        <Password
-          disabled={isPending}
-          placeholder={
-            getTranslation("enter_your_password") || "Enter your password"
-          }
-        />
+        <Password disabled={isPending} placeholder={"Enter your password"} />
         <Field>
           <Button
             className={cn(isPending ? "opacity-50 cursor-not-allowed" : "")}
@@ -131,17 +117,16 @@ export const SignUpForm = () => {
             {isPending ? (
               <>
                 <Spinner />
-                {getTranslation("processing") || "Processing..."}
+                Processing...
               </>
             ) : (
-              getTranslation("sign_up") || "Sign up"
+              "Sign up"
             )}
           </Button>
-          <FieldDescription className="text-center">
-            {getTranslation("already_have_an_account") ||
-              "Already have an account?"}
+          <FieldDescription className="text-center mb-4">
+            Already have an account?
             <Link to="/signin" className="text-primary ml-1   ">
-              {getTranslation("sign_in") || "Sign in"}
+              Sign in
             </Link>
           </FieldDescription>
         </Field>

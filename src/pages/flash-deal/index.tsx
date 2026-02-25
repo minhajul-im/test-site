@@ -6,7 +6,6 @@ import { AnimationWrapper } from "@/components/common/animation-wrapper";
 import { NoDataFound } from "@/components/common/no-data-found";
 import { BaseLayout } from "@/components/layout/base-layout";
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { ImageWithLink } from "@/components/common/image-link";
 import { Skeleton } from "@/components/common/skeleton";
 import { useEffect, useMemo, useState } from "react";
@@ -56,7 +55,7 @@ const CountdownTimer = ({ endTimestamp }: { endTimestamp: number }) => {
             ) : (
               <>
                 {acc}
-                <span className="text-3xl md:text-4xl font-bold text-red-600 self-center mx-1">
+                <span className="text-3xl md:text-4xl font-bold text-primary self-center mx-1">
                   :
                 </span>
                 {curr}
@@ -69,7 +68,6 @@ const CountdownTimer = ({ endTimestamp }: { endTimestamp: number }) => {
 };
 
 export const FlashDealPage = () => {
-  const { getTranslation } = useTranslation();
   const { data, isLoading } = useGetProductsByFlashDeal();
 
   const products = (data?.products?.data as ProductType[]) || [];
@@ -77,7 +75,7 @@ export const FlashDealPage = () => {
 
   return (
     <>
-      <SeoWrapper title={getTranslation("flash_deal") || "Flash Deal"} />
+      <SeoWrapper title={"Flash Deal"} />
 
       <BaseLayout>
         <section className="mb-10 md:mb-20 container mx-auto mt-2">
@@ -102,8 +100,8 @@ export const FlashDealPage = () => {
               <>
                 <div className="mx-2">
                   <ImageWithLink
-                    item={{ image: flashDeal?.banner, link: "" }}
-                  />{" "}
+                    item={{ image: flashDeal?.banner?.trim() || "", link: "" }}
+                  />
                 </div>
                 <div className="flex justify-center mt-6">
                   <h2 className="text-lg line-clamp-1 font-bold md:text-3xl lg:text-4xl text-primary tracking-tight flex text-center">
@@ -134,12 +132,8 @@ export const FlashDealPage = () => {
                 </AnimationWrapper>
               ))
             ) : (
-              <div className="w-full">
-                <NoDataFound
-                  title={
-                    getTranslation("no_products_found") || "No products found"
-                  }
-                />
+              <div className="col-span-full px-4">
+                <NoDataFound title={"No products found"} />
               </div>
             )}
           </CardLayout>

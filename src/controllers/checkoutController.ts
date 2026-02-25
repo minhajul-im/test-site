@@ -5,7 +5,6 @@ import {
 import {
   getGuestUserId,
   getSelectedPaymentMethod,
-  getSelectedShippingMethod,
   getUserId,
   getConfig,
   removeLocalStorage,
@@ -13,7 +12,6 @@ import {
   getLocalStorage,
 } from "@/helper";
 import { usePhoneValidation } from "@/hooks/usePhoneValidation";
-import { useTranslation } from "@/hooks/useTranslation";
 import type { InfoType } from "@/pages/checkout/form";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -36,50 +34,45 @@ export const useCheckoutController = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [otp, setOtp] = useState<string>("");
-  const { getTranslation } = useTranslation();
   const [info, setInfo] = useState<InfoType>(_init);
   const [showOtpModal, setShowOtpModal] = useState(false);
-  const [orderFormData, setOrderFormData] = useState<FormData | null>(null);
+  const [selectedShipping, setSelectedShipping] = useState<string>("");
   const isActiveOtp = getConfig(config, "otp_for_order")?.value === "1";
+  const [orderFormData, setOrderFormData] = useState<FormData | null>(null);
 
   const { validateBangladeshiPhone } = usePhoneValidation();
   const { mutate: otpHook, isPending } = useSendOrderOtpMutation();
   const { mutate, isPending: checkoutLoading } = useCheckoutMutation();
 
   const clearFun = () => {
+    setSelectedShipping("");
     revalidateQueryFn("get_cart");
+    removeLocalStorage("order_completed");
     revalidateQueryFn("get_cart_summary");
     dispatch(clearCartFn());
     removeLocalStorage("last_order_code");
     removeLocalStorage("selected_payment_method");
-    removeLocalStorage("selected_shipping_method");
   };
 
   const handlePlaceOrder = () => {
     const formData = new FormData();
     const paymentType = getSelectedPaymentMethod();
     if (paymentType === "") {
-      toast.error(
-        getTranslation("please_select_a_payment_method") ||
-          "Please select a payment method"
-      );
+      toast.error("Please select a payment method");
       return;
     }
     formData.append("payment_type", paymentType);
-    const shippingId = getSelectedShippingMethod();
-    if (shippingId === "") {
-      toast.error(
-        getTranslation("please_select_a_shipping_method") ||
-          "Please select a shipping method"
-      );
+
+    if (selectedShipping === "") {
+      toast.error("Please select a shipping method");
       return;
     }
     if (!info.name || info.name === "") {
-      toast.error(getTranslation("name_is_required") || "Name is required");
+      toast.error("Name is required");
       return;
     }
     if (!info.phone || info.phone === "") {
-      toast.error(getTranslation("phone_is_required") || "Phone is required");
+      toast.error("Phone is required");
       return;
     }
     const phoneValidation = validateBangladeshiPhone(info.phone);
@@ -88,9 +81,7 @@ export const useCheckoutController = () => {
       return;
     }
     if (!info.address || info.address === "") {
-      toast.error(
-        getTranslation("address_is_required") || "Address is required"
-      );
+      toast.error("Address is required");
       return;
     }
     formData.append("name", info.name);
@@ -108,19 +99,11 @@ export const useCheckoutController = () => {
       otpHook(formOtpData, {
         onSuccess: (res) => {
           if (res?.result) {
-            toast.success(
-              res?.message ||
-                getTranslation("otp_sent_successfully") ||
-                "OTP sent successfully"
-            );
+            toast.success(res?.message || "OTP sent successfully");
             setOrderFormData(formData);
             setShowOtpModal(true);
           } else {
-            toast.error(
-              res?.message ||
-                getTranslation("failed_to_send_otp") ||
-                "Failed to send OTP"
-            );
+            toast.error(res?.message || "Failed to send OTP");
           }
         },
         onError: (error) => {
@@ -131,21 +114,14 @@ export const useCheckoutController = () => {
       mutate(formData, {
         onSuccess: (res) => {
           if (res?.result) {
-            toast.success(
-              res?.message ||
-                getTranslation("order_placed_successfully") ||
-                "Order placed successfully"
-            );
+            toast.success(res?.message || "Order placed successfully");
             clearFun();
+            removeLocalStorage("phone_for_otp");
             if (res?.combined_order_id) {
               navigate(`/orders/details/${res?.combined_order_id}`);
             }
           } else {
-            toast.error(
-              res?.message ||
-                getTranslation("failed_to_place_order") ||
-                "Failed to place order"
-            );
+            toast.error(res?.message || "Failed to place order");
           }
         },
         onError: (error) => {
@@ -162,11 +138,7 @@ export const useCheckoutController = () => {
       mutate(formData, {
         onSuccess: (res) => {
           if (res?.result) {
-            toast.success(
-              res?.message ||
-                getTranslation("order_placed_successfully") ||
-                "Order placed successfully"
-            );
+            toast.success(res?.message || "Order placed successfully");
             clearFun();
             setOtp("");
             setInfo(_init);
@@ -176,11 +148,7 @@ export const useCheckoutController = () => {
               navigate(`/orders/details/${res?.combined_order_id}`);
             }
           } else {
-            toast.error(
-              res?.message ||
-                getTranslation("failed_to_place_order") ||
-                "Failed to place order"
-            );
+            toast.error(res?.message || "Failed to place order");
           }
         },
         onError: (error) => {
@@ -199,6 +167,8 @@ export const useCheckoutController = () => {
     otpLoading: isPending,
     isActiveOtp,
     showOtpModal,
+    selectedShipping,
+    setSelectedShipping,
     setShowOtpModal,
     handlePlaceOrder,
     handleOtpSuccess,
@@ -206,7 +176,6 @@ export const useCheckoutController = () => {
 };
 
 export const useResendOtp = () => {
-  const { getTranslation } = useTranslation();
   const { mutate, isPending } = useSendOrderOtpMutation();
 
   const resendOtpFn = () => {
@@ -216,17 +185,9 @@ export const useResendOtp = () => {
     mutate(formData, {
       onSuccess: (res) => {
         if (res?.result) {
-          toast.success(
-            res?.message ||
-              getTranslation("otp_resend_successfully") ||
-              "OTP resend successfully"
-          );
+          toast.success(res?.message || "OTP resend successfully");
         } else {
-          toast.error(
-            res?.message ||
-              getTranslation("failed_to_resend_otp") ||
-              "Failed to resend OTP"
-          );
+          toast.error(res?.message || "Failed to resend OTP");
         }
       },
       onError: (error) => {

@@ -1,4 +1,3 @@
-import { IMAGE_URL } from "@/constant";
 import type { ConfigType } from "@/hooks/useConfig";
 import type {
   ProductDetailsType,
@@ -7,6 +6,7 @@ import type {
   UserType,
   VariantType,
 } from "@/type";
+import { IMAGE_URL } from "../constant";
 
 export const getImageUrl = (url: string) => {
   return `${IMAGE_URL}${url}`;
@@ -99,11 +99,19 @@ export const getFormattedBanner = (
   banners: unknown | null,
   links: string[] | null
 ) => {
-  const b = Array.isArray(banners)
-    ? banners?.map((item) => (typeof item === "string" ? item : ""))
-    : [];
+  if (!Array.isArray(banners) || banners.length === 0) {
+    return [];
+  }
 
-  const result = b?.map((banner, idx) => ({
+  const b = banners
+    .map((item) => (typeof item === "string" ? item : ""))
+    .filter((item) => item !== null && item !== undefined && item !== "");
+
+  if (b.length === 0) {
+    return [];
+  }
+
+  const result = b.map((banner, idx) => ({
     image: banner,
     link: links ? links[idx] || "" : "",
   }));
@@ -138,14 +146,6 @@ export const getUserId = () => {
   if (typeof window !== "undefined") {
     const userId = localStorage.getItem("user_id");
     return userId;
-  }
-  return null;
-};
-
-export const getLangCode = () => {
-  if (typeof window !== "undefined") {
-    const code = localStorage.getItem("code");
-    return code;
   }
   return null;
 };

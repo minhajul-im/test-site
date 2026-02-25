@@ -1,6 +1,5 @@
 import { SectionTitle } from "@/components/common/section-title";
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { BreadcrumbWrapper } from "@/components/common/breadcrumb-wrapper";
 import { useGetOrdersQuery } from "@/api/queries/userOrders";
@@ -29,7 +28,6 @@ import {
 import { TooltipWrapper } from "@/components/common/tooltip-wrapper";
 
 export const OrdersPage = () => {
-  const { getTranslation } = useTranslation();
   const [filters, setFilters] = useState<Record<string, unknown>>({ page: 1 });
   const { data, isLoading } = useGetOrdersQuery(filters);
 
@@ -38,40 +36,32 @@ export const OrdersPage = () => {
   };
 
   const orders = (data?.data as OrderType[]) || [];
-  const pagination = (data as { meta: PaginationDataType })?.meta;
+  const pagination = (data as { meta: PaginationDataType })?.meta || {};
 
   return (
     <>
-      <SeoWrapper title={getTranslation("my_orders") || "My Orders"} />
+      <SeoWrapper title={"My Orders"} />
       <DashboardLayout>
         <div className="mx-4 md:mx-0 mb-4">
           <BreadcrumbWrapper
             type="dashboard"
-            items={[{ title: getTranslation("my_orders") || "My Orders" }]}
+            items={[{ title: "My Orders" }]}
           />
         </div>
-        <SectionTitle title={getTranslation("my_orders") || "My Orders"} />
+        <SectionTitle title={"My Orders"} />
 
         <Card className="py-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="pl-2 md:pl-4">
-                  {getTranslation("code") || "Code"}
-                </TableHead>
-                <TableHead>{getTranslation("date") || "Date"}</TableHead>
-                <TableHead>
-                  {getTranslation("payment_status") || "Payment Status"}
-                </TableHead>
-                <TableHead>
-                  {getTranslation("payment_type") || "Payment Type"}
-                </TableHead>
-                <TableHead>
-                  {getTranslation("delivery_status") || "Delivery Status"}
-                </TableHead>
-                <TableHead> {getTranslation("total") || "Total"}</TableHead>
+                <TableHead className="pl-2 md:pl-4">{"Code"}</TableHead>
+                <TableHead>{"Date"}</TableHead>
+                <TableHead>{"Payment Status"}</TableHead>
+                <TableHead>{"Payment Type"}</TableHead>
+                <TableHead>{"Delivery Status"}</TableHead>
+                <TableHead> {"Total"}</TableHead>
                 <TableHead className="text-right pr-2 md:pr-4">
-                  {getTranslation("action") || "Action"}
+                  {"Action"}
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -124,18 +114,14 @@ export const OrdersPage = () => {
                     <TableCell className="text-right pr-2 md:pr-4 w-20">
                       <div className="flex items-center justify-end gap-2">
                         <Link to={`/dashboard/track-order/${order?.code}`}>
-                          <TooltipWrapper
-                            text={
-                              getTranslation("track_order") || "Track Order"
-                            }>
+                          <TooltipWrapper text={"Track Order"}>
                             <Button variant="ghost" size="sm">
                               <Truck className="h-4 w-4 text-purple-600" />
                             </Button>
                           </TooltipWrapper>
                         </Link>
                         <Link to={`/dashboard/orders/${order?.id}`}>
-                          <TooltipWrapper
-                            text={getTranslation("view_order") || "View Order"}>
+                          <TooltipWrapper text={"View Order"}>
                             <Button variant="ghost" size="sm">
                               <Eye className="h-4 w-4 text-blue-600" />
                             </Button>
@@ -150,11 +136,8 @@ export const OrdersPage = () => {
                   <TableCell colSpan={7}>
                     <NoDataFound
                       height="min-h-[200px]"
-                      title={getTranslation("no_orders_yet") || "No orders yet"}
+                      title={"No orders yet"}
                       description={
-                        getTranslation(
-                          "you_havent_placed_any_orders_browse_products_and_start_your_first_purchase"
-                        ) ||
                         "You haven’t placed any orders. Browse products and start your first purchase."
                       }
                     />
@@ -166,13 +149,14 @@ export const OrdersPage = () => {
               <TableRow className="w-full">
                 <TableCell colSpan={7}>
                   <div className="w-full flex justify-end">
-                    {pagination && (
-                      <PaginationWrapper
-                        className=""
-                        paginationData={pagination}
-                        onPageChange={handlePageChange}
-                      />
-                    )}
+                    {Object.keys(pagination)?.length > 0 &&
+                      orders?.length > 0 && (
+                        <PaginationWrapper
+                          className=""
+                          paginationData={pagination}
+                          onPageChange={handlePageChange}
+                        />
+                      )}
                   </div>
                 </TableCell>
               </TableRow>

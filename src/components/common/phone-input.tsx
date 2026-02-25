@@ -3,7 +3,6 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { usePhoneValidation } from "@/hooks/usePhoneValidation";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   id: string;
@@ -28,7 +27,6 @@ export const PhoneInput = ({
 }: Props) => {
   const { phone, touched, handlePhoneChange, handleBlur, isValid, error } =
     usePhoneValidation();
-  const { getTranslation } = useTranslation();
   React.useEffect(() => {
     onValidationChange?.(isValid, phone);
   }, [isValid, phone, onValidationChange]);
@@ -60,16 +58,12 @@ export const PhoneInput = ({
         )}
 
         {touched && isValid && (
-          <div className="text-sm text-green-600">
-            ✓ {getTranslation("valid_phone_number") || "Valid phone number"}
-          </div>
+          <div className="text-sm text-green-600">✓ Valid phone number</div>
         )}
 
         {!touched && (
           <div className="text-sm text-muted-foreground">
-            {getTranslation(
-              "enter_your_mobile_number_11_digits_starting_with_01"
-            ) || "Enter your mobile number (11 digits starting with 01)"}
+            Enter your mobile number (11 digits starting with 01)
           </div>
         )}
       </div>

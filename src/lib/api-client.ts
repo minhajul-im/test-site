@@ -1,6 +1,5 @@
-import { BASE_URL } from "@/constant";
-import { getLangCode } from "@/helper";
 import axios from "axios";
+import { BASE_URL } from "../constant";
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -17,14 +16,6 @@ apiClient.interceptors.request.use(
     const token = localStorage.getItem("token") || null;
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const langCode = getLangCode();
-    if (langCode) {
-      config.params = {
-        ...config.params,
-        lang: langCode,
-      };
     }
 
     return config;

@@ -8,7 +8,10 @@ import { Logo } from "@/components/layout/header/logo";
 import type { LandingPageType } from "./type";
 import { getImageUrl } from "@/helper";
 import { useEffect, useState } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
+import {
+  OptimizedBannerImage,
+  OptimizedImage,
+} from "@/components/common/optimized-image";
 
 interface Props {
   info: LandingPageType;
@@ -69,16 +72,11 @@ export const SubTitle = ({ children, className }: TitleProps) => {
 };
 
 export const ProductShowcaseSection = ({ info }: Props) => {
-  const { getTranslation } = useTranslation();
-
   const images = info?.images?.map((img) => getImageUrl(img?.image)) || [];
 
   return (
     <div>
-      <Title>
-        {getTranslation("premium_quality_products") ||
-          "Premium Quality Products"}
-      </Title>
+      <Title>Premium Quality Products</Title>
       <Swiper
         modules={[Pagination, Autoplay]}
         spaceBetween={16}
@@ -91,7 +89,7 @@ export const ProductShowcaseSection = ({ info }: Props) => {
           480: { slidesPerView: 1 },
           600: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },
-          1280: { slidesPerView: 3 },
+          1280: { slidesPerView: 4 },
         }}
         className="mySwiper">
         {Array.from({ length: 5 }, (_, index) => {
@@ -99,9 +97,9 @@ export const ProductShowcaseSection = ({ info }: Props) => {
           return (
             <SwiperSlide key={index}>
               <div className="px-2">
-                <div className="rounded-lg bg-blue-50 border border-blue-100 shadow-md overflow-hidden relative h-[270px] w-[300px] md:h-[350px] md:w-[400px] lg:h-[400px] lg:w-[500px]">
-                  <img
-                    src={images?.[imageIndex] || "/placeholder.svg"}
+                <div className="rounded-lg bg-blue-50 border border-blue-100 shadow-md overflow-hidden relative aspect-[16/20]">
+                  <OptimizedImage
+                    src={images?.[imageIndex] || ""}
                     alt={`Product ${index + 1}`}
                     className="w-full h-full absolute object-cover"
                   />
@@ -117,7 +115,6 @@ export const ProductShowcaseSection = ({ info }: Props) => {
 };
 
 export const BenefitsSection = ({ info }: Props) => {
-  const { getTranslation } = useTranslation();
   const renderHtml = (html: string) => {
     return (
       <motion.div
@@ -131,32 +128,51 @@ export const BenefitsSection = ({ info }: Props) => {
     );
   };
 
+  const hasTextContent = (html: string | undefined): boolean => {
+    if (!html) return false;
+
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+    const textContent = tempDiv.textContent || tempDiv.innerText || "";
+
+    return textContent.trim().length > 0;
+  };
+
+  const features = [
+    info?.feature_1,
+    info?.feature_2,
+    info?.feature_3,
+    info?.feature_4,
+    info?.feature_5,
+    info?.feature_6,
+    info?.feature_7,
+    info?.feature_8,
+  ].filter((feature) => hasTextContent(feature));
+
+  if (features?.length === 0) {
+    return null;
+  }
+
   return (
     <div>
-      <Title>{getTranslation("benefits") || "Benefits"} </Title>
+      <Title>{info?.short_description} </Title>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-4 items-baseline md:gap-6">
-        {info?.feature_1 && renderHtml(info?.feature_1)}
-        {info?.feature_2 && renderHtml(info?.feature_2)}
-        {info?.feature_3 && renderHtml(info?.feature_3)}
-        {info?.feature_4 && renderHtml(info?.feature_4)}
-        {info?.feature_5 && renderHtml(info?.feature_5)}
-        {info?.feature_6 && renderHtml(info?.feature_6)}
-        {info?.feature_7 && renderHtml(info?.feature_7)}
-        {info?.feature_8 && renderHtml(info?.feature_8)}
+        {features &&
+          features?.map((feature, index) => (
+            <div key={index}>{renderHtml(feature)}</div>
+          ))}
       </div>
     </div>
   );
 };
 
 export const WhatOurCustomersSaySection = ({ info }: Props) => {
-  const { getTranslation } = useTranslation();
-
   const images =
     info?.reviews?.map((img) => getImageUrl(img?.review_image)) || [];
 
-  return (
+  return images?.length > 0 ? (
     <div>
-      <Title>{getTranslation("customer_reviews") || "customer reviews"}</Title>
+      <Title>Customer Reviews</Title>
       <Swiper
         modules={[Pagination, Autoplay]}
         spaceBetween={16}
@@ -176,10 +192,10 @@ export const WhatOurCustomersSaySection = ({ info }: Props) => {
           images?.map((img, index) => (
             <SwiperSlide key={index}>
               <div className="rounded-lg bg-blue-50 border border-blue-100 shadow-md overflow-hidden cursor-grab">
-                <img
-                  src={img}
+                <OptimizedImage
+                  src={img || ""}
                   alt={`Customer Review ${index + 1}`}
-                  className="w-full h-auto object-cover"
+                  className="aspect-[16/22] h-auto object-contain rounded-lg"
                 />
               </div>
             </SwiperSlide>
@@ -187,12 +203,10 @@ export const WhatOurCustomersSaySection = ({ info }: Props) => {
       </Swiper>
       <OrderButton />
     </div>
-  );
+  ) : null;
 };
 
 export const OrderButton = () => {
-  const { getTranslation } = useTranslation();
-
   const scrollToOrder = () => {
     document
       .getElementById("order-section")
@@ -203,7 +217,7 @@ export const OrderButton = () => {
     <div className="flex justify-center items-center py-8">
       <motion.button
         onClick={scrollToOrder}
-        className="bg-primary text-primary-foreground px-8 md:px-12 py-3 md:py-6 rounded-full font-bold text-xl shadow-2xl cursor-pointer"
+        className="bg-primary text-primary-foreground px-7 md:px-10 py-2.5 md:py-5 rounded-full font-bold text-xl shadow-2xl cursor-pointer"
         animate={{
           scale: [1, 1.2, 1],
         }}
@@ -222,7 +236,7 @@ export const OrderButton = () => {
           scale: 0.95,
           transition: { duration: 0.1 },
         }}>
-        {getTranslation("order_now") || "Order Now"}
+        Order Now
       </motion.button>
     </div>
   );
@@ -233,13 +247,22 @@ export const BannerSection = ({ info }: Props) => {
     <div>
       {info?.banner_image ? (
         <div className="relative aspect-video rounded-lg overflow-hidden">
-          <img
-            src={getImageUrl(info?.banner_image)}
+          <OptimizedBannerImage
+            src={info?.banner_image}
             alt="banner"
             className="w-full h-full object-cover absolute"
           />
         </div>
-      ) : info?.video_id ? (
+      ) : null}
+      {info?.banner_image ? <OrderButton /> : null}
+    </div>
+  );
+};
+
+export const VideoSection = ({ info }: Props) => {
+  return (
+    <div>
+      {info?.video_id ? (
         <div className="aspect-video relative rounded-lg overflow-hidden">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -261,14 +284,14 @@ export const BannerSection = ({ info }: Props) => {
           </motion.div>
         </div>
       ) : null}
-      {info?.banner_image || info?.video_id ? <OrderButton /> : null}
+      {info?.video_id ? <OrderButton /> : null}
     </div>
   );
 };
 
 export const DateCounter = ({ date }: { date: string }) => {
-  const { getTranslation } = useTranslation();
   const targetDate = new Date(date).getTime();
+
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -296,6 +319,10 @@ export const DateCounter = ({ date }: { date: string }) => {
     return () => clearInterval(timer);
   }, [targetDate]);
 
+  if (targetDate < Date.now()) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col items-center">
       <motion.h2
@@ -303,7 +330,7 @@ export const DateCounter = ({ date }: { date: string }) => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}>
-        {getTranslation("offer_ends_in") || "Offer Ends In"}
+        {"Offer Ends In"}
       </motion.h2>
 
       <div className="flex gap-2 md:gap-4">
@@ -331,7 +358,7 @@ export const DateCounter = ({ date }: { date: string }) => {
             </span>
           </motion.div>
           <span className="mt-2 text-sm font-semibold text-muted-foreground">
-            {getTranslation("days") || "Days"}
+            {"Days"}
           </span>
         </motion.div>
 
@@ -360,7 +387,7 @@ export const DateCounter = ({ date }: { date: string }) => {
             </span>
           </motion.div>
           <span className="mt-2 text-sm font-semibold text-muted-foreground">
-            {getTranslation("hours") || "Hours"}
+            {"Hours"}
           </span>
         </motion.div>
 
@@ -389,7 +416,7 @@ export const DateCounter = ({ date }: { date: string }) => {
             </span>
           </motion.div>
           <span className="mt-2 text-sm font-semibold text-muted-foreground">
-            {getTranslation("minutes") || "Minutes"}
+            {"Minutes"}
           </span>
         </motion.div>
 
@@ -418,7 +445,7 @@ export const DateCounter = ({ date }: { date: string }) => {
             </span>
           </motion.div>
           <span className="mt-2 text-sm font-semibold text-muted-foreground">
-            {getTranslation("seconds") || "Seconds"}
+            {"Seconds"}
           </span>
         </motion.div>
       </div>
@@ -428,7 +455,7 @@ export const DateCounter = ({ date }: { date: string }) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5 }}>
         <p className="text-lg font-semibold text-gray-700">
-          {getTranslation("deadline") || "Deadline"}:{" "}
+          {"Deadline"}:{" "}
           <span className="text-red-600 font-bold">
             {new Date(date).toLocaleDateString()}
           </span>
@@ -448,24 +475,21 @@ export const DateCounter = ({ date }: { date: string }) => {
           <span className="animate-ping absolute h-3 w-3 rounded-full bg-red-400 opacity-75"></span>
           <span className="relative h-3 w-3 rounded-full bg-red-500"></span>
         </span>
-        <span className="text-sm font-bold text-red-600">
-          {getTranslation("hurry_up") || "HURRY UP!"}
-        </span>
+        <span className="text-sm font-bold text-red-600">{"HURRY UP!"}</span>
       </motion.div>
     </div>
   );
 };
 
-export const PriceTicker = () => {
-  const { getTranslation } = useTranslation();
+export const PriceTicker = ({ info }: Props) => {
   const [currentPriceIndex, setCurrentPriceIndex] = useState(0);
 
   const prices = [
     {
-      original: "৳1230",
-      discounted: "৳999",
-      previousText: getTranslation("previous_price") || "Previous Price",
-      offerText: getTranslation("offer_price") || "Offer Price",
+      original: `৳${info?.regular_price}`,
+      discounted: `৳${info?.discount_price}`,
+      previousText: "Previous Price",
+      offerText: "Offer Price",
     },
   ];
 
@@ -520,10 +544,9 @@ export const PriceTicker = () => {
             </motion.h2>
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 z-10 relative">
               <div className="flex items-center gap-6">
-                {/* Original price with X animation */}
                 <div className="relative">
                   <motion.div
-                    className="line-through text-gray-300 text-4xl font-bold"
+                    className="line-through text-gray-300 text-[28px] font-bold"
                     key={`original-${currentPriceIndex}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -584,10 +607,9 @@ export const PriceTicker = () => {
             </motion.h2>
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 z-10 relative">
               <div className="flex items-center gap-6">
-                {/* Discounted price with hand-drawn circle animation */}
                 <div className="relative">
                   <motion.div
-                    className="text-white text-4xl md:text-5xl font-extrabold"
+                    className="text-white text-[32px] font-extrabold"
                     key={`discounted-${currentPriceIndex}`}
                     initial={{ scale: 0.5, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -632,15 +654,10 @@ export const PriceTicker = () => {
 };
 
 export const FooterLanding = () => {
-  const { getTranslation } = useTranslation();
-
   return (
     <div className="h-20 bg-gray-900 mt-10 flex items-center justify-center">
       <span className="font-medium text-base text-white">
-        ©{" "}
-        {`${new Date().getFullYear()} ${
-          getTranslation("all_rights_reserved") || "All rights reserved."
-        }`}
+        © {`${new Date().getFullYear()} ${"All rights reserved."}`}
       </span>
     </div>
   );

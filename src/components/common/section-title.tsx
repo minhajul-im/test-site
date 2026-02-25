@@ -2,8 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Skeleton } from "./skeleton";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useIsMobile } from "@/hooks/useMobile";
 
 interface Props {
   title: string;
@@ -50,12 +49,12 @@ export const HomeSectionTitle = ({
   href,
   children,
 }: NewProps) => {
-  const { getTranslation } = useTranslation();
+  const isMobile = useIsMobile();
   return (
     <>
       <div
         className={`flex justify-center items-center md:gap-2 px-4 md:px-0 ${className}`}>
-        <h2 className="text-lg line-clamp-1 font-bold md:text-3xl lg:text-4xl text-primary tracking-tight flex">
+        <h2 className="text-2xl font-bold md:text-3xl lg:text-4xl text-primary tracking-tight flex">
           {title}
         </h2>
       </div>
@@ -63,8 +62,8 @@ export const HomeSectionTitle = ({
       {href && (
         <div className="flex justify-center items-center mt-4">
           <Link to={href}>
-            <Button className={cn("rounded-none")}>
-              {getTranslation("view_all") || "View All"}
+            <Button size={isMobile ? "sm" : "default"}>
+              View All
               <ArrowRight className="w-6 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
@@ -78,7 +77,7 @@ export const HomeSectionTitleSkeleton = () => {
   return (
     <div className="flex justify-center items-center md:gap-2 px-4 md:px-0">
       <h2 className="text-lg line-clamp-1 font-bold md:text-3xl lg:text-4xl text-primary tracking-tight flex">
-        <Skeleton className="h-7 md:h-9 lg:h-14 w-[250px] md:w-[300px] lg:w-[400px] rounded-none" />
+        <Skeleton className="h-7 md:h-9 lg:h-12 w-[250px] md:w-[300px] lg:w-[400px] rounded-lg" />
       </h2>
     </div>
   );

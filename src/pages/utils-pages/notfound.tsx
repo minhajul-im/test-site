@@ -1,14 +1,16 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, Search, MapPin, Compass } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const NotFoundPage = () => {
+  const navigate = useNavigate();
   const handleGoBack = () => {
     window.history.back();
   };
 
   const handleGoHome = () => {
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (
@@ -93,7 +95,7 @@ export const NotFoundPage = () => {
         <div className="text-center space-y-8 max-w-3xl mx-auto">
           <motion.div className="relative">
             <motion.div
-              className="text-8xl mb-6"
+              className="text-8xl mb-6 mt-6 md:mt-0"
               animate={{
                 y: [0, -15, 0],
                 rotate: [0, 5, 0],
@@ -101,22 +103,6 @@ export const NotFoundPage = () => {
               transition={{ duration: 2, repeat: Infinity }}>
               🔍
             </motion.div>
-
-            <motion.div
-              className="absolute -inset-6 border-4 border-blue-400/30 rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute -inset-8 border-2 border-purple-400/20 rounded-full"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute -inset-10 border border-indigo-400/10 rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            />
           </motion.div>
 
           <motion.h1
@@ -162,7 +148,7 @@ export const NotFoundPage = () => {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div className="grid grid-cols-3 gap-4 text-center">
               <motion.div
                 className="space-y-2"
                 whileHover={{ scale: 1.05 }}
@@ -187,7 +173,7 @@ export const NotFoundPage = () => {
             </div>
           </motion.div>
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex items-center gap-4 justify-center mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.1 }}>

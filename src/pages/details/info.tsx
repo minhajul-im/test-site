@@ -2,15 +2,14 @@ import { useState } from "react";
 import type { ProductDetailsType, ProductType } from "@/type";
 import { CartButton } from "@/components/common/cart-button";
 import { VariantCard } from "@/components/card/variant";
-import { getImageUrl, getVariant } from "@/helper";
+import { getVariant } from "@/helper";
 import { Review } from "@/components/card/review";
 import { FeatureCards } from "@/pages/details/feature";
-import { Discount } from "@/components/common/discount";
 import { CheckoutButton } from "@/components/common/checkout-button";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useModal } from "@/hooks/useModal";
 import { ModalWrapper } from "@/components/common/modal-wrapper";
 import { ProductSuccess } from "@/components/card/product";
+import { OptimizedImage } from "@/components/common/optimized-image";
 
 interface Props {
   product: ProductDetailsType;
@@ -20,13 +19,21 @@ interface Props {
 type StateType = string | null;
 
 export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
-  const { getTranslation } = useTranslation();
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedSize, setSelectedSize] = useState<StateType>(null);
   const [selectedColor, setSelectedColor] = useState<StateType>(null);
   const [displayPrice, setDisplayPrice] = useState<string>(
-    product?.variants?.[0]?.variant_price_string || "0"
+    product?.variants?.[0]?.variant_price_string ||
+      `${product?.currency_symbol}${product?.calculable_price}` ||
+      product?.main_price ||
+      "৳00.00"
   );
+  const [displayDiscountPrice, setDisplayDiscountPrice] = useState<string>(
+    product?.variants?.[0]?.variant_price_without_discount ||
+      product?.stroked_price ||
+      "৳00.00"
+  );
+
   const { modalRef, modalConfig, onHideModal, onShowModal } = useModal();
   const hasBrand = product?.brand?.name || product?.brand?.logo;
 
@@ -49,22 +56,19 @@ export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
             </span>
             {product?.has_discount && (
               <span className="text-xl md:text-2xl text-muted-foreground line-through">
-                {product?.stroked_price}
+                {displayDiscountPrice}
               </span>
             )}
           </div>
-          <Discount product={product} type="INFO" />
         </div>
 
         {hasBrand && (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">
-              {getTranslation("brand") || "Brand"}:
-            </span>
+            <span className="text-sm font-medium">{"Brand"}:</span>
             <div className="flex items-center gap-2">
               {product?.brand?.logo ? (
-                <img
-                  src={getImageUrl(product?.brand?.logo)}
+                <OptimizedImage
+                  src={product?.brand?.logo || ""}
                   alt={product?.brand?.name}
                   className="w-20 h-10 object-contain"
                 />
@@ -87,6 +91,7 @@ export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
           setQuantity={setQuantity}
           setDisplayPrice={setDisplayPrice}
           onVariantImageChange={onVariantImageChange}
+          setDisplayDiscountPrice={setDisplayDiscountPrice}
         />
 
         <div className="space-y-3">
@@ -108,6 +113,7 @@ export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
             type="DETAILS"
             product={product as unknown as ProductType}
             quantity={quantity}
+            onShowModal={onShowModal}
             variant={getVariant(selectedColor, selectedSize, product?.variants)}
           />
         </div>

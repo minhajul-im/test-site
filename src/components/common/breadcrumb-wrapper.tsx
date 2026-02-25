@@ -8,7 +8,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useTranslation } from "@/hooks/useTranslation";
 
 interface BreadcrumbItem {
   title: string;
@@ -27,16 +26,14 @@ export const BreadcrumbWrapper = ({
   className,
   type = "home",
 }: Props) => {
-  const { getTranslation } = useTranslation();
-
   const dashboard = {
-    title: getTranslation("my_dashboard") || "My Dashboard",
+    title: "My Dashboard",
     path: "/dashboard",
     icon: <LayoutDashboard className="h-4 w-4" />,
   };
 
   const home = {
-    title: getTranslation("home") || "Home",
+    title: "Home",
     path: "/",
     icon: <Home className="h-4 w-4" />,
   };

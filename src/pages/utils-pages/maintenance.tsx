@@ -40,24 +40,14 @@ export const MaintenancePage = () => {
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-        <div className="text-center space-y-8 max-w-2xl mx-auto">
+        <div className="text-center space-y-8 max-w-2xl mx-auto mt-6">
           <motion.div className="relative">
             <motion.div
-              className="text-8xl mb-6"
+              className="text-8xl mb-4"
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 1, repeat: Infinity }}>
               🔧
             </motion.div>
-            <motion.div
-              className="absolute -inset-4 border-4 border-blue-400/30 rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute -inset-6 border-2 border-purple-400/20 rounded-full"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            />
           </motion.div>
 
           <motion.h1
@@ -85,7 +75,7 @@ export const MaintenancePage = () => {
           </motion.p>
 
           <motion.div
-            className="w-full max-w-md mx-auto mt-8"
+            className="w-full max-w-md mx-auto mt-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6 }}>
@@ -108,7 +98,7 @@ export const MaintenancePage = () => {
           </motion.div>
 
           <motion.div
-            className="flex justify-center space-x-2 mt-8"
+            className="flex justify-center space-x-2 mt-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.8 }}>
@@ -130,11 +120,11 @@ export const MaintenancePage = () => {
           </motion.div>
 
           <motion.div
-            className="mt-12 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+            className="mt-6 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1 }}>
-            <div className="flex items-center justify-center space-x-3 mb-4">
+            <div className="flex items-center justify-center space-x-3">
               <motion.div
                 className="w-3 h-3 bg-green-400 rounded-full"
                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
@@ -142,9 +132,8 @@ export const MaintenancePage = () => {
               />
               <span className="text-green-400 font-medium">System Status</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div className="grid grid-cols-3 gap-2 text-center">
               <motion.div
-                className="space-y-2"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}>
                 <div className="text-2xl">🚀</div>
@@ -152,7 +141,6 @@ export const MaintenancePage = () => {
                 <div className="text-green-400 font-bold">Optimizing</div>
               </motion.div>
               <motion.div
-                className="space-y-2"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}>
                 <div className="text-2xl">🔒</div>
@@ -160,7 +148,6 @@ export const MaintenancePage = () => {
                 <div className="text-green-400 font-bold">Secured</div>
               </motion.div>
               <motion.div
-                className="space-y-2"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}>
                 <div className="text-2xl">⚡</div>
@@ -171,7 +158,7 @@ export const MaintenancePage = () => {
           </motion.div>
 
           <motion.div
-            className="mt-8"
+            className="mt-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.4 }}>
@@ -201,13 +188,13 @@ export const MaintenancePage = () => {
           </motion.div>
 
           <motion.div
-            className="mt-8 text-center"
+            className="mt-2 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.2 }}>
             <p className="text-gray-400 mb-2">Estimated completion time</p>
             <motion.div
-              className="text-2xl font-bold text-white"
+              className="text-2xl font-bold text-white mb-6"
               animate={{ opacity: [0.8, 1, 0.8] }}
               transition={{ duration: 2, repeat: Infinity }}>
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">

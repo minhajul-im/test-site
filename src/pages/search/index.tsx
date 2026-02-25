@@ -8,33 +8,41 @@ import { AnimationWrapper } from "@/components/common/animation-wrapper";
 import { NoDataFound } from "@/components/common/no-data-found";
 import { BaseLayout } from "@/components/layout/base-layout";
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
+import {
+  PaginationWrapper,
+  type PaginationDataType,
+} from "@/components/common/pagination-wrapper";
+import { useState } from "react";
 
 export const SearchPage = () => {
   const [searchParams] = useSearchParams();
-  const { getTranslation } = useTranslation();
+
   const type = searchParams.get("type") || "";
   const query = searchParams.get("query") || "";
   const params = { query_key: query, ...(type.trim() ? { type } : {}) };
+  const [filters, setFilters] = useState<Record<string, unknown>>({ page: 1 });
 
-  const { data, isLoading } = useGetProductsForHome("search", params);
+  const { data, isLoading } = useGetProductsForHome("search", {
+    ...params,
+    ...filters,
+  });
 
   const products = (data?.data as ProductType[]) || [];
+  const pagination = (data as { meta: PaginationDataType })?.meta || {};
+
+  const handlePageChange = (page: number) => {
+    setFilters((prev) => ({ ...prev, page }));
+    window.scrollTo(0, 0);
+  };
 
   return (
     <>
-      <SeoWrapper
-        title={`${
-          getTranslation("search_results_for") || "Search results for"
-        } "${query?.toUpperCase()}"`}
-      />
+      <SeoWrapper title={`Search results for "${query?.toUpperCase()}"`} />
 
       <BaseLayout>
         <section className="mb-10 md:mb-20 container mx-auto mt-10">
           <SectionTitle
-            title={`${
-              getTranslation("search_results_for") || "Search results for"
-            } "${query?.toUpperCase()}"`}
+            title={`Search results for "${query?.toUpperCase()}"`}
           />
           <CardLayout>
             {isLoading ? (
@@ -53,15 +61,18 @@ export const SearchPage = () => {
                 </AnimationWrapper>
               ))
             ) : (
-              <div className="w-full">
-                <NoDataFound
-                  title={
-                    getTranslation("no_products_found") || "No products found"
-                  }
-                />
+              <div className="col-span-full px-4">
+                <NoDataFound title={"No products found"} />
               </div>
             )}
           </CardLayout>
+
+          {Object.keys(pagination)?.length > 0 && products?.length > 0 && (
+            <PaginationWrapper
+              paginationData={pagination}
+              onPageChange={handlePageChange}
+            />
+          )}
         </section>
       </BaseLayout>
     </>

@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useSignOutMutation } from "@/api/mutations/useAuth";
 import { Link, useLocation } from "react-router-dom";
-import { useTranslation } from "@/hooks/useTranslation";
+
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUpdateProfileImageMutation } from "@/api/mutations/useProfIle";
 import { useRef } from "react";
@@ -30,7 +30,6 @@ interface Props {
 
 export const ProfileCard = ({ className, width }: Props) => {
   const location = useLocation();
-  const { getTranslation } = useTranslation();
   const { data, isLoading } = useGetUserQuery();
   const { mutate, isPending } = useSignOutMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -68,50 +67,45 @@ export const ProfileCard = ({ className, width }: Props) => {
   const menuItems = [
     {
       icon: Home,
-      label: getTranslation("dashboard") || "Dashboard",
+      label: "Dashboard",
       href: "/dashboard",
       action: null,
     },
     {
       icon: User,
-      label: getTranslation("manage_profile") || "Manage Profile",
+      label: "Manage Profile",
       href: "/dashboard/profile",
       action: null,
     },
     {
       icon: FileText,
-      label: getTranslation("purchase_history") || "Purchase History",
+      label: "Purchase History",
       href: "/dashboard/orders",
       action: null,
     },
     {
       icon: Truck,
-      label: getTranslation("track_order") || "Track Order",
+      label: "Track Order",
       href: "/dashboard/track-order",
       action: null,
     },
     {
       icon: Heart,
-      label: getTranslation("my_wishlist") || "My Wishlist",
+      label: "My Wishlist",
       href: "/dashboard/wishlist",
       action: null,
     },
     {
       icon: ShoppingCart,
-      label: getTranslation("my_cart") || "My Cart",
+      label: "My Cart",
       href: "/cart",
       action: null,
     },
     {
       icon: LogOutIcon,
-      label: getTranslation("sign_out") || "Sign Out",
+      label: "Sign Out",
       href: null,
-      action: () =>
-        onShowModal(
-          "SIGN_OUT",
-          getTranslation("sign_out") || "Sign Out",
-          "max-w-md"
-        ),
+      action: () => onShowModal("SIGN_OUT", "Sign Out", "max-w-md"),
     },
   ];
 

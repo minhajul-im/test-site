@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/input-otp";
 import { toast } from "react-hot-toast";
 import { Spinner } from "../ui/spinner";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useState, useEffect } from "react";
 import { useResendOtp } from "@/controllers/checkoutController";
 
@@ -24,7 +23,6 @@ export const OrderConfirmOtp = ({
   isPending,
   onOtpSuccess,
 }: Props) => {
-  const { getTranslation } = useTranslation();
   const [timer, setTimer] = useState(60 * 10);
   const [resendTimer, setResendTimer] = useState(60 * 2);
   const { isLoading, resendOtpFn } = useResendOtp();
@@ -57,10 +55,7 @@ export const OrderConfirmOtp = ({
     e.preventDefault();
 
     if (otp?.length !== 6) {
-      toast.error(
-        getTranslation("please_enter_a_valid_6digit_otp") ||
-          "Please enter a valid 6-digit OTP"
-      );
+      toast.error("Please enter a valid 6-digit OTP");
       return;
     }
     onOtpSuccess();
@@ -70,17 +65,15 @@ export const OrderConfirmOtp = ({
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl relative">
         <h1 className="text-3xl font-bold text-center text-foreground mb-2">
-          {getTranslation("order_confirmation_otp") || "Order Confirmation OTP"}
+          {"Order Confirmation OTP"}
         </h1>
         <p className="text-center text-muted-foreground mb-6">
-          {getTranslation("please_enter_the_6digit_code_sent_to_your_phone") ||
-            "Please enter the 6-digit code sent to your phone"}
+          {"Please enter the 6-digit code sent to your phone"}
         </p>
 
         <div className="text-center mb-4">
           <div className="text-lg font-mono text-primary mb-2">
-            {getTranslation("otp_valid_for") || "OTP valid for"}:
-            {formatTime(timer)}
+            {"OTP valid for"}:{formatTime(timer)}
           </div>
         </div>
 
@@ -103,14 +96,12 @@ export const OrderConfirmOtp = ({
 
           {resendTimer > 0 ? (
             <div className="flex items-center justify-center text-sm text-muted-foreground">
-              {getTranslation("resend_available_in") || "Resend available in"} :{" "}
-              {formatTime(resendTimer)}
+              {"Resend available in"} : {formatTime(resendTimer)}
             </div>
           ) : (
             <div className="flex items-center justify-center">
               <p className="text-sm text-muted-foreground">
-                {getTranslation("did_not_receive_otp") ||
-                  "Did not receive OTP?"}
+                {"Did not receive OTP?"}
               </p>
               <Button
                 disabled={isLoading}
@@ -122,7 +113,7 @@ export const OrderConfirmOtp = ({
                   setTimer(60 * 10);
                   setResendTimer(60 * 3);
                 }}>
-                {getTranslation("resend_otp") || "Resend OTP"}
+                {"Resend OTP"}
               </Button>
             </div>
           )}
@@ -134,10 +125,10 @@ export const OrderConfirmOtp = ({
             {isPending ? (
               <>
                 <Spinner />
-                <span>{getTranslation("processing") || "Processing..."}</span>
+                <span>{"Processing..."}</span>
               </>
             ) : (
-              <span>{getTranslation("submit") || "Submit"}</span>
+              <span>{"Submit"}</span>
             )}
           </Button>
         </form>

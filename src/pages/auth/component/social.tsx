@@ -4,14 +4,12 @@ import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
 import { toast } from "react-hot-toast";
 import { useConfig } from "@/hooks/useConfig";
 import { getConfig } from "@/helper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useGetConfig } from "@/api/queries/useGetConfig";
 import { useState } from "react";
 
 export const SocialSignIn = () => {
   const config = useConfig();
   const { data } = useGetConfig();
-  const { getTranslation } = useTranslation();
   const { mutate } = useSocialSignInMutation();
   const clientId = data?.google_client_id || null;
   const isShow = getConfig(config, "google_login")?.value;
@@ -37,10 +35,7 @@ export const SocialSignIn = () => {
 
         mutate(formData);
       } catch {
-        toast.error(
-          getTranslation("failed_to_process_google_authentication") ||
-            "Failed to process Google authentication"
-        );
+        toast.error("Failed to process Google authentication");
         mutate({
           credential: res.credential,
         });
@@ -60,7 +55,7 @@ export const SocialSignIn = () => {
   return (
     <>
       <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
-        {getTranslation("or_continue_with") || "Or continue with"}
+        Or continue with
       </FieldSeparator>
       <Field className="pb-4 w-full">
         <GoogleLogin

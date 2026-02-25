@@ -9,13 +9,13 @@ import {
   Search,
 } from "lucide-react";
 import { getImageUrl, slugify } from "@/helper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { Input } from "@/components/ui/input";
 import type {
   CategoryType,
   SubCategoryType,
   SubSubCategoryType,
 } from "@/components/layout/header/useMenu";
+import { OptimizedImage } from "../common/optimized-image";
 
 interface Props {
   categories: CategoryType[];
@@ -42,38 +42,21 @@ interface SubSubCategoryItemProps {
 
 const CategoryItem = ({ category, level }: CategoryItemProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { getTranslation } = useTranslation();
   const hasSubCategories =
     category.sub_categories && category.sub_categories.length > 0;
 
   return (
     <div className="border-b border-border/50 last:border-b-0">
-      <div className="flex items-center space-x-1 p-2 bg-background">
+      <div className="flex items-center space-x-1 p-2 bg-background group">
         <Link
           to={`/categories/${category?.id}/${slugify(category?.name)}`}
-          className="flex-1 flex items-center gap-1">
+          className="flex-1 flex items-center gap-1 group-hover:bg-primary/5 rounded-r">
           <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0 bg-muted">
-            {category?.icon ? (
-              <img
-                src={getImageUrl(category.icon)}
-                alt={category.name}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                  const fallback = e.currentTarget
-                    .nextElementSibling as HTMLElement;
-                  if (fallback) fallback.style.display = "flex";
-                }}
-              />
-            ) : null}
-            <div
-              className={`w-full h-full flex items-center justify-center ${
-                category?.icon ? "hidden" : "flex"
-              }`}
-              style={{ display: category?.icon ? "none" : "flex" }}>
-              <Image className="w-6 h-6 text-muted-foreground" />
-            </div>
+            <OptimizedImage
+              src={getImageUrl(category.icon)}
+              alt={category.name}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           <div className="flex-1 min-w-0">
@@ -82,8 +65,7 @@ const CategoryItem = ({ category, level }: CategoryItemProps) => {
             </h3>
             {category?.number_of_children > 0 && (
               <p className="text-xs text-muted-foreground">
-                {category?.number_of_children}{" "}
-                {getTranslation("subcategories") || "subcategories"}
+                {category?.number_of_children} subcategories
               </p>
             )}
           </div>
@@ -138,18 +120,17 @@ const SubCategoryItem = ({
   level,
 }: SubCategoryItemProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { getTranslation } = useTranslation();
   const hasSubSubCategories =
     subCategory.sub_sub_categories && subCategory.sub_sub_categories.length > 0;
 
   return (
     <div className="border-b border-border/30 last:border-b-0">
-      <div className="flex items-center p-2 pl-4 gap-1">
+      <div className="flex items-center p-2 pl-4 gap-1 group">
         <Link
           to={`/categories/${parentCategory?.id}/${slugify(
             parentCategory?.name
           )}/${subCategory?.id}/${slugify(subCategory?.name)}`}
-          className="flex-1 flex items-center gap-1">
+          className="flex-1 flex items-center gap-1 group-hover:bg-primary/5 rounded-r">
           <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0 bg-muted relative">
             {subCategory?.icon ? (
               <img
@@ -180,8 +161,7 @@ const SubCategoryItem = ({
             </h4>
             {subCategory?.number_of_children > 0 && (
               <p className="text-xs text-muted-foreground">
-                {subCategory?.number_of_children}{" "}
-                {getTranslation("subcategories") || "subcategories"}
+                {subCategory?.number_of_children} {"subcategories"}
               </p>
             )}
           </div>
@@ -237,8 +217,6 @@ const SubSubCategoryItem = ({
   parentCategory,
   parentSubCategory,
 }: SubSubCategoryItemProps) => {
-  const { getTranslation } = useTranslation();
-
   return (
     <Link
       to={`/categories/${parentCategory?.id}/${slugify(parentCategory?.name)}/${
@@ -277,8 +255,7 @@ const SubSubCategoryItem = ({
           </h5>
           {subSubCategory?.number_of_children > 0 && (
             <p className="text-xs text-muted-foreground">
-              {subSubCategory?.number_of_children}{" "}
-              {getTranslation("subcategories") || "subcategories"}
+              {subSubCategory?.number_of_children} {"subcategories"}
             </p>
           )}
         </div>
@@ -288,7 +265,6 @@ const SubSubCategoryItem = ({
 };
 
 export const MobileCategory = ({ categories, isLoading }: Props) => {
-  const { getTranslation } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredCategories = useMemo(() => {
@@ -333,11 +309,9 @@ export const MobileCategory = ({ categories, isLoading }: Props) => {
       <div className="text-center py-12">
         <div className="text-muted-foreground">
           <Image className="w-16 h-16 mx-auto mb-4 opacity-50" />
-          <p className="text-lg font-medium">
-            {getTranslation("no_categories_found") || "No categories found"}
-          </p>
+          <p className="text-lg font-medium">{"No categories found"}</p>
           <p className="text-sm text-muted-foreground mt-2">
-            {getTranslation("try_again_later") || "Try again later"}
+            {"Try again later"}
           </p>
         </div>
       </div>
@@ -350,9 +324,7 @@ export const MobileCategory = ({ categories, isLoading }: Props) => {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           type="text"
-          placeholder={
-            getTranslation("search_categories") || "Search categories..."
-          }
+          placeholder={"Search categories..."}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10 pr-4 py-3 text-base"
@@ -373,12 +345,9 @@ export const MobileCategory = ({ categories, isLoading }: Props) => {
           <div className="text-center py-12">
             <div className="text-muted-foreground">
               <Search className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">
-                {getTranslation("no_results_found") || "No results found"}
-              </p>
+              <p className="text-lg font-medium">{"No results found"}</p>
               <p className="text-sm text-muted-foreground mt-2">
-                {getTranslation("try_different_search") ||
-                  "Try a different search term"}
+                {"Try a different search term"}
               </p>
             </div>
           </div>

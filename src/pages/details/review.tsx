@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Spinner } from "@/components/ui/spinner";
@@ -20,7 +19,6 @@ interface ReviewType {
 }
 
 export const ProductReviews = () => {
-  const { getTranslation } = useTranslation();
   const { data, isLoading } = useGetReviews();
 
   const reviews = (data?.data as ReviewType[]) || [];
@@ -28,7 +26,7 @@ export const ProductReviews = () => {
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-foreground">
-        {getTranslation("customer_reviews") || "Customer Reviews"}
+        {"Customer Reviews"}
       </h3>
       {isLoading ? (
         <div className="flex items-center justify-center h-full">
@@ -71,9 +69,7 @@ export const ProductReviews = () => {
         ))
       ) : (
         <div className="flex items-center justify-center h-full">
-          <p className="text-muted-foreground">
-            {getTranslation("no_reviews_found") || "No reviews found"}
-          </p>
+          <p className="text-muted-foreground">{"No reviews found"}</p>
         </div>
       )}
       <GiveReviewForm />
@@ -83,7 +79,7 @@ export const ProductReviews = () => {
 
 const GiveReviewForm = () => {
   const { id } = useParams();
-  const { getTranslation } = useTranslation();
+
   const { mutate, isPending } = useSubmitReviewMutation();
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
@@ -111,11 +107,11 @@ const GiveReviewForm = () => {
       onSubmit={handleSubmit}
       className="border rounded-lg p-3 md:p-4 space-y-4">
       <h4 className="text-base md:text-lg font-semibold text-foreground">
-        {getTranslation("write_a_review") || "Write a review"}
+        {"Write a review"}
       </h4>
 
       <div className="space-y-2">
-        <Label>{getTranslation("your_rating") || "Your rating"}</Label>
+        <Label>{"Your rating"}</Label>
         <div className="flex items-center gap-2">
           {stars.map((star) => {
             const active = (hoverRating || rating) >= star;
@@ -143,17 +139,12 @@ const GiveReviewForm = () => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="comment">
-          {getTranslation("your_comment") || "Your comment"} *
-        </Label>
+        <Label htmlFor="comment">{"Your comment"} *</Label>
         <Textarea
           id="comment"
           name="comment"
           required
-          placeholder={
-            getTranslation("share_your_experience") ||
-            "Share your experience..."
-          }
+          placeholder={"Share your experience..."}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={4}
@@ -166,10 +157,10 @@ const GiveReviewForm = () => {
           disabled={isPending || !rating || comment.trim().length === 0}>
           {isPending ? (
             <>
-              <Spinner /> {getTranslation("processing") || "Processing..."}
+              <Spinner /> {"Processing..."}
             </>
           ) : (
-            getTranslation("submit_review") || "Submit Review"
+            "Submit Review"
           )}
         </Button>
       </div>

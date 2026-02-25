@@ -5,10 +5,9 @@ import { CartItem } from "./item";
 import { CartSummary } from "@/components/card/summary";
 import { CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SectionTitle } from "@/components/common/section-title";
+import { HomeSectionTitle } from "@/components/common/section-title";
 import { Link } from "react-router-dom";
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { EmptyCart } from "@/components/common/empty-cart";
 import { useGtmTracker } from "@/hooks/useGtmTracker";
 import { useEffect, useRef } from "react";
@@ -16,7 +15,6 @@ import { cartTotalPrice, cartTotalItems } from "@/helper";
 
 export const CartPage = () => {
   const hasTracked = useRef(false);
-  const { getTranslation } = useTranslation();
   const { viewCartTracker } = useGtmTracker();
   const cart = useSelector((state: RootStateType) => state.cart);
 
@@ -32,10 +30,10 @@ export const CartPage = () => {
 
   return (
     <>
-      <SeoWrapper title={getTranslation("my_cart") || "My Cart"} />
+      <SeoWrapper title="My Cart" />
       <BaseLayout>
         <section className="mb-10 md:mb-20 mt-10">
-          <SectionTitle title={getTranslation("my_cart") || "My Cart"} />
+          <HomeSectionTitle title="My Cart" />
           {cart?.items?.length === 0 ? (
             <EmptyCart />
           ) : (
@@ -53,7 +51,7 @@ export const CartPage = () => {
                   <Link to="/checkout">
                     <Button className="w-full" size="lg">
                       <CreditCard className="h-5 w-5 mr-2" />
-                      {getTranslation("check_out") || "CHECK OUT"}
+                      CHECK OUT
                     </Button>
                   </Link>
                 </CartSummary>

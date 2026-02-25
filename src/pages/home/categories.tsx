@@ -4,13 +4,12 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Navigation, Pagination, Autoplay } from "swiper/modules";
-import { getImageUrl, slugify } from "@/helper";
-import { Image } from "lucide-react";
+import { slugify } from "@/helper";
 import { Skeleton } from "@/components/common/skeleton";
 import { useCategories } from "@/api/queries/useCategories";
 import { Link } from "react-router-dom";
 import type { CategoryType } from "@/type";
-import { useTranslation } from "@/hooks/useTranslation";
+import { OptimizedImage } from "@/components/common/optimized-image";
 
 const CategorySkeleton = () => (
   <div className="flex flex-col items-center px-1 mx-1 sm:px-2 sm:mx-2 min-w-fit sm:min-w-0">
@@ -20,7 +19,6 @@ const CategorySkeleton = () => (
 );
 
 export const CategoriesSection = () => {
-  const { getTranslation } = useTranslation();
   const { data, isLoading } = useCategories();
 
   const categories = (data?.data as CategoryType[]) || [];
@@ -28,7 +26,7 @@ export const CategoriesSection = () => {
   const enableLoop = totalSlidesCount > 10;
 
   return (
-    <section className="w-full py-10 md:py-16">
+    <section className="w-full">
       <Swiper
         modules={[EffectFade, Navigation, Pagination, Autoplay]}
         loop={enableLoop}
@@ -42,7 +40,7 @@ export const CategoriesSection = () => {
             slidesPerView: 3,
           },
           600: {
-            slidesPerView: 4,
+            slidesPerView: 3,
           },
           1024: {
             slidesPerView: 6,
@@ -67,7 +65,7 @@ export const CategoriesSection = () => {
               />
             </div>
             <span className="mt-1 sm:mt-2 text-xs font-medium text-foreground group-hover:text-primary text-center w-20 sm:w-24 md:w-28 line-clamp-1 transition-all duration-300 group-hover:underline">
-              {getTranslation("all_products") || "All Products"}
+              {"All Products"}
             </span>
           </Link>
         </SwiperSlide>
@@ -83,21 +81,14 @@ export const CategoriesSection = () => {
               <SwiperSlide key={category?.id}>
                 <Link
                   to={`/categories/${category?.id}/${slugify(category?.name)}`}
-                  className="flex flex-col items-center px-1 mx-1 sm:px-2 sm:mx-2 min-w-fit sm:min-w-0 group"
+                  className="flex flex-col items-center px-1 sm:px-2 mx-2 min-w-fit sm:min-w-0 group"
                   aria-label={`Explore ${category?.name}`}>
                   <div className="w-20 h-16 sm:w-24 sm:h-20 md:w-28 md:h-24 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden shadow-md group-hover:bg-primary/20 transition-colors duration-300 relative p-1 sm:p-2 select-none">
-                    {category?.icon ? (
-                      <img
-                        src={getImageUrl(category?.icon)}
-                        alt={category?.name}
-                        className="w-full h-full object-contain absolute"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                        <Image className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-primary" />
-                      </div>
-                    )}
+                    <OptimizedImage
+                      src={category?.icon || ""}
+                      alt={category?.name}
+                      className="w-full h-full object-contain absolute"
+                    />
                   </div>
                   <span className="mt-1 sm:mt-2 text-xs font-medium text-foreground group-hover:text-primary text-center w-20 sm:w-24 md:w-28 line-clamp-1 transition-all duration-300 group-hover:underline">
                     {category?.name}

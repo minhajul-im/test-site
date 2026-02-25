@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useTranslation } from "@/hooks/useTranslation";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   ShoppingCart,
@@ -12,32 +12,30 @@ import {
 import type { OrderDataType, OrderStatusType, OrderStepType } from "./utils";
 
 export const OrderTrackStep = ({ orderData }: { orderData: OrderDataType }) => {
-  const { getTranslation } = useTranslation();
-
   const orderSteps: OrderStepType[] = [
     {
       id: "place_order",
-      label: getTranslation("place_order") || "Place Order",
+      label: "Place Order",
       icon: ShoppingCart,
     },
     {
       id: "processing",
-      label: getTranslation("processing") || "Processing",
+      label: "Processing",
       icon: Package,
     },
     {
       id: "quality_check",
-      label: getTranslation("picked_up") || "Picked Up",
+      label: "Picked Up",
       icon: Truck,
     },
     {
       id: "on_the_way",
-      label: getTranslation("on_the_way") || "On the Way",
+      label: "On the Way",
       icon: Navigation2,
     },
     {
       id: "delivered",
-      label: getTranslation("delivered") || "Delivered",
+      label: "Delivered",
       icon: MapPin,
     },
   ];
@@ -53,9 +51,7 @@ export const OrderTrackStep = ({ orderData }: { orderData: OrderDataType }) => {
   return (
     <Card className="shadow-lg mb-8">
       <CardContent className="p-4">
-        <h2 className="text-xl font-bold mb-6 ml-4">
-          {getTranslation("order_status") || "Order Status"}
-        </h2>
+        <h2 className="text-xl font-bold mb-6 ml-4">{"Order Status"}</h2>
 
         {orderData?.order_status === "cancelled" ? (
           <motion.div
@@ -106,16 +102,14 @@ export const OrderTrackStep = ({ orderData }: { orderData: OrderDataType }) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
                 className="text-base md:text-lg lg:text-xl font-semibold text-center text-destructive">
-                {getTranslation("order_cancelled") || "Order cancelled"}
+                {"Order cancelled"}
               </motion.p>
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
                 className="text-xs md:text-sm text-center text-muted-foreground max-w-sm px-2">
-                {getTranslation(
-                  "this_order_has_been_cancelled_and_cannot_be_processed"
-                ) || "This order has been cancelled and cannot be processed."}
+                {"This order has been cancelled and cannot be processed."}
               </motion.p>
             </div>
           </motion.div>
@@ -261,8 +255,7 @@ export const OrderTrackStep = ({ orderData }: { orderData: OrderDataType }) => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             className="text-xs text-muted-foreground">
-                            {getTranslation("current_status") ||
-                              "Current status"}
+                            {"Current status"}
                           </motion.p>
                         )}
                       </div>

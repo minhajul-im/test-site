@@ -9,6 +9,7 @@ import {
   PriceTicker,
   ProductShowcaseSection,
   WhatOurCustomersSaySection,
+  VideoSection,
 } from "./common";
 import { motion } from "framer-motion";
 import { PackageX, Home, ArrowLeft, RefreshCw } from "lucide-react";
@@ -21,7 +22,6 @@ import type { LandingPageType } from "./type";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LandingSkeleton } from "./skeleton";
-import { useTranslation } from "@/hooks/useTranslation";
 import { GtmSeo } from "./gtm";
 import { useEffect } from "react";
 import { removeLocalStorage } from "@/helper";
@@ -32,7 +32,10 @@ export const LandingPage = () => {
   useEffect(() => {
     removeLocalStorage("token");
     removeLocalStorage("user_id");
+    removeLocalStorage("order_completed");
     removeLocalStorage("guest_user_id");
+    removeLocalStorage("selected_shipping_method");
+    removeLocalStorage("selected_payment_method");
   }, []);
 
   if (isLoading) return <LandingSkeleton />;
@@ -52,10 +55,15 @@ export const LandingPage = () => {
             <Title>{info?.title}</Title>
             <SubTitle>{info?.sub_title}</SubTitle>
           </div>
-          <BannerSection info={info} />
-          <ProductShowcaseSection info={info} />
 
-          {info?.regular_price && info?.discount_price && <PriceTicker />}
+          <VideoSection info={info} />
+          <BannerSection info={info} />
+
+          {info?.images?.length > 0 && <ProductShowcaseSection info={info} />}
+
+          {info?.regular_price && info?.discount_price && (
+            <PriceTicker info={info} />
+          )}
 
           {info?.deadline && <DateCounter date={info?.deadline} />}
 
@@ -78,7 +86,6 @@ export const LandingPage = () => {
 
 const NoProductFoundUI = () => {
   const navigate = useNavigate();
-  const { getTranslation } = useTranslation();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 p-4">
@@ -128,7 +135,7 @@ const NoProductFoundUI = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-              {getTranslation("no_products_found") || "No products found"}
+              {"No products found"}
             </motion.h2>
 
             <motion.p
@@ -136,10 +143,9 @@ const NoProductFoundUI = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
               className="text-muted-foreground text-base md:text-lg max-w-sm mx-auto leading-relaxed">
-              {getTranslation(
-                "looks_like_were_all_out_of_magic_beans_today_check_back_soon___new_drops_incoming"
-              ) ||
-                "Looks like we're all out of magic beans today. Check back soon —  new drops incoming!"}
+              {
+                "Looks like we're all out of magic beans today. Check back soon —  new drops incoming!"
+              }
             </motion.p>
 
             {/* Action Buttons */}
@@ -156,7 +162,7 @@ const NoProductFoundUI = () => {
                   "flex items-center gap-2"
                 )}>
                 <Home className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                {getTranslation("back_to_home") || "Back to Home"}
+                {"Back to Home"}
                 <span className="absolute inset-0 bg-white/20 translate-x-[-110%] group-hover:translate-x-0 transition-transform duration-500" />
               </Button>
 
@@ -169,7 +175,7 @@ const NoProductFoundUI = () => {
                   "hover:bg-slate-100 dark:hover:bg-slate-800"
                 )}>
                 <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                {getTranslation("go_back") || "Go Back"}
+                {"Go Back"}
               </Button>
 
               <Button
@@ -178,7 +184,7 @@ const NoProductFoundUI = () => {
                 variant="ghost"
                 className="font-medium rounded-xl">
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin-slow" />
-                {getTranslation("retry") || "Retry"}
+                {"Retry"}
               </Button>
             </motion.div>
 
@@ -187,8 +193,7 @@ const NoProductFoundUI = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
               className="text-xs text-muted-foreground/70 mt-12">
-              {getTranslation("pro_tip_sometimes_a_refresh_works_wonders") ||
-                "Pro tip: Sometimes a refresh works wonders"}
+              {"Pro tip: Sometimes a refresh works wonders"}
             </motion.p>
           </div>
         </div>

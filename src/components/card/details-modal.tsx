@@ -13,7 +13,6 @@ import { ImageGallery } from "../common/image-gallery";
 
 interface Props {
   id: string;
-  onHideModal: () => void;
   onShowModal?: (
     type: string,
     title?: string,
@@ -28,10 +27,10 @@ interface DetailsModalResponse {
 }
 type StateType = string | null;
 
-export const DetailsModal = ({ id, onHideModal, onShowModal }: Props) => {
+export const DetailsModal = ({ id, onShowModal }: Props) => {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState<number>(1);
-  const [displayPrice, setDisplayPrice] = useState<string>("0");
+  const [displayPrice, setDisplayPrice] = useState<string>("৳0");
   const [selectedSize, setSelectedSize] = useState<StateType>(null);
   const [selectedColor, setSelectedColor] = useState<StateType>(null);
   const [selectedVariantImage, setSelectedVariantImage] =
@@ -39,6 +38,9 @@ export const DetailsModal = ({ id, onHideModal, onShowModal }: Props) => {
   const { data, isLoading } = useGetProductDetails(
     id as string
   ) as DetailsModalResponse;
+
+  const [displayDiscountPrice, setDisplayDiscountPrice] =
+    useState<string>("৳0");
 
   if (isLoading)
     return (
@@ -74,7 +76,13 @@ export const DetailsModal = ({ id, onHideModal, onShowModal }: Props) => {
         <h2 className="text-xl md:text-2xl font-bold">{product?.name}</h2>
 
         <Review product={product} />
-        <h3 className="text-xl md:text-2xl font-bold">{displayPrice}</h3>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xl md:text-2xl font-bold">{displayPrice}</span>
+          <span className="text-xl md:text-xl text-muted-foreground line-through">
+            {displayDiscountPrice}
+          </span>
+        </div>
 
         <VariantCard
           product={product}
@@ -85,6 +93,7 @@ export const DetailsModal = ({ id, onHideModal, onShowModal }: Props) => {
           setSelectedSize={setSelectedSize}
           setSelectedColor={setSelectedColor}
           setDisplayPrice={setDisplayPrice}
+          setDisplayDiscountPrice={setDisplayDiscountPrice}
           onVariantImageChange={setSelectedVariantImage}
         />
 
@@ -99,7 +108,6 @@ export const DetailsModal = ({ id, onHideModal, onShowModal }: Props) => {
                 selectedSize,
                 product?.variants
               )}
-              onHideModal={onHideModal}
               onShowModal={onShowModal}
             />
           </div>
@@ -108,6 +116,7 @@ export const DetailsModal = ({ id, onHideModal, onShowModal }: Props) => {
               type="DETAILS"
               product={product as unknown as ProductType}
               quantity={quantity}
+              onShowModal={onShowModal}
               variant={getVariant(
                 selectedColor,
                 selectedSize,

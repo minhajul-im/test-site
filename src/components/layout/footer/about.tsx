@@ -1,46 +1,42 @@
-import { useTranslation } from "@/hooks/useTranslation";
 import { Link, useLocation } from "react-router-dom";
 
 export const AboutUsFooter = () => {
   const location = useLocation();
-  const { getTranslation } = useTranslation();
 
   const policies = [
     {
-      name: getTranslation("about_us") || "About Us",
+      name: "About Us",
       href: "/pages/about-us",
     },
     {
-      name: getTranslation("contact_us") || "Contact us",
+      name: "Contact us",
       href: "/pages/contact-us",
     },
     {
-      name: getTranslation("privacy_policy") || "Privacy Policy",
+      name: "Privacy Policy",
       href: "/pages/privacy-policy",
     },
     {
-      name: getTranslation("terms__condition") || "Terms & Condition",
+      name: "Terms & Condition",
       href: "/pages/terms-condition",
     },
     {
-      name: getTranslation("return_policy") || "Return Policy",
+      name: "Return Policy",
       href: "/pages/return-policy",
     },
     {
-      name: getTranslation("support_policy") || "Support Policy",
+      name: "Support Policy",
       href: "/pages/support-policy",
     },
     {
-      name: getTranslation("seller_policy") || "Seller Policy",
+      name: "Seller Policy",
       href: "/pages/seller-policy",
     },
   ];
 
   return (
     <div>
-      <h4 className="font-bold text-lg mb-4">
-        {getTranslation("about_us") || "About Us"}
-      </h4>
+      <h4 className="font-bold text-lg mb-4">About Us</h4>
       <ul className="space-y-2">
         {policies?.map((item) => (
           <li key={item?.name}>

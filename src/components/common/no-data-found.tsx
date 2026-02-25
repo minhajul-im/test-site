@@ -1,7 +1,6 @@
 import { SearchX } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   title?: string;
@@ -32,13 +31,9 @@ export const NoDataFound = ({
   description,
   height = "min-h-[300px]",
 }: Props) => {
-  const { getTranslation } = useTranslation();
-  const defaultTitle =
-    title || getTranslation("no_data_found") || "No Data Found";
+  const defaultTitle = title || "No Data Found";
   const defaultDescription =
-    description ||
-    getTranslation("looks_like_theres_nothing_here_yet_try_again_later") ||
-    "Looks like there’s nothing here yet. Try again later.";
+    description || "Looks like there’s nothing here yet. Try again later.";
 
   return (
     <motion.div

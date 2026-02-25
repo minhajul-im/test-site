@@ -11,6 +11,9 @@ export const useGetDashboard = () => {
       );
       return response.data;
     },
+    enabled: !!getUserId(),
+    staleTime: 1000 * 60 * 1,
+    gcTime: 1000 * 60 * 5,
   });
 
   return { data, isLoading, error };

@@ -9,10 +9,13 @@ import { ProductTabs } from "@/pages/details/tabs";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProductDetailsSeo } from "./seo";
 import { ProductInfo } from "./info";
-import { useTranslation } from "@/hooks/useTranslation";
 import { getImageUrl } from "@/helper";
 import { ImageGallery } from "@/components/common/image-gallery";
 import { useState } from "react";
+import { ProductCardSkeleton } from "@/components/card/product";
+import { CardLayout } from "@/components/common/card-layout";
+import { HomeSectionTitleSkeleton } from "@/components/common/section-title";
+import { useInitialLength } from "@/hooks/useMobile";
 
 export interface ProductDetailsResponse {
   data: ProductDetailsType[];
@@ -23,7 +26,7 @@ export interface ProductDetailsResponse {
 export const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getTranslation } = useTranslation();
+
   const [selectedVariantImage, setSelectedVariantImage] = useState<
     string | null
   >(null);
@@ -47,7 +50,7 @@ export const ProductDetailsPage = () => {
           className="my-10 mx-4 md:mx-auto"
           items={[
             {
-              title: getTranslation("products") || "Products",
+              title: "Products",
               path: "/products",
             },
             { title: product?.name },
@@ -69,25 +72,31 @@ export const ProductDetailsPage = () => {
             onVariantImageChange={setSelectedVariantImage}
           />
         </div>
+        <div className="mb-10 md:mb-16">
+          <ProductTabs product={product} />
 
-        <ProductTabs product={product} />
-
-        {product?.tags && product?.tags?.length > 0 && (
-          <div className="mx-4 md:mx-auto mt-4 md:mt-6">
-            <div className="mt-8 flex items-center gap-2">
-              <span className="text-sm font-medium">
-                {getTranslation("tags") || "Tags"}:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {product?.tags?.map((tag) => (
-                  <Badge key={tag} variant="secondary">
-                    {tag}
-                  </Badge>
-                ))}
+          {product?.tags && product?.tags?.length > 0 && (
+            <div className="mx-4 md:mx-auto mt-4 md:mt-6">
+              <div className="mt-8 flex items-center gap-2">
+                <span className="text-sm font-medium">Tags:</span>
+                <div className="flex flex-wrap gap-2">
+                  {product?.tags?.map((tag, i: number) =>
+                    tag?.trim() ? (
+                      <Badge key={i} variant="secondary">
+                        {tag}
+                      </Badge>
+                    ) : (
+                      <span key={i} className="text-sm font-medium">
+                        {" "}
+                        No Tags
+                      </span>
+                    )
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
         <RelatedProducts />
       </BaseLayout>
     </>
@@ -95,6 +104,8 @@ export const ProductDetailsPage = () => {
 };
 
 export const ProductDetailsSkeleton = () => {
+  const initialLength = useInitialLength();
+
   return (
     <BaseLayout>
       <div className="my-10 mx-4 md:mx-auto">
@@ -104,7 +115,6 @@ export const ProductDetailsSkeleton = () => {
           <Skeleton className="h-4 w-24" />
         </div>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 mx-4 md:mx-auto">
         <div className="md:col-span-6">
           <div className="space-y-2.5 md:space-y-4 w-full overflow-hidden">
@@ -117,7 +127,6 @@ export const ProductDetailsSkeleton = () => {
                   />
                 ))}
               </div>
-
               <div className="flex-1 relative">
                 <Skeleton className="aspect-[16/17] w-full rounded-xl" />
                 <div className="absolute top-4 right-4">
@@ -131,7 +140,6 @@ export const ProductDetailsSkeleton = () => {
             </div>
           </div>
         </div>
-
         <div className="space-y-1.5 md:space-y-4 md:col-span-6">
           <div>
             <Skeleton className="h-8 w-3/4 mb-2" />
@@ -144,7 +152,6 @@ export const ProductDetailsSkeleton = () => {
               <Skeleton className="h-4 w-16" />
             </div>
           </div>
-
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <Skeleton className="h-8 w-24" />
@@ -152,12 +159,10 @@ export const ProductDetailsSkeleton = () => {
             </div>
             <Skeleton className="h-4 w-16" />
           </div>
-
           <div className="flex items-center gap-2">
             <Skeleton className="h-4 w-12" />
             <Skeleton className="h-8 w-20" />
           </div>
-
           <div className="flex items-center gap-2">
             <Skeleton className="h-4 w-12" />
             <div className="flex items-center gap-2">
@@ -169,7 +174,6 @@ export const ProductDetailsSkeleton = () => {
               ))}
             </div>
           </div>
-
           <div className="flex items-center gap-2">
             <Skeleton className="h-4 w-12" />
             <div className="flex items-center gap-2">
@@ -178,12 +182,10 @@ export const ProductDetailsSkeleton = () => {
               ))}
             </div>
           </div>
-
           <div className="flex items-center gap-2">
             <Skeleton className="w-3 h-3 rounded-full" />
             <Skeleton className="h-4 w-24" />
           </div>
-
           <div className="flex items-center gap-2">
             <Skeleton className="h-4 w-16" />
             <div className="flex items-center gap-3">
@@ -211,49 +213,42 @@ export const ProductDetailsSkeleton = () => {
           </div>
         </div>
       </div>
-
       <div className="mt-6 md:mt-8 mx-4 md:mx-auto">
         <div className="w-full">
-          <div className="flex w-full overflow-x-auto border-b">
+          <div className="flex w-full overflow-x-auto">
             {["Details", "Return Policy", "Video", "Reviews"].map((_, i) => (
               <Skeleton key={i} className="h-10 w-24 mx-2 flex-shrink-0" />
             ))}
           </div>
-
           <div className="mt-6 space-y-4">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-5/6" />
           </div>
         </div>
       </div>
-
-      <div className="mx-4 md:mx-auto mt-4 md:mt-6">
+      <div className="mx-4 md:mx-auto my-4 md:my-6">
         <div className="mt-8 flex items-center gap-2">
-          <Skeleton className="h-4 w-12" />
+          <Skeleton className="h-5 w-20" />:
           <div className="flex flex-wrap gap-2">
             {[...Array(3)].map((_, i) => (
-              <Skeleton key={i} className="h-6 w-16 rounded-full" />
+              <Skeleton key={i} className="h-5 w-24 rounded-full" />
             ))}
           </div>
         </div>
       </div>
-
-      <div className="mx-4 md:mx-auto mt-8">
-        <Skeleton className="h-8 w-48 mb-6" />
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="space-y-3">
-              <Skeleton className="aspect-square w-full rounded-lg" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-6 w-1/2" />
-              </div>
-            </div>
-          ))}
+      <div className="mb-10 md:mb-20 mt-8 container mx-auto">
+        <div className="my-6">
+          <HomeSectionTitleSkeleton />
         </div>
+        <CardLayout>
+          {Array.from({ length: initialLength }).map((_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </CardLayout>
       </div>
     </BaseLayout>
   );

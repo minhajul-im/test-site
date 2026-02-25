@@ -17,14 +17,12 @@ import {
 } from "@/components/ui/sheet";
 import { useState, useMemo } from "react";
 import { Search, Filter, RefreshCcw } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
 import { Label } from "../ui/label";
 import type { BrandType, FilterPropsType } from "@/type";
 
 export const FilterProduct = ({ filters, setFilters }: FilterPropsType) => {
   const { data, isLoading } = useGetAllBrands();
   const brands = data?.data as BrandType[];
-  const { getTranslation } = useTranslation();
   const [brandSearch, setBrandSearch] = useState("");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -64,41 +62,33 @@ export const FilterProduct = ({ filters, setFilters }: FilterPropsType) => {
   };
 
   const sortOptions = [
-    { value: "default", label: getTranslation("sort_by") || "Sort By" },
-    { value: "newest", label: getTranslation("newest") || "Newest" },
-    { value: "oldest", label: getTranslation("oldest") || "Oldest" },
+    { value: "default", label: "Sort By" },
+    { value: "newest", label: "Newest" },
+    { value: "oldest", label: "Oldest" },
     {
       value: "price_low_to_high",
-      label: getTranslation("low_to_high") || "Low to High",
+      label: "Low to High",
     },
     {
       value: "price_high_to_low",
-      label: getTranslation("high_to_low") || "High to Low",
+      label: "High to Low",
     },
   ];
 
   const BrandFilter = ({ isLabel = true }: { isLabel?: boolean }) => (
     <div className="space-y-3">
-      {isLabel && (
-        <Label htmlFor="brand-filter">
-          {getTranslation("filter_by_brand") || "Filter by Brand"}
-        </Label>
-      )}
+      {isLabel && <Label htmlFor="brand-filter">{"Filter by Brand"}</Label>}
       <Select
         value={(filters?.brand as string) || "all"}
         onValueChange={handleBrandChange}>
         <SelectTrigger className="w-full">
-          <SelectValue
-            placeholder={getTranslation("select_brand") || "Select Brand"}
-          />
+          <SelectValue placeholder={"Select Brand"} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">
-            {getTranslation("all_brands") || "All Brands"}
-          </SelectItem>
+          <SelectItem value="all">{"All Brands"}</SelectItem>
           {isLoading ? (
             <SelectItem value="loading" disabled>
-              {getTranslation("loading_brands") || "Loading brands..."}
+              {"Loading brands..."}
             </SelectItem>
           ) : (
             <>
@@ -108,9 +98,7 @@ export const FilterProduct = ({ filters, setFilters }: FilterPropsType) => {
                   <Input
                     id="brand-filter"
                     name="brand-filter"
-                    placeholder={
-                      getTranslation("search_brands") || "Search brands..."
-                    }
+                    placeholder={"Search brands..."}
                     value={brandSearch}
                     onChange={(e) => setBrandSearch(e.target.value)}
                     className="pl-8 h-8"
@@ -128,7 +116,7 @@ export const FilterProduct = ({ filters, setFilters }: FilterPropsType) => {
                   value="no-results"
                   disabled
                   className="text-muted-foreground">
-                  {getTranslation("no_brands_found") || "No brands found"}
+                  {"No brands found"}
                 </SelectItem>
               )}
             </>
@@ -140,16 +128,12 @@ export const FilterProduct = ({ filters, setFilters }: FilterPropsType) => {
 
   const SortFilter = ({ isLabel = true }: { isLabel?: boolean }) => (
     <div className="space-y-3">
-      {isLabel && (
-        <Label htmlFor="sort-filter">
-          {getTranslation("sort_by") || "Sort By"}
-        </Label>
-      )}
+      {isLabel && <Label htmlFor="sort-filter">{"Sort By"}</Label>}
       <Select
         value={(filters?.sort as string) || "default"}
         onValueChange={handleSortChange}>
         <SelectTrigger className="w-full">
-          <SelectValue placeholder={getTranslation("sort_by") || "Sort By"} />
+          <SelectValue placeholder={"Sort By"} />
         </SelectTrigger>
         <SelectContent>
           {sortOptions?.map((option: { value: string; label: string }) => (
@@ -173,9 +157,7 @@ export const FilterProduct = ({ filters, setFilters }: FilterPropsType) => {
           </SheetTrigger>
           <SheetContent side="bottom" className="h-[80vh]">
             <SheetHeader>
-              <SheetTitle>
-                {getTranslation("filter_products") || "Filter Products"}
-              </SheetTitle>
+              <SheetTitle>{"Filter Products"}</SheetTitle>
             </SheetHeader>
 
             <div className="flex flex-col justify-between h-full mx-4">
@@ -190,7 +172,7 @@ export const FilterProduct = ({ filters, setFilters }: FilterPropsType) => {
                   onClick={clearFilters}
                   className="w-full gap-2">
                   <RefreshCcw className="h-4 w-4" />
-                  {getTranslation("clear_all_filters") || "Clear All Filters"}
+                  {"Clear All Filters"}
                 </Button>
               </div>
             </div>
@@ -211,7 +193,7 @@ export const FilterProduct = ({ filters, setFilters }: FilterPropsType) => {
             onClick={clearFilters}
             className="w-full gap-2">
             <RefreshCcw className="h-4 w-4" />
-            {getTranslation("reset") || "Reset"}
+            {"Reset"}
           </Button>
         </div>
       </div>

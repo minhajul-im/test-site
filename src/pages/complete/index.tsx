@@ -3,7 +3,6 @@ import { BaseLayout } from "@/components/layout/base-layout";
 import { Skeleton } from "@/components/common/skeleton";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useGetOrderSuccessful } from "@/api/queries/userOrders";
 import type { InvoiceType } from "@/type";
 import {
@@ -19,18 +18,20 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   getLocalStorage,
   removeCurrencySymbol,
+  removeLocalStorage,
   setLocalStorage,
 } from "@/helper";
 
 export const OrderCompletePage = () => {
   const hasTracked = useRef(false);
   const [ip, setIp] = useState("");
-  const { getTranslation } = useTranslation();
+
   const { purchaseTracker } = useGtmTracker();
   const { data, isLoading } = useGetOrderSuccessful();
   const order = useMemo(() => (data?.invoice as InvoiceType) || {}, [data]);
 
   useEffect(() => {
+    removeLocalStorage("selected_shipping_method");
     if (!ip) {
       fetch("https://api.ipify.org?format=json")
         .then((res) => res?.json())
@@ -45,7 +46,7 @@ export const OrderCompletePage = () => {
         coupon: order?.coupon || "",
         tax: removeCurrencySymbol(order?.tax?.toString() || "0"),
         shipping: removeCurrencySymbol(order?.shipping_cost?.toString() || "0"),
-        value: removeCurrencySymbol(order?.grand_total?.toString() || "0") || 0,
+        value: removeCurrencySymbol(order?.subtotal?.toString() || "0") || 0,
         customer_type:
           (order?.customer_type?.toLowerCase() as "new" | "returning") || "new",
         items: order?.order_items?.map((item) => ({
@@ -82,11 +83,9 @@ export const OrderCompletePage = () => {
   if (isLoading) {
     return (
       <>
-        <SeoWrapper
-          title={getTranslation("order_successful") || "Order Successful!"}
-        />
+        <SeoWrapper title={"Order Successful!"} />
         <BaseLayout isShowMegaMenu={false} isContainer={false}>
-          <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+          <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 relative">
             <div className="container mx-auto px-4 py-8">
               <div className="text-center py-12">
                 <Skeleton className="h-20 w-20 mx-auto rounded-full mb-6" />
@@ -95,6 +94,8 @@ export const OrderCompletePage = () => {
               </div>
               <OrderDetailsSkeleton />
             </div>
+
+            <FlowerAnimation />
           </div>
         </BaseLayout>
       </>
@@ -104,16 +105,14 @@ export const OrderCompletePage = () => {
   if (!order) {
     return (
       <>
-        <SeoWrapper
-          title={getTranslation("order_successful") || "Order Successful!"}
-        />
+        <SeoWrapper title={"Order Successful!"} />
         <BaseLayout isShowMegaMenu={false} isContainer={false}>
           <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
             <div className="container mx-auto px-4 py-8">
               <div className="text-center py-12">
                 <AlertCircle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-medium text-muted-foreground">
-                  {getTranslation("order_not_found") || "Order not found"}
+                  {"Order not found"}
                 </h3>
               </div>
             </div>
@@ -125,11 +124,9 @@ export const OrderCompletePage = () => {
 
   return (
     <>
-      <SeoWrapper
-        title={getTranslation("order_successful") || "Order Successful!"}
-      />
+      <SeoWrapper title={"Order Successful!"} />
       <BaseLayout isShowMegaMenu={false} isContainer={false}>
-        <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 dark:from-gray-900 dark:to-gray-800 relative">
           <div className="container mx-auto px-4 py-8">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -152,18 +149,41 @@ export const OrderCompletePage = () => {
               </motion.div>
 
               <h1 className="text-4xl font-bold text-green-600 mb-2">
-                {getTranslation("order_successful") || "Order Successful!"}
+                {"Order Successful!"}
               </h1>
               <p className="text-lg text-muted-foreground dark:text-gray-300">
-                {getTranslation("thank_you_for_your_purchase") ||
-                  "Thank you for your purchase."}
+                {"Thank you for your purchase."}
               </p>
             </motion.div>
 
             <OrderDetailsCard order={order} path="/track-order" />
           </div>
+
+          <FlowerAnimation />
         </div>
       </BaseLayout>
     </>
+  );
+};
+
+const FlowerAnimation = () => {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {[...Array(100)].map((_, i) => (
+        <img
+          key={i}
+          src="/flower.png"
+          alt="flower"
+          className="absolute w-10 h-10 animate-fall"
+          style={{
+            animationDuration: `${Math.random() * 5 + 3}s`,
+            animationDelay: `${Math.random() * 5}s`,
+            left: `${Math.random() * 100}%`,
+            top: `-${Math.random() * 20}vh`,
+            transform: `rotate(${Math.random() * 360}deg)`,
+          }}
+        />
+      ))}
+    </div>
   );
 };

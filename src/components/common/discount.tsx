@@ -1,7 +1,6 @@
 import type { ProductDetailsType, ProductType } from "@/type";
 import { Badge } from "../ui/badge";
 import { hasDiscount } from "@/helper";
-import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   type: "CARD" | "DETAILS" | "INFO";
@@ -9,16 +8,15 @@ interface Props {
 }
 
 export const Discount = ({ product, type }: Props) => {
-  const { getTranslation } = useTranslation();
   const discount = hasDiscount(product?.main_price, product?.stroked_price);
   const isDiscount = discount > 0;
 
-  if (type === "INFO") {
+  if (type === "INFO" && product?.has_discount) {
     return (
       <>
         {isDiscount && (
           <p className="text-sm text-green-600 font-medium">
-            {getTranslation("you_save") || "You save"} {discount}%
+            {"You save"} {discount}%
           </p>
         )}
       </>
@@ -27,11 +25,11 @@ export const Discount = ({ product, type }: Props) => {
 
   return (
     <>
-      {isDiscount && (
+      {isDiscount && product?.has_discount && (
         <Badge
           className={`${
             type === "DETAILS" && "text-sm font-semibold"
-          } z-10 top-2 left-2 absolute text-primary-foreground`}
+          } z-10 top-2 left-2 absolute text-white`}
           variant="destructive">
           {discount}%
         </Badge>

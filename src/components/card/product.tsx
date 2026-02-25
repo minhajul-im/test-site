@@ -1,7 +1,7 @@
-import { CheckCircle, Image } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import type { ProductType } from "@/type";
 import { Skeleton } from "../common/skeleton";
-import { getImageUrl, slugify } from "@/helper";
+import { slugify } from "@/helper";
 import { Link } from "react-router";
 import { CartButton } from "../common/cart-button";
 import { WishlistButton } from "../common/wishlist-button";
@@ -13,7 +13,6 @@ import { Discount } from "../common/discount";
 import { CheckoutButton } from "../common/checkout-button";
 import { OptimizedImage } from "../common/optimized-image";
 import { Button } from "../ui/button";
-import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   product: ProductType;
@@ -24,37 +23,29 @@ export const ProductCard = ({ product }: Props) => {
 
   return (
     <>
-      <div className="group relative mt-2 md:mt-0 w-[178px] md:w-[237px] overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300 select-none">
+      <div className="group relative mt-2 md:mt-0 overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300 select-none">
         <WishlistButton product={product} size="DEFAULT" />
         <Discount product={product} type="CARD" />
 
         <Link to={`/products/${product?.id}/${slugify(product?.name)}`}>
-          <div className="relative aspect-[16/12] overflow-hidden bg-muted">
-            {product?.thumbnail_image ? (
-              <OptimizedImage
-                src={product?.thumbnail_image}
-                alt={product?.name}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                quality={90}
-                priority={true}
-              />
-            ) : (
-              <div className="w-full absolute h-full bg-muted flex items-center justify-center">
-                <Image className="w-20 h-20 text-muted-foreground" />
-              </div>
-            )}
+          <div className="relative aspect-[16/17] overflow-hidden bg-muted">
+            <OptimizedImage
+              src={product?.thumbnail_image || ""}
+              alt={product?.name}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
           </div>
         </Link>
 
-        <div className="p-2 sm:p-3">
+        <div className="p-1.5 sm:p-2 xl:p-3 group-hover:bg-primary/5">
           <Link to={`/products/${product?.id}/${slugify(product?.name)}`}>
             <Review product={product} starSize="w-3 h-3" />
-            <h3 className="line-clamp-1 mt-0.5 text-sm font-medium leading-tight text-foreground duration-300">
+            <h3 className="line-clamp-1 mt-0.5 text-xs md:text-sm font-medium leading-tight text-foreground duration-300">
               {product?.name}
             </h3>
 
-            <div className="mb-2 flex items-center gap-2 duration-300">
-              <span className="text-lg font-bold text-foreground">
+            <div className="mb-1 flex items-center gap-2 duration-300">
+              <span className="text-base md:text-lg font-bold text-foreground">
                 {product?.main_price}
               </span>
               {product?.has_discount && (
@@ -65,7 +56,7 @@ export const ProductCard = ({ product }: Props) => {
             </div>
           </Link>
 
-          <div className="flex  items-center gap-2 duration-300">
+          <div className="flex items-center gap-1.5 md:gap-2 duration-300">
             <div className="flex-1 w-full">
               <CartButton
                 product={product}
@@ -76,6 +67,7 @@ export const ProductCard = ({ product }: Props) => {
             <div className="flex-1 w-full">
               <CheckoutButton
                 type="SLIDER"
+                onShowModal={onShowModal}
                 product={product as ProductType}
                 quantity={1}
               />
@@ -92,7 +84,6 @@ export const ProductCard = ({ product }: Props) => {
         {modalConfig.type === "DETAILS" && (
           <DetailsModal
             id={product?.id as unknown as string}
-            onHideModal={onHideModal}
             onShowModal={onShowModal}
           />
         )}
@@ -113,7 +104,6 @@ export const ProductSuccess = ({
   product,
   onHideModal,
 }: ProductSuccessProps) => {
-  const { getTranslation } = useTranslation();
   return (
     <div className="w-full flex flex-col items-center justify-center gap-4">
       <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto shadow-lg">
@@ -121,12 +111,8 @@ export const ProductSuccess = ({
       </div>
       <div className="flex items-start justify-center gap-2">
         <div className="size-16 relative overflow-hidden rounded-lg bg-cover bg-center border border-border">
-          <img
-            src={
-              product?.thumbnail_image
-                ? getImageUrl(product?.thumbnail_image)
-                : "/placeholder.svg"
-            }
+          <OptimizedImage
+            src={product?.thumbnail_image || ""}
             alt={product?.name}
             className="w-full h-full object-cover relative"
           />
@@ -137,7 +123,7 @@ export const ProductSuccess = ({
             {product?.name}
           </p>
           <p className="text-base font-semibold text-foreground">
-            {getTranslation("price") || "Price"}: {product?.main_price}
+            {"Price"}: {product?.main_price}
           </p>
         </div>
       </div>
@@ -145,13 +131,13 @@ export const ProductSuccess = ({
       <div className="w-full flex items-center justify-center gap-2">
         <div className="flex-1 w-full">
           <Button variant="outline" className="w-full" onClick={onHideModal}>
-            {getTranslation("back_to_shopping") || "Back to shopping"}
+            {"Back to shopping"}
           </Button>
         </div>
         <div className="flex-1 w-full">
           <Link to="/checkout">
             <Button variant="default" className="w-full" onClick={onHideModal}>
-              {getTranslation("checkout") || "Checkout"}
+              Order now
             </Button>
           </Link>
         </div>
@@ -162,7 +148,7 @@ export const ProductSuccess = ({
 
 export const ProductCardSkeleton = () => {
   return (
-    <div className="group w-[170px] md:w-[237px] relative overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300">
+    <div className="group relative mt-2 md:mt-0 overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300 select-none">
       <div className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm">
         <Skeleton className="h-4 w-4 rounded-full" />
       </div>
@@ -170,12 +156,12 @@ export const ProductCardSkeleton = () => {
         <Skeleton className="h-5 w-8 rounded-full" />
       </div>
 
-      <div className="relative aspect-[16/12] overflow-hidden bg-muted">
+      <div className="relative aspect-[16/17] overflow-hidden bg-muted">
         <Skeleton className="h-full w-full" />
       </div>
 
-      <div className="p-3">
-        <div className="mb-2 flex items-center gap-1">
+      <div className="p-1.5 sm:p-2 xl:p-3">
+        <div className="flex items-center gap-1">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
               <Skeleton key={i} className="h-4 w-4" />
@@ -184,13 +170,12 @@ export const ProductCardSkeleton = () => {
           <Skeleton className="h-3 w-8" />
         </div>
 
-        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-full" />
 
-        <div className="mb-2 flex items-center gap-2">
+        <div className="mb-1 flex items-center gap-2">
           <Skeleton className="h-6 w-16" />
           <Skeleton className="h-4 w-12" />
         </div>
-
         <div className="flex gap-2">
           <Skeleton className="flex-1 h-8" />
           <Skeleton className="flex-1 h-8" />

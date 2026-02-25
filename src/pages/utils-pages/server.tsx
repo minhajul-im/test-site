@@ -1,9 +1,14 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Server, Database, Cpu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const ServerError = () => {
+  const navigate = useNavigate();
   const handleRefresh = () => {
+    if (window.location.pathname === "/500") {
+      navigate("/");
+    }
     window.location.reload();
   };
 
@@ -43,7 +48,6 @@ export const ServerError = () => {
           <Cpu className="w-full h-full text-yellow-400" />
         </motion.div>
 
-        {/* Error Code Particles */}
         <motion.div
           className="absolute top-1/4 left-1/4 text-red-400/30 text-6xl font-bold"
           animate={{
@@ -75,7 +79,6 @@ export const ServerError = () => {
           0
         </motion.div>
 
-        {/* Animated Lines */}
         <motion.div
           className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent"
           animate={{ opacity: [0.2, 0.8, 0.2] }}
@@ -92,7 +95,7 @@ export const ServerError = () => {
         <div className="text-center max-w-3xl mx-auto">
           <motion.div className="relative">
             <motion.div
-              className="text-8xl"
+              className="text-8xl mt-6 md:mt-0"
               animate={{
                 y: [0, -15, 0],
                 rotate: [0, 5, 0],
@@ -100,22 +103,6 @@ export const ServerError = () => {
               transition={{ duration: 2, repeat: Infinity }}>
               🔥
             </motion.div>
-
-            <motion.div
-              className="absolute -inset-6 border-4 border-red-400/30 rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute -inset-8 border-2 border-orange-400/20 rounded-full"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute -inset-10 border border-yellow-400/10 rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            />
           </motion.div>
 
           <motion.h1
@@ -168,7 +155,7 @@ export const ServerError = () => {
               <span className="text-red-400 font-medium">Server Status</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-center">
+            <div className="grid grid-cols-3 gap-2 text-center">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}>
@@ -199,7 +186,7 @@ export const ServerError = () => {
             transition={{ type: "spring", stiffness: 300 }}>
             <Button
               onClick={handleRefresh}
-              className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 mt-4"
+              className="bg-gradient-to-r mb-6 from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 mt-4"
               size="lg">
               <motion.div
                 animate={{ rotate: 360 }}

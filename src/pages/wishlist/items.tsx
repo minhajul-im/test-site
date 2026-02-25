@@ -1,38 +1,31 @@
-import { useTranslation } from "@/hooks/useTranslation";
 import { useSelector } from "react-redux";
 import type { RootStateType } from "@/redux/store";
-import { Heart, Image } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { WishlistButton } from "@/components/common/wishlist-button";
 import { CartButton } from "@/components/common/cart-button";
-import { getImageUrl, slugify } from "@/helper";
+import { slugify } from "@/helper";
 import type { ProductType } from "@/type";
+import { OptimizedImage } from "@/components/common/optimized-image";
 
 export const WishlistItems = () => {
-  const { getTranslation } = useTranslation();
   const wishlist = useSelector((state: RootStateType) => state.wishlist);
   return (
     <>
       {wishlist?.items?.length === 0 ? (
         <div className="text-center py-16">
-          <Heart className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
+          <Heart className="mx-auto h-16 w-16 text-primary mb-4" />
           <h2 className="text-2xl font-bold text-foreground mb-2">
-            {getTranslation("your_wishlist_is_empty") ||
-              "Your wishlist is empty"}
+            Your wishlist is empty
           </h2>
           <p className="text-muted-foreground mb-6">
-            {getTranslation(
-              "save_items_you_love_for_later_by_adding_them_to_your_wishlist"
-            ) ||
-              "Save items you love for later by adding them to your wishlist."}
+            Save items you love for later by adding them to your wishlist.
           </p>
           <Button asChild>
-            <Link to="/products">
-              {getTranslation("start_shopping") || "Start Shopping"}
-            </Link>
+            <Link to="/products">Start Shopping→</Link>
           </Button>
         </div>
       ) : (
@@ -41,17 +34,11 @@ export const WishlistItems = () => {
             <Card key={item.id} className="p-1 md:p-4 border rounded-lg">
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-20 h-16 relative rounded-lg border overflow-hidden">
-                  {item?.image ? (
-                    <img
-                      src={getImageUrl(item?.image)}
-                      alt={item?.name}
-                      className="absolute w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="absolute w-full h-full bg-muted-foreground/10 flex items-center justify-center">
-                      <Image className="w-8 h-8" />
-                    </div>
-                  )}
+                  <OptimizedImage
+                    src={item?.image || ""}
+                    alt={item?.name}
+                    className="absolute w-full h-full object-cover"
+                  />
                 </div>
 
                 <div className="flex-1 min-w-0">

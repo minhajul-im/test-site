@@ -1,5 +1,4 @@
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useGetUserOrderDetails } from "@/api/queries/userOrders";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import type { InvoiceType } from "@/type";
@@ -11,34 +10,29 @@ import {
 } from "@/components/card/order-details";
 
 export const OrderDetailsPage = () => {
-  const { getTranslation } = useTranslation();
   const { data, isLoading } = useGetUserOrderDetails();
   const order = (data?.data?.[0] as InvoiceType) || {};
 
   return (
     <>
-      <SeoWrapper title={getTranslation("order_details") || "Order Details"} />
+      <SeoWrapper title={"Order Details"} />
       <DashboardLayout>
         <div className="mx-4 md:mx-0 mb-4">
           <BreadcrumbWrapper
             type="dashboard"
             items={[
               {
-                title: getTranslation("my_orders") || "My Orders",
+                title: "My Orders",
                 path: "/dashboard/orders",
               },
               {
-                title: `${
-                  getTranslation("order_details") || "Order Details"
-                } #${order?.order_code}`,
+                title: `${"Order Details"} #${order?.order_code}`,
               },
             ]}
           />
         </div>
 
-        <SectionTitle
-          title={getTranslation("order_details") || "Order Details"}
-        />
+        <SectionTitle title={"Order Details"} />
         {isLoading ? (
           <OrderDetailsSkeleton />
         ) : (

@@ -1,6 +1,7 @@
 import * as React from "react";
 
-const MOBILE_BREAKPOINT = 768;
+export const MOBILE_BREAKPOINT = 768;
+export const TABLET_BREAKPOINT = 1279;
 
 export const useIsMobile = () => {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
@@ -20,22 +21,31 @@ export const useIsMobile = () => {
   return !!isMobile;
 };
 
-const TABLET_BREAKPOINT = 1440;
-
-export const useIsTablet = () => {
-  const [isTablet, setIsTablet] = React.useState<boolean | undefined>(
-    undefined
+export const useWindowWidth = () => {
+  const [windowWidth, setWindowWidth] = React.useState<number>(
+    window.innerWidth
   );
 
   React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${TABLET_BREAKPOINT}px)`);
-    const onChange = () => {
-      setIsTablet(window.innerWidth <= TABLET_BREAKPOINT);
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
     };
-    mql.addEventListener("change", onChange);
-    setIsTablet(window.innerWidth <= TABLET_BREAKPOINT);
-    return () => mql.removeEventListener("change", onChange);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  return !!isTablet;
+  return windowWidth;
+};
+
+export const useInitialLength = () => {
+  const windowWidth = useWindowWidth();
+
+  const initialLength =
+    windowWidth <= MOBILE_BREAKPOINT
+      ? 2
+      : windowWidth <= TABLET_BREAKPOINT
+      ? 5
+      : 6;
+
+  return initialLength;
 };

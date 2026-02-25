@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
 interface PhoneValidationType {
   isValid: boolean;
   error?: string;
@@ -9,15 +8,12 @@ interface PhoneValidationType {
 
 export const usePhoneValidation = () => {
   const [phone, setPhone] = useState("");
-  const { getTranslation } = useTranslation();
   const [touched, setTouched] = useState(false);
   const validateBangladeshiPhone = (phone: string): PhoneValidationType => {
     if (!phone) {
       return {
         isValid: false,
-        error:
-          getTranslation("phone_number_is_required") ||
-          "Phone number is required",
+        error: "Phone number is required",
       };
     }
 
@@ -26,9 +22,7 @@ export const usePhoneValidation = () => {
     if (!cleanPhone || cleanPhone.length === 0) {
       return {
         isValid: false,
-        error:
-          getTranslation("phone_number_is_required") ||
-          "Phone number is required",
+        error: "Phone number is required",
       };
     }
 
@@ -45,27 +39,21 @@ export const usePhoneValidation = () => {
     if (!phoneNumber.startsWith("01")) {
       return {
         isValid: false,
-        error:
-          getTranslation("phone_number_must_start_with_01_or_88") ||
-          "Phone number must start with 01 or +88",
+        error: "Phone number must start with 01 or +88",
       };
     }
 
     if (phoneNumber.length !== 11) {
       return {
         isValid: false,
-        error:
-          getTranslation("phone_number_must_be_11_digits_01xxxxxxxxx") ||
-          "Phone number must be 11 digits (01XXXXXXXXX)",
+        error: "Phone number must be 11 digits (01XXXXXXXXX)",
       };
     }
 
     if (!/^01\d{9}$/.test(phoneNumber)) {
       return {
         isValid: false,
-        error:
-          getTranslation("invalid_phone_number_format") ||
-          "Invalid phone number format",
+        error: "Invalid phone number format",
       };
     }
 

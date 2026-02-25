@@ -1,4 +1,3 @@
-import { useTranslation } from "@/hooks/useTranslation";
 import { Password } from "@/components/common/password";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -9,7 +8,6 @@ import { getUserId } from "@/helper";
 import type { UserType } from "@/type";
 
 export const ProfileSecurity = ({ user }: { user: UserType }) => {
-  const { getTranslation } = useTranslation();
   const { mutate, isPending } = useUpdateProfileMutation();
 
   const handleSecuritySubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -19,30 +17,19 @@ export const ProfileSecurity = ({ user }: { user: UserType }) => {
     const newPassword = formData.get("new_password") as string;
     const confirmPassword = formData.get("confirm_password") as string;
     if (currentPassword === "") {
-      toast.error(
-        getTranslation("current_password_is_required") ||
-          "Current password is required"
-      );
+      toast.error("Current password is required");
       return;
     }
     if (newPassword === "") {
-      toast.error(
-        getTranslation("new_password_is_required") || "New password is required"
-      );
+      toast.error("New password is required");
       return;
     }
     if (confirmPassword === "") {
-      toast.error(
-        getTranslation("confirm_password_is_required") ||
-          "Confirm password is required"
-      );
+      toast.error("Confirm password is required");
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast.error(
-        getTranslation("new_password_and_confirm_password_do_not_match") ||
-          "New password and confirm password do not match"
-      );
+      toast.error("New password and confirm password do not match");
       return;
     }
 
@@ -58,20 +45,15 @@ export const ProfileSecurity = ({ user }: { user: UserType }) => {
   return (
     <Card className="col-span-1 px-4 md:px-6 py-4 md:py-6">
       <form className="space-y-4" onSubmit={handleSecuritySubmit}>
-        <h3 className="text-lg font-semibold mb-6">
-          {getTranslation("security_information") || "Security Information"}
-        </h3>
+        <h3 className="text-lg font-semibold mb-6">{"Security Information"}</h3>
         <div className="space-y-2">
           <Password
             id="current_password"
             name="current_password"
             disabled={isDisabled}
             required={true}
-            label={getTranslation("current_password") || "Current Password"}
-            placeholder={
-              getTranslation("enter_your_current_password") ||
-              "Enter your current password"
-            }
+            label={"Current Password"}
+            placeholder={"Enter your current password"}
           />
         </div>
         <div className="space-y-2">
@@ -80,11 +62,8 @@ export const ProfileSecurity = ({ user }: { user: UserType }) => {
             name="new_password"
             required={true}
             disabled={isDisabled}
-            label={getTranslation("new_password") || "New Password"}
-            placeholder={
-              getTranslation("enter_your_new_password") ||
-              "Enter your new password"
-            }
+            label={"New Password"}
+            placeholder={"Enter your new password"}
           />
         </div>
         <div className="space-y-2">
@@ -93,11 +72,8 @@ export const ProfileSecurity = ({ user }: { user: UserType }) => {
             name="confirm_password"
             disabled={isDisabled}
             required={true}
-            label={getTranslation("confirm_password") || "Confirm Password"}
-            placeholder={
-              getTranslation("enter_your_confirm_password") ||
-              "Enter your confirm password"
-            }
+            label={"Confirm Password"}
+            placeholder={"Enter your confirm password"}
           />
         </div>
         <div className="space-y-2 flex justify-end">
@@ -105,10 +81,10 @@ export const ProfileSecurity = ({ user }: { user: UserType }) => {
             {isPending ? (
               <>
                 <Spinner />
-                {getTranslation("processing") || "Processing..."}
+                {"Processing..."}
               </>
             ) : (
-              getTranslation("submit") || "Submit"
+              "Submit"
             )}
           </Button>
         </div>

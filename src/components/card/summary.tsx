@@ -2,15 +2,15 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Coupon } from "./coupon";
 import { useGetCartSummaryQuery } from "@/api/queries/useGetCart";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useSelector } from "react-redux";
 import type { RootStateType } from "@/redux/store";
-import { getConfig, getImageUrl, slugify } from "@/helper";
+import { getConfig, slugify } from "@/helper";
 import { Link } from "react-router-dom";
 import { useConfig } from "@/hooks/useConfig";
 import { RemoveCartButton } from "../common/cart-button";
 import { Quantity } from "./quantity";
 import { cn } from "@/lib/utils";
+import { OptimizedImage } from "../common/optimized-image";
 
 interface CartSummaryType {
   sub_total: string;
@@ -36,7 +36,6 @@ export const CartSummary = ({
 }: Props) => {
   const config = useConfig();
   const { data } = useGetCartSummaryQuery();
-  const { getTranslation } = useTranslation();
 
   const cart = useSelector((state: RootStateType) => state.cart?.items);
   const isActiveCoupon = getConfig(config, "coupon_system")?.value === "1";
@@ -45,9 +44,7 @@ export const CartSummary = ({
 
   return (
     <Card className={cn("p-4 md:p-6 md:sticky md:top-28 bg-card", className)}>
-      <h2 className="text-xl font-bold text-foreground">
-        {getTranslation("order_summery") || "ORDER SUMMERY"}
-      </h2>
+      <h2 className="text-xl font-bold text-foreground">{"ORDER SUMMERY"}</h2>
 
       {isShowCartItems && cart?.length > 0 && (
         <div className="flex flex-col gap-2">
@@ -57,12 +54,8 @@ export const CartSummary = ({
               className="flex justify-between items-center border-b pb-2">
               <div className="flex gap-1">
                 <div className="flex-shrink-0 w-20 h-16 sm:w-24 sm:h-20 relative rounded-lg border overflow-hidden">
-                  <img
-                    src={
-                      item?.image
-                        ? getImageUrl(item?.image)
-                        : "/placeholder.svg"
-                    }
+                  <OptimizedImage
+                    src={item?.image || ""}
                     alt={item?.name}
                     className="absolute w-full h-full object-cover"
                   />
@@ -74,15 +67,13 @@ export const CartSummary = ({
                     {item?.name}
                   </Link>
                   <div className="text-foreground flex items-center gap-1.5 text-xs md:text-sm mb-0.5">
-                    {getTranslation("qty") || "Qty"}: {item?.quantity} |{" "}
-                    {getTranslation("price") || "Price"}: {item?.mainPrice}
+                    {"Qty"}: {item?.quantity} | {"Price"}: {item?.mainPrice}
                     {item?.variant && (
                       <>
                         {" "}
                         |{" "}
                         <span className="text-[10px] font-medium rounded text-primary border border-primary px-1">
-                          {getTranslation("variant") || "Variant"}:
-                          {item?.variant}
+                          {"Variant"}:{item?.variant}
                         </span>
                       </>
                     )}
@@ -103,25 +94,20 @@ export const CartSummary = ({
 
       <div className="space-y-1 md:space-y-3">
         <div className="flex justify-between">
-          <span className="text-muted-foreground">
-            {getTranslation("sub_total") || "Sub Total"}:
-          </span>
+          <span className="text-muted-foreground">{"Sub Total"}:</span>
           <span className="font-medium">
             {cartSummary?.sub_total || " ৳00.00"}
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-muted-foreground">
-            {getTranslation("shipping_cost") || "Shipping Cost"}:
-          </span>
+          <span className="text-muted-foreground">{"Shipping Cost"}:</span>
+
           <span className="font-medium">
-            {cartSummary?.shipping_cost || " ৳00.00"}
+            {cartSummary?.shipping_cost || "৳00.00"}
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-muted-foreground">
-            {getTranslation("discount") || "Discount"}:
-          </span>
+          <span className="text-muted-foreground">{"Discount"}:</span>
           <span className="text-green-600 font-semibold">
             {cartSummary?.discount || " ৳00.00"}
           </span>
@@ -129,7 +115,7 @@ export const CartSummary = ({
 
         <div className="flex justify-between">
           <span className="text-muted-foreground">
-            {getTranslation("estimated_sales_tax") || "Estimated sales tax"}:
+            {"Estimated sales tax"}:
           </span>
           <span className="font-medium">{cartSummary?.tax || " ৳00.00"}</span>
         </div>
@@ -138,7 +124,7 @@ export const CartSummary = ({
       <Separator />
 
       <div className="flex justify-between text-lg font-bold">
-        <span>{getTranslation("total_amount") || "Total Amount"}</span>
+        <span>{"Total Amount"}</span>
         <span>{cartSummary?.grand_total || " ৳00.00"}</span>
       </div>
 

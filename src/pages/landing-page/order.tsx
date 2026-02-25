@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Title } from "./common";
 import { CheckoutForm } from "../checkout/form";
-import { useTranslation } from "@/hooks/useTranslation";
 import { Spinner } from "@/components/ui/spinner";
 import { CreditCard } from "lucide-react";
 import { useCheckoutController } from "@/controllers/checkoutController";
@@ -14,24 +13,25 @@ import { OrderConfirmOtp } from "@/components/common/checkout-otp";
 import { CampaignCartSummary } from "./summary";
 
 export const OrdersSection = () => {
-  const { getTranslation } = useTranslation();
   const {
     otp,
-    setOtp,
     info,
+    setOtp,
     setInfo,
     isPending,
     otpLoading,
     isActiveOtp,
     showOtpModal,
+    selectedShipping,
     handlePlaceOrder,
     handleOtpSuccess,
+    setSelectedShipping,
   } = useCheckoutController();
 
   return (
     <>
       <section>
-        <Title>{getTranslation("order_now") || "Order Now"}</Title>
+        <Title>{"Order Now"}</Title>
 
         <div className="grid md:grid-cols-2 gap-6">
           <motion.div
@@ -41,11 +41,13 @@ export const OrdersSection = () => {
             viewport={{ once: true }}>
             <Card className={cn("p-4 md:p-6 md:sticky md:top-28 bg-card")}>
               <h3 className="text-2xl font-bold text-foreground mb-6">
-                {getTranslation("shipping_information") ||
-                  "Shipping Information"}
+                {"Shipping Information"}
               </h3>
               <CheckoutForm info={info} setInfo={setInfo} />
-              <ShippingCost />
+              <ShippingCost
+                selectedShipping={selectedShipping}
+                setSelectedShipping={setSelectedShipping}
+              />
               <PaymentMethods />
             </Card>
           </motion.div>
@@ -55,7 +57,7 @@ export const OrdersSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}>
-            <CampaignCartSummary>
+            <CampaignCartSummary setSelectedShipping={setSelectedShipping}>
               <Button
                 className="w-full"
                 size="lg"
@@ -65,16 +67,12 @@ export const OrdersSection = () => {
                 {isPending ? (
                   <>
                     <Spinner />
-                    <span>
-                      {getTranslation("processing") || "Processing..."}
-                    </span>
+                    <span>{"Processing..."}</span>
                   </>
                 ) : (
                   <>
                     <CreditCard className="h-5 w-5 mr-2" />
-                    <span>
-                      {getTranslation("place_order") || "Place Order"}
-                    </span>
+                    <span>{"Place Order"}</span>
                   </>
                 )}
               </Button>

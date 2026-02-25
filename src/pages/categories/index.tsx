@@ -1,4 +1,4 @@
-import { SectionTitle } from "@/components/common/section-title";
+import { HomeSectionTitle } from "@/components/common/section-title";
 import { AnimationWrapper } from "@/components/common/animation-wrapper";
 import { NoDataFound } from "@/components/common/no-data-found";
 import { BaseLayout } from "@/components/layout/base-layout";
@@ -7,24 +7,18 @@ import { useCategories } from "@/api/queries/useCategories";
 import { CategoryCard, CategoryCardSkeleton } from "@/components/card/category";
 import { MobileCategory } from "@/components/card/mobile-category";
 import type { CategoryType } from "@/components/layout/header/useMenu";
-import { useTranslation } from "@/hooks/useTranslation";
 
 export const CategoriesPage = () => {
   const { data, isLoading } = useCategories();
-  const { getTranslation } = useTranslation();
   const categories = (data?.data as CategoryType[]) || [];
 
   return (
     <>
-      <SeoWrapper
-        title={getTranslation("all_categories") || "All Categories"}
-      />
+      <SeoWrapper title="All Categories" />
 
       <BaseLayout>
         <section className="mb-10 md:mb-20 container mx-auto mt-6 md:mt-10">
-          <SectionTitle
-            title={getTranslation("all_categories") || "All Categories"}
-          />
+          <HomeSectionTitle title="All Categories" />
 
           <div className="block md:hidden mt-6 mx-4">
             <MobileCategory categories={categories} isLoading={isLoading} />
@@ -48,12 +42,7 @@ export const CategoriesPage = () => {
               ))
             ) : (
               <div className="col-span-full">
-                <NoDataFound
-                  title={
-                    getTranslation("no_categories_found") ||
-                    "No categories found"
-                  }
-                />
+                <NoDataFound title={"No categories found"} />
               </div>
             )}
           </div>

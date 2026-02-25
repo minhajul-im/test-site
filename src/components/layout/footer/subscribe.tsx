@@ -1,14 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Mail, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useNewsletterSubscribeMutation } from "@/api/mutations/useNewsletter";
 import { Spinner } from "@/components/ui/spinner";
 import toast from "react-hot-toast";
 import { isValidEmail } from "@/helper";
 
 export const SubscribeFooter = () => {
-  const { getTranslation } = useTranslation();
   const { mutate, isPending } = useNewsletterSubscribeMutation();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,11 +14,11 @@ export const SubscribeFooter = () => {
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
     if (!email) {
-      toast.error(getTranslation("email_is_required") || "Email is required");
+      toast.error("Email is required");
       return;
     }
     if (!isValidEmail(email)) {
-      toast.error(getTranslation("invalid_email") || "Invalid email");
+      toast.error("Invalid email");
       return;
     }
     mutate(formData);
@@ -28,18 +26,13 @@ export const SubscribeFooter = () => {
   };
 
   return (
-    <div className="py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
+    <div className="pt-16 md:pt-20 px-4">
+      <div className="container mx-auto max-w-4xl bg-primary/10 py-8 rounded-t-lg">
         <div className="text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {getTranslation("newsletter") || "Newsletter"}
+          <h2 className="text-xl md:text-4xl font-bold text-foreground mb-4 px-4">
+            Join Our Mailing List For Exclusive Offers and Latest Updates
           </h2>
-          <p className="text-lg text-muted-foreground mb-4">
-            {getTranslation(
-              "get_a_free_20_discount_on_all_products_on_your_first_order"
-            ) || "Get a free 20% discount on all products on your first order!"}
-          </p>
-          <div className="max-w-md mx-auto">
+          <div className="max-w-md mx-auto px-4 md:px-0">
             <form
               onSubmit={handleSubmit}
               className="border-2 border-primary rounded-lg overflow-hidden flex">
@@ -48,24 +41,24 @@ export const SubscribeFooter = () => {
                 <Input
                   type="email"
                   name="email"
-                  placeholder={
-                    getTranslation("your_email_address") || "Your Email Address"
-                  }
-                  className="w-full h-10 md:h-12 pl-10 pr-0 border-border focus-visible:border-none focus-visible:ring-0 focus-visible:outline-none"
+                  placeholder={"Your Email Address"}
+                  className="w-full h-10 pl-10 pr-0 border-border focus-visible:border-none focus-visible:ring-0 focus-visible:outline-none"
                 />
               </div>
               <Button
                 type="submit"
                 disabled={isPending}
-                className="font-medium transition-colors border-0 rounded-none h-10 md:h-12 px-6">
-                <Send className="w-4 h-4" />
+                className="font-medium transition-colors border-0 rounded-none h-10 px-6">
                 {isPending ? (
                   <>
                     <Spinner />
-                    {getTranslation("processing") || "Processing..."}
+                    {"Processing..."}
                   </>
                 ) : (
-                  getTranslation("subscribe") || "Subscribe"
+                  <>
+                    <Send className="w-4 h-4 hidden md:block" />
+                    <span>Subscribe</span>
+                  </>
                 )}
               </Button>
             </form>

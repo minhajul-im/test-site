@@ -3,19 +3,15 @@ import { Skeleton } from "@/components/common/skeleton";
 import type { CategoryType } from "@/type";
 import { Link, useLocation } from "react-router-dom";
 import { slugify } from "@/helper";
-import { useTranslation } from "@/hooks/useTranslation";
 
 export const CategoriesFooter = () => {
   const location = useLocation();
   const { data, isLoading } = useCategories();
   const categories = data?.data as CategoryType[];
-  const { getTranslation } = useTranslation();
 
   return (
     <div>
-      <h4 className="text-white font-bold text-lg mb-4">
-        {getTranslation("shop_by_category") || "Shop by Category"}
-      </h4>
+      <h4 className="text-white font-bold text-lg mb-4">Shop by Category</h4>
       <ul className="space-y-2">
         {isLoading ? (
           Array.from({ length: 7 }).map((_, i) => (

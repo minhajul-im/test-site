@@ -1,5 +1,4 @@
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { SectionTitle } from "@/components/common/section-title";
 import { BreadcrumbWrapper } from "@/components/common/breadcrumb-wrapper";
@@ -9,20 +8,19 @@ import { ProfileSecurity } from "./security";
 
 export const ProfilePage = () => {
   const { data } = useGetUserQuery();
-  const { getTranslation } = useTranslation();
 
   return (
     <>
-      <SeoWrapper title={getTranslation("my_profile") || "My Profile"} />
+      <SeoWrapper title={"My Profile"} />
       <DashboardLayout>
         <section className="space-y-4">
           <div className="mx-4 md:mx-0">
             <BreadcrumbWrapper
               type="dashboard"
-              items={[{ title: getTranslation("my_profile") || "My Profile" }]}
+              items={[{ title: "My Profile" }]}
             />
           </div>
-          <SectionTitle title={getTranslation("my_profile") || "My Profile"} />
+          <SectionTitle title={"My Profile"} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mx-4 md:mx-0">
             <ProfileInfo user={data?.user} />

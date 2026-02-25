@@ -8,7 +8,6 @@ import {
 import { EyeOff, Eye } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "@/hooks/useTranslation";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -38,10 +37,9 @@ export const Password = ({
   onChange,
   ariaInvalid,
 }: Props) => {
-  const { getTranslation } = useTranslation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const labelText = !label ? getTranslation("password") || "Password" : label;
+  const labelText = !label ? "Password" : label;
 
   return (
     <Field>
@@ -53,7 +51,7 @@ export const Password = ({
           <Link
             to="/forgot-password"
             className="ml-auto text-sm underline-offset-4 hover:underline">
-            {getTranslation("forgot_your_password") || "Forgot your password?"}
+            Forgot your password?
           </Link>
         )}
       </div>
@@ -61,11 +59,7 @@ export const Password = ({
         <InputGroupInput
           id={id}
           name={name}
-          placeholder={
-            placeholder ||
-            getTranslation("enter_your_password") ||
-            "Enter your password"
-          }
+          placeholder={placeholder || "Enter your password"}
           disabled={disabled}
           className={cn("pl-3 h-full", className)}
           type={showPassword ? "text" : "password"}

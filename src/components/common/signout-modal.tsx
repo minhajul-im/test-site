@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "../ui/spinner";
-import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   onSignOut: () => void;
@@ -10,7 +9,6 @@ interface Props {
 }
 
 export const SignOutModal = ({ onSignOut, isPending, onHideModal }: Props) => {
-  const { getTranslation } = useTranslation();
   return (
     <div className="flex flex-col items-center gap-6 mt-4">
       <div className="relative">
@@ -42,12 +40,10 @@ export const SignOutModal = ({ onSignOut, isPending, onHideModal }: Props) => {
 
       <div className="text-center space-y-2">
         <h2 className="text-xl font-semibold text-foreground dark:text-gray-200">
-          {getTranslation("sign_out") || "Sign Out"}?
+          Sign Out?
         </h2>
         <p className="text-sm text-muted-foreground dark:text-gray-400">
-          {getTranslation(
-            "are_you_sure_you_want_to_sign_out_of_your_account"
-          ) || "Are you sure you want to sign out of your account?"}
+          Are you sure you want to sign out of your account?
         </p>
       </div>
 
@@ -57,7 +53,7 @@ export const SignOutModal = ({ onSignOut, isPending, onHideModal }: Props) => {
           onClick={onHideModal}
           disabled={isPending}
           className="flex-1">
-          {getTranslation("cancel") || "Cancel"}
+          Cancel
         </Button>
         <Button
           variant="destructive"
@@ -66,10 +62,10 @@ export const SignOutModal = ({ onSignOut, isPending, onHideModal }: Props) => {
           className="flex-1">
           {isPending ? (
             <>
-              <Spinner /> {getTranslation("processing") || "Processing..."}
+              <Spinner /> Processing...
             </>
           ) : (
-            getTranslation("confirm") || "Confirm"
+            "Confirm"
           )}
         </Button>
       </div>

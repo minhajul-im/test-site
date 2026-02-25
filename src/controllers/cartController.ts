@@ -22,7 +22,6 @@ import { useGetCartQuery } from "@/api/queries/useGetCart";
 import { apiErrorHandler } from "@/api/utils/error";
 import { revalidateQueryFn } from "@/lib/query-client";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "@/hooks/useTranslation";
 import type { ItemTrackerType } from "@/hooks/useGtmTracker";
 import { useGtmTracker } from "@/hooks/useGtmTracker";
 
@@ -42,7 +41,6 @@ export const useAddToCart = (
   const dispatch = useDispatch();
   const { mutate } = useAddToCartMutation();
   const { addToCartTracker } = useGtmTracker();
-  const { getTranslation } = useTranslation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
 
   const fnAddToCart = (isCheckout?: boolean) => {
@@ -80,11 +78,7 @@ export const useAddToCart = (
     mutate(formData, {
       onSuccess: (res) => {
         if (res?.result === true) {
-          toast.success(
-            res?.message ||
-              getTranslation("item_added_to_cart") ||
-              "Item added to cart"
-          );
+          toast.success(res?.message || "Item added to cart");
           addToCartTracker(trackerData);
           dispatch(addToCartFn(data));
           stopLoadingFn(item?.id);
@@ -93,11 +87,7 @@ export const useAddToCart = (
             navigate("/checkout");
           }
           if (onShowModal) {
-            onShowModal(
-              "SUCCESS",
-              getTranslation("item_added_to_cart") || "Item added to cart",
-              "w-md"
-            );
+            onShowModal("SUCCESS", "Item added to cart", "w-md");
           }
         } else {
           toast.error(res?.message || "Something went wrong");
@@ -119,7 +109,6 @@ export const useAddToCart = (
 
 export const useRemoveFromCart = (item: ProductType | StateSyncType) => {
   const dispatch = useDispatch();
-  const { getTranslation } = useTranslation();
   const { mutate, isPending } = useRemoveCartMutation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
   const cart = useSelector((state: RootStateType) => state.cart);
@@ -138,18 +127,11 @@ export const useRemoveFromCart = (item: ProductType | StateSyncType) => {
               revalidateQueryFn("get_cart");
               revalidateQueryFn("get_cart_summary");
 
-              toast.success(
-                getTranslation("item_removed_from_cart") ||
-                  "Item removed from cart"
-              );
+              toast.success("Item removed from cart");
 
               stopLoadingFn(item?.id);
             } else {
-              toast.error(
-                res?.message ||
-                  getTranslation("something_went_wrong") ||
-                  "Something went wrong"
-              );
+              toast.error(res?.message || "Something went wrong");
               stopLoadingFn(item?.id);
               return;
             }
@@ -171,7 +153,6 @@ export const useRemoveFromCart = (item: ProductType | StateSyncType) => {
 export const useIncrementCart = (item: ProductType | StateSyncType) => {
   const dispatch = useDispatch();
   const { mutate } = useUpdateCartMutation();
-  const { getTranslation } = useTranslation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
   const cart = useSelector((state: RootStateType) => state.cart);
 
@@ -179,9 +160,7 @@ export const useIncrementCart = (item: ProductType | StateSyncType) => {
     const existingItem = isExistingItem(cart?.items, item as ProductType);
 
     if (!existingItem) {
-      toast.error(
-        getTranslation("item_not_found_in_cart") || "Item not found in cart"
-      );
+      toast.error("Item not found in cart");
       return;
     }
 
@@ -194,20 +173,12 @@ export const useIncrementCart = (item: ProductType | StateSyncType) => {
       onSuccess: (res) => {
         if (res?.result === true) {
           dispatch(incrementFn(existingItem.id as number));
-          toast.success(
-            res?.message ||
-              getTranslation("item_incremented_in_cart") ||
-              "Item incremented in cart"
-          );
+          toast.success(res?.message || "Item incremented in cart");
           revalidateQueryFn("get_cart");
           revalidateQueryFn("get_cart_summary");
           stopLoadingFn(item?.id);
         } else {
-          toast.error(
-            res?.message ||
-              getTranslation("something_went_wrong") ||
-              "Something went wrong"
-          );
+          toast.error(res?.message || "Something went wrong");
           stopLoadingFn(item?.id);
           return;
         }
@@ -227,7 +198,6 @@ export const useIncrementCart = (item: ProductType | StateSyncType) => {
 export const useDecrementCart = (item: ProductType | StateSyncType) => {
   const dispatch = useDispatch();
   const { mutate } = useUpdateCartMutation();
-  const { getTranslation } = useTranslation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
   const cart = useSelector((state: RootStateType) => state.cart);
 
@@ -235,17 +205,12 @@ export const useDecrementCart = (item: ProductType | StateSyncType) => {
     const existingItem = isExistingItem(cart?.items, item as ProductType);
 
     if (!existingItem) {
-      toast.error(
-        getTranslation("item_not_found_in_cart") || "Item not found in cart"
-      );
+      toast.error("Item not found in cart");
       return;
     }
 
     if (existingItem.quantity <= 1) {
-      toast.error(
-        getTranslation("cannot_decrease_quantity_below_1") ||
-          "Cannot decrease quantity below 1"
-      );
+      toast.error("Cannot decrease quantity below 1");
       return;
     }
 
@@ -258,20 +223,12 @@ export const useDecrementCart = (item: ProductType | StateSyncType) => {
       onSuccess: (res) => {
         if (res?.result === true) {
           dispatch(decrementFn(existingItem.id as number));
-          toast.success(
-            res?.message ||
-              getTranslation("item_decremented_in_cart") ||
-              "Item decremented in cart"
-          );
+          toast.success(res?.message || "Item decremented in cart");
           revalidateQueryFn("get_cart");
           revalidateQueryFn("get_cart_summary");
           stopLoadingFn(item?.id);
         } else {
-          toast.error(
-            res?.message ||
-              getTranslation("something_went_wrong") ||
-              "Something went wrong"
-          );
+          toast.error(res?.message || "Something went wrong");
           stopLoadingFn(item?.id);
           return;
         }

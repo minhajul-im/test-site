@@ -3,10 +3,164 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loading...</title>
+    <title>Tsbbazar - Best Online Shopping Store</title>
+    <meta
+      name="description"
+      content="Shop the latest fashion, electronics, beauty, home goods & more at unbeatable prices. ✓ Free shipping ✓ Easy returns ✓ Secure payment" />
+    <meta
+      name="keywords"
+      content="online shopping, e-commerce, buy online, cheap prices, fashion, electronics, free shipping, deals, discounts" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet" />
+    <link rel="canonical" href="https://tsbbazar.com/" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" href="/tsb.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/tsb.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tsbbazar.com/tsb.png" />
+    <meta
+      property="og:title"
+      content="Tsbbazar - Best Online Shopping Store" />
+    <meta
+      name="description"
+      content="Shop the latest fashion, electronics, beauty, home goods & more at unbeatable prices. ✓ Free shipping ✓ Easy returns ✓ Secure payment" />
+    <meta
+      name="keywords"
+      content="online shopping, e-commerce, buy online, cheap prices, fashion, electronics, free shipping, deals, discounts" />
+    <meta
+      property="og:image"
+      content="https://tsbbazar.com/tsb.png" />
+    <meta property="og:site_name" content="Tsbbazar" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://tsbbazar.com/" />
+    <meta
+      name="twitter:title"
+      content="Tsbbazar - Best Online Shopping Store" />
+    <meta
+      name="description"
+      content="Shop the latest fashion, electronics, beauty, home goods & more at unbeatable prices. ✓ Free shipping ✓ Easy returns ✓ Secure payment" />
+    <meta
+      name="keywords"
+      content="online shopping, e-commerce, buy online, cheap prices, fashion, electronics, free shipping, deals, discounts" />
+    <meta
+      name="twitter:image"
+      content="https://tsbbazar.com/tsb.png" />
+
+    <meta name="robots" content="index, follow" />
+
+    <script>
+      (function () {
+        import("https://esm.sh/isbot@5").then((module) => {
+          const isBot = module.isbot(navigator.userAgent);
+
+          if (!isBot) return;
+
+          const BASE_URL = "https://backend.tsbbazar.com";
+          const IMAGE_URL = `${BASE_URL}/public/`;
+          const BACKEND_URL = `${BASE_URL}/api/v2`;
+
+          const setMetaProperty = (property, content) => {
+            if (!content) return;
+            let tag = document.querySelector(`meta[property="${property}"]`);
+            if (!tag) {
+              tag = document.createElement("meta");
+              tag.setAttribute("property", property);
+              document.head.appendChild(tag);
+            }
+            tag.setAttribute("content", content);
+          };
+
+          const setMetaName = (name, content) => {
+            if (!content) return;
+            let tag = document.querySelector(`meta[name="${name}"]`);
+            if (!tag) {
+              tag = document.createElement("meta");
+              tag.setAttribute("name", name);
+              document.head.appendChild(tag);
+            }
+            tag.setAttribute("content", content);
+          };
+
+          fetch(`${BACKEND_URL}/metadata`)
+            .then((response) =>
+              response.ok ? response.json() : Promise.reject()
+            )
+            .then((cfg) => {
+              if (!cfg || !cfg.data) return;
+              const siteConfig = cfg?.data || {};
+
+              const config = {
+                name: `${siteConfig?.name} | ${siteConfig?.motto}` || "",
+                favicon: `${IMAGE_URL}${siteConfig?.favicon}` || "",
+                logo: `${IMAGE_URL}${siteConfig?.logo}` || "",
+                description: siteConfig?.description || "",
+                keywords: siteConfig?.keywords || "",
+                metaImage: siteConfig?.meta_image_url
+                  ? `${IMAGE_URL}${siteConfig?.meta_image_url}`
+                  : `${IMAGE_URL}${siteConfig?.logo}`,
+              };
+
+              document.title = config?.name;
+              setMetaName("description", config?.description);
+              setMetaName("keywords", config?.keywords);
+              setMetaProperty("og:title", config?.name);
+              setMetaProperty("og:description", config?.description);
+              setMetaProperty("og:image", config?.metaImage);
+              setMetaProperty("og:url", window.location.href);
+              setMetaProperty("og:site_name", config?.name);
+
+              if (
+                window.location.pathname.includes("/products/") &&
+                window.location.pathname.split("/").length >= 3
+              ) {
+                const productId = window.location.pathname.split("/")[2];
+                fetch(`${BACKEND_URL}/product-metadata/${productId}`)
+                  .then((response) =>
+                    response?.ok ? response.json() : Promise.reject()
+                  )
+                  .then((productData) => {
+                    if (!productData || !productData?.data) return;
+
+                    const product = productData?.data || {};
+                    document.title = product?.meta_title || config?.name;
+                    setMetaName(
+                      "description",
+                      product?.meta_description || config?.description
+                    );
+                    setMetaProperty(
+                      "og:title",
+                      product?.meta_title || config?.name
+                    );
+                    setMetaProperty(
+                      "og:description",
+                      product?.description || config?.description
+                    );
+                    setMetaProperty(
+                      "og:image",
+                      product?.image
+                        ? `${IMAGE_URL}/${product?.image}`
+                        : config?.metaImage
+                    );
+                  })
+                  .catch(() => {});
+              }
+            })
+            .catch(() => {});
+        });
+      })();
+    </script>
   </head>
   <body>
-    <main id="root" />
+    <main id="root"></main>
+    <div id="modal"></div>
     <script type="module" src="/src/app.tsx"></script>
   </body>
 </html>

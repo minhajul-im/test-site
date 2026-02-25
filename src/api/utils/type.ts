@@ -1,4 +1,3 @@
-import type { LanguageType } from "@/redux/slice/languageSlice";
 import type { UserType } from "@/type";
 
 export interface MutationType {
@@ -22,7 +21,6 @@ export interface QueryType {
     data?: unknown;
     meta?: unknown;
     google_client_id?: string;
-    languages?: { data: LanguageType[] };
   };
   error: unknown;
   isLoading: boolean;

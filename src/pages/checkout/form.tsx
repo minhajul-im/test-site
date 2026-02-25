@@ -5,7 +5,6 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
-import { useTranslation } from "@/hooks/useTranslation";
 
 export type InfoType = {
   name: string;
@@ -18,8 +17,6 @@ interface Props {
   setInfo: (info: InfoType) => void;
 }
 export const CheckoutForm = ({ info, setInfo }: Props) => {
-  const { getTranslation } = useTranslation();
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInfo({ ...info, [name]: value });
@@ -28,7 +25,7 @@ export const CheckoutForm = ({ info, setInfo }: Props) => {
   return (
     <div className="space-y-3 md:space-y-4">
       <div className="space-y-1 md:space-y-2">
-        <Label htmlFor="name">{getTranslation("name") || "Name"} *</Label>
+        <Label htmlFor="name">Name *</Label>
         <InputGroup className="h-9 md:h-10">
           <InputGroupAddon>
             <User />
@@ -38,16 +35,14 @@ export const CheckoutForm = ({ info, setInfo }: Props) => {
             id="name"
             name="name"
             required
-            placeholder={
-              getTranslation("enter_your_full_name") || "Enter your full name"
-            }
+            placeholder={"Enter your full name"}
             value={info.name}
             onChange={handleChange}
           />
         </InputGroup>
       </div>
       <div className="space-y-1 md:space-y-2">
-        <Label htmlFor="contact">{getTranslation("phone") || "Phone"} *</Label>
+        <Label htmlFor="contact">Phone *</Label>
         <InputGroup className="h-9 md:h-10">
           <InputGroupAddon>
             <Phone />
@@ -57,19 +52,14 @@ export const CheckoutForm = ({ info, setInfo }: Props) => {
             id="phone"
             name="phone"
             required
-            placeholder={
-              getTranslation("enter_your_phone_number") ||
-              "Enter your phone number"
-            }
+            placeholder={"Enter your phone number"}
             value={info.phone}
             onChange={handleChange}
           />
         </InputGroup>
       </div>
       <div className="space-y-1 md:space-y-2">
-        <Label htmlFor="address">
-          {getTranslation("full_address") || "Full Address"} *
-        </Label>
+        <Label htmlFor="address">Full Address *</Label>
         <InputGroup className="h-9 md:h-10">
           <InputGroupAddon>
             <MapPin />
@@ -79,17 +69,14 @@ export const CheckoutForm = ({ info, setInfo }: Props) => {
             id="address"
             name="address"
             required
-            placeholder={
-              getTranslation("enter_your_full_address") ||
-              "Enter your full address"
-            }
+            placeholder={"Enter your full address"}
             value={info.address}
             onChange={handleChange}
           />
         </InputGroup>
       </div>
       <div className="space-y-1 md:space-y-2">
-        <Label htmlFor="notes">{getTranslation("notes") || "Notes"}</Label>
+        <Label htmlFor="notes">Notes</Label>
         <InputGroup className="h-9 md:h-10">
           <InputGroupAddon>
             <MessageSquare />
@@ -98,10 +85,7 @@ export const CheckoutForm = ({ info, setInfo }: Props) => {
             type="text"
             id="notes"
             name="notes"
-            placeholder={
-              getTranslation("enter_any_additional_notes_or_comments") ||
-              "Enter any additional notes or comments"
-            }
+            placeholder={"Enter any additional notes or comments"}
             value={info.notes}
             onChange={handleChange}
           />

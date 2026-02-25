@@ -1,40 +1,40 @@
-import type { ProductDetailsType } from "@/type";
-import { cn } from "@/lib/utils";
 import { useEffect } from "react";
+import { Minus, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   findVariantByColorAndSize,
   getCurrentStock,
   getUniqueColors,
   getUniqueSizes,
 } from "@/helper";
-import { Button } from "../ui/button";
-import { Minus, Plus } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
+import { StockVisibilityStateEnum, type ProductDetailsType } from "@/type";
 
 interface Props {
   quantity: number;
   product: ProductDetailsType;
   selectedColor: string | null;
   selectedSize: string | null;
-  setSelectedColor: (color: string) => void;
-  setSelectedSize: (size: string) => void;
+  setSelectedColor: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedSize: React.Dispatch<React.SetStateAction<string | null>>;
   setQuantity: (quantity: number) => void;
   setDisplayPrice: (price: string) => void;
+  setDisplayDiscountPrice: (price: string) => void;
   onVariantImageChange?: (image: string) => void;
 }
 
 export const VariantCard = ({
-  product,
   quantity,
-  setQuantity,
+  product,
   selectedColor,
   selectedSize,
   setSelectedColor,
   setSelectedSize,
+  setQuantity,
   setDisplayPrice,
   onVariantImageChange,
+  setDisplayDiscountPrice,
 }: Props) => {
-  const { getTranslation } = useTranslation();
   const handleQuantityChange = (newQuantity: number): void => {
     const currentStock = getCurrentStock(product, selectedColor, selectedSize);
     if (newQuantity >= 1 && newQuantity <= currentStock?.stock) {
@@ -73,12 +73,14 @@ export const VariantCard = ({
       const variant = findVariantByColorAndSize(product, selectedColor, size);
       if (variant) {
         setDisplayPrice(variant?.variant_price_string);
+        setDisplayDiscountPrice(variant?.variant_price_without_discount);
         onVariantImageChange?.(variant?.variant_image);
       }
     } else {
       const sizeVariant = product?.variants?.find((v) => v.size_name === size);
       if (sizeVariant) {
         setDisplayPrice(sizeVariant?.variant_price_string);
+        setDisplayDiscountPrice(sizeVariant?.variant_price_without_discount);
         onVariantImageChange?.(sizeVariant?.variant_image);
       }
     }
@@ -91,6 +93,10 @@ export const VariantCard = ({
       setSelectedSize(firstVariant?.size_name);
       setDisplayPrice(firstVariant?.variant_price_string);
       onVariantImageChange?.(firstVariant?.variant_image);
+      setDisplayDiscountPrice(firstVariant?.variant_price_without_discount);
+    } else{
+      setDisplayPrice(product?.main_price);
+      setDisplayDiscountPrice(product?.stroked_price);
     }
   }, [
     product,
@@ -98,6 +104,7 @@ export const VariantCard = ({
     setDisplayPrice,
     setSelectedColor,
     setSelectedSize,
+    setDisplayDiscountPrice,
   ]);
 
   useEffect(() => {
@@ -111,46 +118,12 @@ export const VariantCard = ({
 
   return (
     <>
-      {/* {(selectedColor || selectedSize) && (
-        <div className="flex items-center gap-4 p-2 md:p-3 bg-muted/50 rounded">
-          <span className="text-sm font-medium">Selected:</span>
-          {selectedColor && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Color:</span>
-              <div className="flex items-center gap-1">
-                <div
-                  className="w-4 h-4 rounded-full"
-                  style={{
-                    backgroundColor: product?.variants?.find(
-                      (v) => v?.color_name === selectedColor
-                    )?.color_code,
-                    borderColor: product?.variants?.find(
-                      (v) => v?.color_name === selectedColor
-                    )?.color_code,
-                    borderWidth: 2,
-                  }}
-                />
-                <span className="text-xs font-medium">{selectedColor}</span>
-              </div>
-            </div>
-          )}
-          {selectedSize && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Size:</span>
-              <span className="text-xs font-medium">{selectedSize}</span>
-            </div>
-          )}
-        </div>
-      )} */}
-
       {product?.variants &&
         product?.variants?.length > 0 &&
         getUniqueColors(product).length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">
-              {getTranslation("colors") || "Colors"}:
-            </span>
-            <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Colors:</span>
+            <div className="flex items-center flex-wrap gap-2">
               {getUniqueColors(product)?.map((color) => {
                 return (
                   <button
@@ -179,16 +152,13 @@ export const VariantCard = ({
       {product?.variants &&
         product?.variants?.length > 0 &&
         getUniqueSizes(product)?.length > 0 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">
-              {getTranslation("sizes") || "Sizes"}:
-            </span>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm font-medium">Size:</span>
+            <div className="flex items-center flex-wrap gap-2">
               {getUniqueSizes(product)?.map((size) => (
                 <Button
                   key={size}
                   variant={selectedSize === size ? "default" : "outline"}
-                  size="icon-sm"
                   onClick={() => handleSizeSelect(size)}
                   className={cn(
                     "flex items-center justify-center transition-all",
@@ -204,45 +174,54 @@ export const VariantCard = ({
           </div>
         )}
 
-      <div className="flex items-center gap-2">
-        {(() => {
-          const currentStock = getCurrentStock(
-            product,
-            selectedColor,
-            selectedSize
-          );
-          const isOutOfStock = currentStock?.stock === 0;
+      {product?.stock_visibility_state !== StockVisibilityStateEnum.HIDE ? (
+        <div className="flex items-center gap-2">
+          {(() => {
+            const getStockText = () => {
+              const currentStock = getCurrentStock(
+                product,
+                selectedColor,
+                selectedSize
+              );
+              const isOutOfStock = currentStock?.stock === 0;
+              if (isOutOfStock) {
+                return "Out of stock";
+              }
+              if (
+                product?.stock_visibility_state ===
+                StockVisibilityStateEnum.TEXT
+              ) {
+                return "In stock";
+              }
+              return `${currentStock?.stock} ${currentStock?.unit}`;
+            };
 
-          return (
-            <div className="flex items-center gap-2">
-              <div
-                className={cn(
-                  "w-3 h-3 rounded-full",
-                  isOutOfStock ? "bg-red-500" : "bg-green-500"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-xs md:text-sm font-medium",
-                  isOutOfStock && "text-red-600",
-                  !isOutOfStock && "text-green-600"
-                )}>
-                {isOutOfStock
-                  ? getTranslation("out_of_stock") || "Out of stock"
-                  : !isOutOfStock &&
-                    `${currentStock?.stock} ${currentStock?.unit} ${
-                      getTranslation("in_stock") || "in stock"
-                    }`}
-              </span>
-            </div>
-          );
-        })()}
-      </div>
+            return (
+              <div className="flex items-center gap-2">
+                <div
+                  className={cn(
+                    "w-3 h-3 rounded-full",
+                    getStockText() === "Out of stock"
+                      ? "bg-red-500"
+                      : "bg-green-500"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "text-xs md:text-sm font-medium",
+                    getStockText() === "Out of stock" && "text-red-600",
+                    getStockText() !== "Out of stock" && "text-green-600"
+                  )}>
+                  {getStockText()}
+                </span>
+              </div>
+            );
+          })()}
+        </div>
+      ) : null}
 
       <div className="flex items-center gap-2">
-        <label className="text-sm font-medium">
-          {getTranslation("quantity") || "Quantity"}:
-        </label>
+        <label className="text-sm font-medium">Quantity:</label>
         <div className="flex items-center gap-3 my-1 md:my-0">
           {(() => {
             const currentStock = getCurrentStock(

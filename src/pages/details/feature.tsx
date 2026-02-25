@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { useTranslation } from "@/hooks/useTranslation";
+
 import { DollarSign, Truck, CreditCard, CheckCircle } from "lucide-react";
 
 interface FeatureCard {
@@ -10,39 +10,30 @@ interface FeatureCard {
 }
 
 export const FeatureCards = () => {
-  const { getTranslation } = useTranslation();
   const featureData: FeatureCard[] = [
     {
       id: "money-back",
       icon: DollarSign,
-      title: getTranslation("money_back_guaranty") || "Money back guaranty!",
-      description:
-        getTranslation("we_offer_competitive_price") ||
-        "We Offer competitive price.",
+      title: "Money back guaranty!",
+      description: "We Offer competitive price.",
     },
     {
       id: "fast-delivery",
       icon: Truck,
-      title: getTranslation("fast_delivery") || "Fast Delivery",
-      description:
-        getTranslation("faster_delivery_on_selected_items") ||
-        "Faster delivery on selected items.",
+      title: "Fast Delivery",
+      description: "Faster delivery on selected items.",
     },
     {
       id: "safe-payments",
       icon: CreditCard,
-      title: getTranslation("safe_payments") || "Safe payments",
-      description:
-        getTranslation("safe_payments_method") || "Safe payments method",
+      title: "Safe payments",
+      description: "Safe payments method",
     },
     {
       id: "authentic-products",
       icon: CheckCircle,
-      title:
-        getTranslation("100_authentic_products") || "100% Authentic products",
-      description:
-        getTranslation("we_provide_authentic_products") ||
-        "We provide authentic products.",
+      title: "100% Authentic products",
+      description: "We provide authentic products.",
     },
   ];
   return (

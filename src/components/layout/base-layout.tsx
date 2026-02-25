@@ -10,6 +10,8 @@ import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { Footer } from "./footer";
 import nprogress from "nprogress";
+import "nprogress/nprogress.css";
+nprogress.configure({ showSpinner: false });
 
 interface Props {
   children: React.ReactNode;
@@ -51,7 +53,7 @@ const BaseLayoutContent = ({
   );
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <section className="min-h-screen flex flex-col">
       {headerContent}
 
       <section
@@ -66,7 +68,7 @@ const BaseLayoutContent = ({
       </footer>
 
       <ScrollToTop />
-    </main>
+    </section>
   );
 };
 

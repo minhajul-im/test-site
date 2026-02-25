@@ -6,6 +6,9 @@ import type { ProductDetailsType, ProductType } from "@/type";
 import { WishlistButton } from "./wishlist-button";
 import { Discount } from "./discount";
 import { getImageUrl } from "@/helper";
+import { OptimizedImage } from "./optimized-image";
+import { useModal } from "@/hooks/useModal";
+import { ModalWrapper } from "./modal-wrapper";
 
 interface Props {
   className?: string;
@@ -20,9 +23,11 @@ export const ImageGallery = ({ img, product, className }: Props) => {
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
   const [thumbnailScrollPosition, setThumbnailScrollPosition] = useState(0);
   const [visibleThumbnails, setVisibleThumbnails] = useState(3);
+  const { modalRef, modalConfig, onHideModal, onShowModal } = useModal();
 
   const images = useMemo(() => {
-    return product?.photos?.map((photo) => getImageUrl(photo?.path)) || [];
+    const imageUrls = product?.photos?.map((photo) => getImageUrl(photo?.path)) || [];
+    return [...new Set(imageUrls)];
   }, [product?.photos]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -82,136 +87,159 @@ export const ImageGallery = ({ img, product, className }: Props) => {
   }, [img, images]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="space-y-4">
-      <div className="flex gap-1 md:gap-4">
-        {images?.length > 1 && (
-          <div className="relative flex flex-col gap-2">
-            {images?.length > visibleThumbnails &&
-              thumbnailScrollPosition > 0 && (
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={scrollThumbnailsLeft}
-                  className="absolute cursor-pointer -top-2 left-1/2 -translate-x-1/2 z-10 bg-white/90 border border-primary/20 hover:bg-white text-primary p-1 rounded-full shadow-lg">
-                  <ChevronLeft size={16} className="rotate-90" />
-                </motion.button>
-              )}
-
-            {images?.length > visibleThumbnails &&
-              thumbnailScrollPosition < images?.length - visibleThumbnails && (
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={scrollThumbnailsRight}
-                  className="absolute cursor-pointer -bottom-2 left-1/2 -translate-x-1/2 z-10 bg-white/90 border border-primary/20 hover:bg-white text-primary p-1 rounded-full shadow-lg">
-                  <ChevronRight size={16} className="rotate-90" />
-                </motion.button>
-              )}
-
-            <div
-              className={`flex flex-col gap-2 overflow-hidden ${
-                className ? className : "h-auto max-h-[280px] md:max-h-[90vh]"
-              } select-none`}>
-              <div
-                className="flex flex-col gap-2 transition-transform duration-300 ease-in-out"
-                style={{
-                  transform: `translateY(-${
-                    thumbnailScrollPosition * (80 + 8)
-                  }px)`,
-                }}>
-                {images?.map((image, index) => (
+    <>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="space-y-4">
+        <div className="flex gap-1 md:gap-4">
+          {images?.length > 1 && (
+            <div className="relative flex flex-col gap-2">
+              {images?.length > visibleThumbnails &&
+                thumbnailScrollPosition > 0 && (
                   <motion.button
-                    key={index}
-                    onClick={() => {
-                      setSelectedImage(index);
-                      setImgUrl(image);
-                    }}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`relative size-16 cursor-pointer md:size-20 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 select-none ${
-                      selectedImage === index
-                        ? "border-primary"
-                        : "border-accent/20 hover:border-accent/50"
-                    }`}>
-                    <img
-                      src={image || "/placeholder.svg"}
-                      alt={`Image ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    {selectedImage === index && (
-                      <motion.div
-                        layoutId="selectedThumbnail"
-                        className="absolute inset-0 border-2 border-primary rounded-lg"
-                      />
-                    )}
+                    onClick={scrollThumbnailsLeft}
+                    className="absolute cursor-pointer -top-2 left-1/2 -translate-x-1/2 z-10 bg-white/90 border border-primary/20 hover:bg-white text-primary p-1 rounded-full shadow-lg">
+                    <ChevronLeft size={16} className="rotate-90" />
                   </motion.button>
-                ))}
+                )}
+
+              {images?.length > visibleThumbnails &&
+                thumbnailScrollPosition <
+                  images?.length - visibleThumbnails && (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={scrollThumbnailsRight}
+                    className="absolute cursor-pointer -bottom-2 left-1/2 -translate-x-1/2 z-10 bg-white/90 border border-primary/20 hover:bg-white text-primary p-1 rounded-full shadow-lg">
+                    <ChevronRight size={16} className="rotate-90" />
+                  </motion.button>
+                )}
+
+              <div
+                className={`flex flex-col gap-2 overflow-hidden ${
+                  className ? className : "h-auto max-h-[280px] md:max-h-[90vh]"
+                } select-none`}>
+                <div
+                  className="flex flex-col gap-2 transition-transform duration-300 ease-in-out"
+                  style={{
+                    transform: `translateY(-${
+                      thumbnailScrollPosition * (80 + 8)
+                    }px)`,
+                  }}>
+                  {images?.map((image, index) => (
+                    <motion.button
+                      key={index}
+                      onClick={() => {
+                        setSelectedImage(index);
+                        setImgUrl(image);
+                      }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`relative size-16 cursor-pointer md:size-20 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 select-none ${
+                        selectedImage === index
+                          ? "border-primary"
+                          : "border-accent/20 hover:border-accent/50"
+                      }`}>
+                      <OptimizedImage
+                        src={image || ""}
+                        alt={`Image ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      {selectedImage === index && (
+                        <motion.div
+                          layoutId="selectedThumbnail"
+                          className="absolute inset-0 border-2 border-primary rounded-lg"
+                        />
+                      )}
+                    </motion.button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-
-        <div
-          className="flex-1 relative w-full aspect-square border border-primary/10 select-none bg-primary/5 rounded-2xl overflow-hidden group cursor-zoom-in"
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsZoomed(true)}
-          onMouseLeave={() => setIsZoomed(false)}>
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={selectedImage}
-              src={imgUrl || "/placeholder.svg"}
-              alt="Image Gallery"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: 1,
-                scale: isZoomed ? 2 : 1,
-                transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-              }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="w-full h-full object-cover select-none"
-            />
-          </AnimatePresence>
-          <WishlistButton
-            product={product as unknown as ProductType}
-            size="DEFAULT"
-          />
-          <Discount product={product} type="DETAILS" />
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
-            className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-lg flex items-center gap-2">
-            <ZoomIn size={18} />
-          </motion.div>
-
-          {images?.length > 1 && (
-            <>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={prevImage}
-                className="absolute left-1 md:left-4 top-1/2 -translate-y-1/2 hover:border-primary/10 border border-primary/40 text-primary p-1.5 md:p-2 rounded-full opacity-0 group-hover:opacity-100 bg-white/90 select-none">
-                <ChevronLeft size={24} />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={nextImage}
-                className="absolute right-1 md:right-4 top-1/2 -translate-y-1/2 hover:border-primary/10 border border-primary/40 text-primary p-1.5 md:p-2 rounded-full opacity-0 group-hover:opacity-100 bg-white/90 select-none">
-                <ChevronRight size={24} />
-              </motion.button>
-            </>
           )}
 
-          <div className="absolute bottom-2 md:bottom-4 left-2 md:left-4 bg-black/50 text-white px-2 py-0.5 rounded-full text-sm select-none">
-            {selectedImage + 1} / {images?.length}
+          <div
+            className="flex-1 relative w-full aspect-[16/17] border border-primary/10 select-none bg-primary/5 rounded-2xl overflow-hidden group cursor-zoom-in"
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsZoomed(true)}
+            onMouseLeave={() => setIsZoomed(false)}>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={selectedImage}
+                src={imgUrl || "/placeholder.svg"}
+                onError={() => setImgUrl("/placeholder.svg")}
+                alt="Image Gallery"
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                  scale: isZoomed ? 2 : 1,
+                  transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="w-full h-full object-cover select-none"
+              />
+            </AnimatePresence>
+            <WishlistButton
+              product={product as unknown as ProductType}
+              size="DEFAULT"
+            />
+            <Discount product={product} type="DETAILS" />
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              className="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-lg flex items-center gap-2">
+              <ZoomIn size={18} />
+            </motion.div>
+
+            {images?.length > 1 && (
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={prevImage}
+                  className="absolute left-1 md:left-2 top-1/2 -translate-y-1/2 hover:border-primary/10 border border-primary/40 text-primary p-1.5 md:p-2 rounded-full opacity-0 group-hover:opacity-100 bg-white/90 select-none">
+                  <ChevronLeft size={20} />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={nextImage}
+                  className="absolute right-1 md:right-2 top-1/2 -translate-y-1/2 hover:border-primary/10 border border-primary/40 text-primary p-1.5 md:p-2 rounded-full opacity-0 group-hover:opacity-100 bg-white/90 select-none">
+                  <ChevronRight size={20} />
+                </motion.button>
+              </>
+            )}
+
+            <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-0.5 rounded-full text-sm select-none">
+              {selectedImage + 1} / {images?.length}
+            </div>
+            <motion.button
+              onClick={() =>
+                onShowModal("IMAGES", product?.name, "max-w-4xl", imgUrl)
+              }
+              className="absolute cursor-pointer bottom-2 right-2 bg-black/50 text-white p-2 rounded-full text-sm select-none motion.button">
+              <ZoomIn size={18} />
+            </motion.button>
           </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      <ModalWrapper
+        ref={modalRef}
+        title={modalConfig.title}
+        width={modalConfig.size}
+        onHide={onHideModal}>
+        {modalConfig.type === "IMAGES" && (
+          <div className="aspect-[16/21] md:aspect-[16/19] relative">
+            <OptimizedImage src={imgUrl as string} className="absolute" />
+          </div>
+        )}
+      </ModalWrapper>
+    </>
   );
 };

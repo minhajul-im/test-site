@@ -3,12 +3,10 @@ import {
   HomeSectionTitleSkeleton,
 } from "@/components/common/section-title";
 import type { ProductType } from "@/type";
-import { useTranslation } from "@/hooks/useTranslation";
 import { CardLayout } from "@/components/common/card-layout";
 import { ProductCard, ProductCardSkeleton } from "@/components/card/product";
-import { useIsMobile, useIsTablet } from "@/hooks/useMobile";
+import { useInitialLength, useIsMobile } from "@/hooks/useMobile";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useState } from "react";
 
@@ -20,11 +18,9 @@ interface Props {
 
 export const ProductSection = ({ isLoading, products, title }: Props) => {
   const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
-  const { getTranslation } = useTranslation();
-  const [showAll, setShowAll] = useState(false);
+  const initialLength = useInitialLength();
 
-  const initialLength = isMobile ? 2 : isTablet ? 5 : 6;
+  const [showAll, setShowAll] = useState(false);
 
   const handleViewAll = () => {
     setShowAll(true);
@@ -48,7 +44,7 @@ export const ProductSection = ({ isLoading, products, title }: Props) => {
         </div>
 
         <CardLayout>
-          {Array.from({ length: 6 }).map((_, i) => (
+          {Array.from({ length: initialLength }).map((_, i) => (
             <ProductCardSkeleton key={i} />
           ))}
         </CardLayout>
@@ -64,13 +60,13 @@ export const ProductSection = ({ isLoading, products, title }: Props) => {
       </CardLayout>
       <div className="flex justify-center items-center mt-4">
         {!showAll && products && products?.length > initialLength ? (
-          <Button onClick={handleViewAll} className={cn("rounded-none")}>
-            {getTranslation("view_all") || "View All"}
+          <Button onClick={handleViewAll} size={isMobile ? "sm" : "default"}>
+            View All
             <ArrowDown className="w-6 h-6 font-bold group-hover:translate-x-1 transition-transform" />
           </Button>
         ) : showAll && products && products?.length > initialLength ? (
-          <Button onClick={handleSeeLess} className={cn("rounded-none")}>
-            {getTranslation("see_less") || "See Less"}
+          <Button onClick={handleSeeLess} size={isMobile ? "sm" : "default"}>
+            See Less
             <ArrowUp className="w-6 h-6 font-bold group-hover:-translate-x-1 transition-transform" />
           </Button>
         ) : null}

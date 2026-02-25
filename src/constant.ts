@@ -1,5 +1,4 @@
-// JUST HAVE TO CHANGE IT
-export const BACKEND_URL = `https://backend.kidsya.com`;
+export const BACKEND_URL = `https://backend.tsbbazar.com`;
 
 /** DON'T TOUCH HERE */
 export const BASE_URL = `${BACKEND_URL}/api/v2`;

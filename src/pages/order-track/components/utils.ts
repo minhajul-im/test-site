@@ -29,6 +29,7 @@ export interface OrderDataType {
   order_items: OrderItemType[];
   shipping_cost: string;
   grand_total: string;
+  sub_total: string;
   payment_method: string;
   shipping_address: {
     name: string;
@@ -123,6 +124,7 @@ export const transformApiResponseToOrderData = (
     order_date: apiData?.date,
     order_status,
     order_items,
+    sub_total: apiData?.subtotal || "",
     shipping_cost: apiData?.shipping_cost || "",
     grand_total: apiData?.grand_total || "",
     payment_method: apiData?.payment_type,

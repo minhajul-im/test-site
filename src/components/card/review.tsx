@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Star } from "lucide-react";
 import type { ProductDetailsType, ProductType } from "@/type";
-import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   starSize?: string;
@@ -9,8 +8,6 @@ interface Props {
 }
 
 export const Review = ({ product, starSize = "w-4 h-4" }: Props) => {
-  const { getTranslation } = useTranslation();
-
   return (
     <div className="flex items-center gap-2">
       <div className="flex items-center">
@@ -44,7 +41,7 @@ export const Review = ({ product, starSize = "w-4 h-4" }: Props) => {
         })}
       </div>
       <span className="text-sm text-muted-foreground">
-        ({product?.rating_count || 0} {getTranslation("reviews") || "reviews"})
+        ({product?.rating_count || 0} {"reviews"})
       </span>
     </div>
   );

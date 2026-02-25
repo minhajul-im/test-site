@@ -1,4 +1,5 @@
 import { useGetCustomPage } from "@/api/queries/usePolicy";
+import { NoDataFound } from "@/components/common/no-data-found";
 import { SectionTitle } from "@/components/common/section-title";
 import { SeoWrapper } from "@/components/common/seo-wrapper";
 import { Skeleton } from "@/components/common/skeleton";
@@ -38,12 +39,12 @@ export const PolicyPage = () => {
             <article>
               <SectionTitle title={info?.title || `Policy ${key}`} />
               <div
-                className="prose prose-sm max-w-none"
+                className=""
                 dangerouslySetInnerHTML={{ __html: info?.content || "" }}
               />
             </article>
           ) : (
-            <div> No content found</div>
+            <NoDataFound title={"No policy found"} />
           )}
         </div>
       </BaseLayout>

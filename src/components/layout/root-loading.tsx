@@ -1,28 +1,58 @@
+import { useInitialLength } from "@/hooks/useMobile";
+import { ProductCardSkeleton } from "../card/product";
+import { CardLayout } from "../common/card-layout";
+import { HomeSectionTitleSkeleton } from "../common/section-title";
 import { Skeleton } from "../common/skeleton";
-import { Input } from "../ui/input";
+
+const SectionSkeleton = () => {
+  const initialLength = useInitialLength();
+
+  return (
+    <div className="mb-16 md:mb-20">
+      <div className="my-6">
+        <HomeSectionTitleSkeleton />
+      </div>
+
+      <CardLayout>
+        {Array.from({ length: initialLength }).map((_, i) => (
+          <ProductCardSkeleton key={i} />
+        ))}
+      </CardLayout>
+    </div>
+  );
+};
+
+const SectionPromotion = () => {
+  return (
+    <div className="w-full mb-16 px-2 md:px-0">
+      <div className="mb-6">
+        <HomeSectionTitleSkeleton />
+      </div>
+      <Skeleton className="w-full aspect-[16/5]" />
+    </div>
+  );
+};
 
 export const RootPageLoading = () => {
   return (
     <main className="min-h-screen flex flex-col">
-      <header className="h-16 container mx-auto flex items-center justify-center w-full px-1 md:px-0">
+      <header className="h-16 container mx-auto flex items-center w-full px-1 md:px-0 justify-between">
         <Skeleton className="w-40 h-10" />
-
+        {/* // logo */}
         <div className="w-full hidden md:block max-w-xl mx-auto relative">
-          <div className="relative">
-            <Input
-              type="text"
-              placeholder="Search for Products..."
-              className="pl-3 pr-9 py-1.5 h-10 md:h-11 text-base rounded-md focus-visible:ring-offset-0 w-full bg-background"
-            />
-          </div>
+          <Skeleton className="h-10 text-base rounded-md" />
         </div>
-        <div className="flex items-center gap-4">
-          {Array.from({ length: 4 }).map((_, index) => (
+
+        {/* // input */}
+        <div className="flex items-center gap-4 md:gap-6">
+          <Skeleton className="w-28 h-8 rounded hidden md:block" />
+          {Array.from({ length: 3 }).map((_, index) => (
             <Skeleton key={index} className="w-8 h-8 rounded" />
           ))}
         </div>
       </header>
-      <nav className="hidden md:block relative border border-border">
+      {/* // action */}
+      <div className="hidden md:block relative border border-border">
         <div className="container mx-auto">
           <div className="flex items-center gap-2 justify-center py-1">
             {Array.from({ length: 10 }).map((_, index) => (
@@ -30,15 +60,15 @@ export const RootPageLoading = () => {
             ))}
           </div>
         </div>
-      </nav>
-
-      <section className={"container md:mx-auto"}>
+      </div>
+      {/* // banner */}
+      <section className="container md:mx-auto">
         <div className="w-full mt-2 px-2 md:px-0 mb-4">
           <div className="aspect-[16/5] relative">
             <Skeleton className="w-full h-full absolute" />
           </div>
         </div>
-
+        {/* // category menu */}
         <div className="w-full py-10 md:py-16">
           <div className="hidden md:flex gap-2 overflow-hidden">
             {Array.from({ length: 10 }).map((_, index) => (
@@ -61,7 +91,7 @@ export const RootPageLoading = () => {
             ))}
           </div>
         </div>
-
+        {/* // trusted badge */}
         <div className="container mx-auto hidden md:block mb-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-5">
             {Array.from({ length: 5 }).map((_, index) => (
@@ -79,194 +109,48 @@ export const RootPageLoading = () => {
             ))}
           </div>
         </div>
-
-        <div className="mb-10 md:mb-20 container mx-auto">
-          <div className="mb-6">
-            <Skeleton className="h-8 w-40 rounded" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="group w-[170px] md:w-[237px] relative overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300">
-                <div className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm">
-                  <Skeleton className="h-4 w-4 rounded-full" />
-                </div>
-                <div className="absolute left-2 top-2 z-10">
-                  <Skeleton className="h-5 w-8 rounded-full" />
-                </div>
-                <div className="relative aspect-[16/12] overflow-hidden bg-muted">
-                  <Skeleton className="h-full w-full" />
-                </div>
-                <div className="p-3">
-                  <div className="mb-2 flex items-center gap-1">
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Skeleton key={i} className="h-4 w-4" />
-                      ))}
-                    </div>
-                    <Skeleton className="h-3 w-8" />
-                  </div>
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <div className="mb-2 flex items-center gap-2">
-                    <Skeleton className="h-6 w-16" />
-                    <Skeleton className="h-4 w-12" />
-                  </div>
-                  <div className="flex gap-2">
-                    <Skeleton className="flex-1 h-8" />
-                    <Skeleton className="flex-1 h-8" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full mb-16 px-2 md:px-0">
-          <Skeleton className="w-full aspect-[16/5]" />
-        </div>
-
-        <div className="mb-10 md:mb-20 container mx-auto">
-          <div className="mb-6">
-            <Skeleton className="h-8 w-40 rounded" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="group w-[170px] md:w-[237px] relative overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300">
-                <div className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm">
-                  <Skeleton className="h-4 w-4 rounded-full" />
-                </div>
-                <div className="absolute left-2 top-2 z-10">
-                  <Skeleton className="h-5 w-8 rounded-full" />
-                </div>
-                <div className="relative aspect-[16/12] overflow-hidden bg-muted">
-                  <Skeleton className="h-full w-full" />
-                </div>
-                <div className="p-3">
-                  <div className="mb-2 flex items-center gap-1">
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Skeleton key={i} className="h-4 w-4" />
-                      ))}
-                    </div>
-                    <Skeleton className="h-3 w-8" />
-                  </div>
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <div className="mb-2 flex items-center gap-2">
-                    <Skeleton className="h-6 w-16" />
-                    <Skeleton className="h-4 w-12" />
-                  </div>
-                  <div className="flex gap-2">
-                    <Skeleton className="flex-1 h-8" />
-                    <Skeleton className="flex-1 h-8" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full mb-16 px-2 md:px-0">
-          <div className="mb-6">
-            <Skeleton className="h-8 w-40 rounded" />
-          </div>
-          <Skeleton className="w-full aspect-[16/5]" />
-        </div>
-
-        <div className="mb-10 md:mb-20">
-          <div className="mb-6">
-            <Skeleton className="h-8 w-40 rounded" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="group w-[170px] md:w-[237px] relative overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300">
-                <div className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm">
-                  <Skeleton className="h-4 w-4 rounded-full" />
-                </div>
-                <div className="absolute left-2 top-2 z-10">
-                  <Skeleton className="h-5 w-8 rounded-full" />
-                </div>
-                <div className="relative aspect-[16/12] overflow-hidden bg-muted">
-                  <Skeleton className="h-full w-full" />
-                </div>
-                <div className="p-3">
-                  <div className="mb-2 flex items-center gap-1">
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Skeleton key={i} className="h-4 w-4" />
-                      ))}
-                    </div>
-                    <Skeleton className="h-3 w-8" />
-                  </div>
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <div className="mb-2 flex items-center gap-2">
-                    <Skeleton className="h-6 w-16" />
-                    <Skeleton className="h-4 w-12" />
-                  </div>
-                  <div className="flex gap-2">
-                    <Skeleton className="flex-1 h-8" />
-                    <Skeleton className="flex-1 h-8" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full mb-16 px-2 md:px-0">
-          <Skeleton className="w-full aspect-[16/5]" />
-        </div>
-
-        <div className="mb-10 md:mb-20 container mx-auto">
-          <div className="mb-6">
-            <Skeleton className="h-8 w-40 rounded" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="group w-[170px] md:w-[237px] relative overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300">
-                <div className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm">
-                  <Skeleton className="h-4 w-4 rounded-full" />
-                </div>
-                <div className="absolute left-2 top-2 z-10">
-                  <Skeleton className="h-5 w-8 rounded-full" />
-                </div>
-                <div className="relative aspect-[16/12] overflow-hidden bg-muted">
-                  <Skeleton className="h-full w-full" />
-                </div>
-                <div className="p-3">
-                  <div className="mb-2 flex items-center gap-1">
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Skeleton key={i} className="h-4 w-4" />
-                      ))}
-                    </div>
-                    <Skeleton className="h-3 w-8" />
-                  </div>
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <div className="mb-2 flex items-center gap-2">
-                    <Skeleton className="h-6 w-16" />
-                    <Skeleton className="h-4 w-12" />
-                  </div>
-                  <div className="flex gap-2">
-                    <Skeleton className="flex-1 h-8" />
-                    <Skeleton className="flex-1 h-8" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full mb-16 px-2 md:px-0">
-          <Skeleton className="w-full aspect-[16/5]" />
-        </div>
+        <SectionSkeleton />
+        <SectionPromotion />
+        <SectionSkeleton />
+        <SectionPromotion />
+        <SectionSkeleton />
+        <SectionPromotion />
+        <SectionSkeleton />
+        <SectionPromotion />
       </section>
+      {/** footer */}
+      <footer className="container mx-auto mt-16 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pb-6">
+          <div className="flex flex-col items-start justify-center gap-2">
+            <Skeleton className="w-56 h-16 rounded" />
+            <Skeleton className="w-56 h-4 rounded" />
+            <Skeleton className="w-56 h-4 rounded" />
+            <Skeleton className="w-56 h-4 rounded" />
+          </div>
+          <FooterItem />
+          <FooterItem />
+          <FooterItem />
+        </div>
+        <div className="border-t">
+          <div className="flex items-center justify-between mt-4 gap-2">
+            <Skeleton className="w-56 h-6 rounded" />
+            <Skeleton className="w-56 h-12 rounded" />
+          </div>
+        </div>
+      </footer>
     </main>
+  );
+};
+
+const FooterItem = () => {
+  return (
+    <div className="flex flex-col items-start justify-start gap-2">
+      <Skeleton className="w-56 h-12 rounded" />
+      <Skeleton className="w-56 h-4 rounded" />
+      <Skeleton className="w-56 h-4 rounded" />
+      <Skeleton className="w-56 h-4 rounded" />
+      <Skeleton className="w-56 h-4 rounded" />
+      <Skeleton className="w-56 h-4 rounded" />
+    </div>
   );
 };

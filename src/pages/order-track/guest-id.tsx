@@ -1,7 +1,6 @@
 import { SeoWrapper } from "@/components/common/seo-wrapper";
 import { BaseLayout } from "@/components/layout/base-layout";
-import { useTranslation } from "@/hooks/useTranslation";
-import { SectionTitle } from "@/components/common/section-title";
+import { HomeSectionTitle } from "@/components/common/section-title";
 import { OrderTrackCard } from "./components/order";
 import { useGetOrderTrack } from "@/api/queries/useGetOrderTrack";
 import { OrderTrackSkeleton } from "./components/skeleton";
@@ -11,7 +10,6 @@ import {
 } from "./components/utils";
 
 export const OrderTrackDetailsGuestPage = () => {
-  const { getTranslation } = useTranslation();
   const { data, isLoading } = useGetOrderTrack();
 
   const orderData =
@@ -21,12 +19,10 @@ export const OrderTrackDetailsGuestPage = () => {
 
   return (
     <>
-      <SeoWrapper title={getTranslation("order_track") || "Order Track"} />
+      <SeoWrapper title={"Order Track"} />
       <BaseLayout isShowMegaMenu={false}>
         <section className="mb-10 md:mb-20 mt-10 px-4 md:px-0">
-          <SectionTitle
-            title={getTranslation("order_track") || "Order Track"}
-          />
+          <HomeSectionTitle title="Order Track" />
 
           <div className="mx-4 md:mx-0">
             {isLoading ? (

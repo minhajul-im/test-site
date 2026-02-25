@@ -2,10 +2,8 @@ import { useSignInMutation, useSignUpMutation } from "@/api/mutations/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { usePhoneValidation } from "@/hooks/usePhoneValidation";
-import { useTranslation } from "@/hooks/useTranslation";
 
 export const useSignIn = () => {
-  const { getTranslation } = useTranslation();
   const [error, setError] = useState<string>("");
   const { mutate, isPending } = useSignInMutation();
   const { validateBangladeshiPhone } = usePhoneValidation();
@@ -16,11 +14,7 @@ export const useSignIn = () => {
     const phone = data.get("email") as string;
     const phoneValidation = validateBangladeshiPhone(phone);
     if (!phoneValidation.isValid) {
-      setError(
-        phoneValidation.error ||
-          getTranslation("invalid_phone_number") ||
-          "Invalid phone number"
-      );
+      setError(phoneValidation.error || "Invalid phone number");
       return;
     }
     setError("");
@@ -34,7 +28,6 @@ export const useSignIn = () => {
 
 export const useSignUp = () => {
   const navigate = useNavigate();
-  const { getTranslation } = useTranslation();
   const [error, setError] = useState<string>("");
   const { mutate, isPending } = useSignUpMutation();
   const { validateBangladeshiPhone } = usePhoneValidation();
@@ -47,24 +40,18 @@ export const useSignUp = () => {
     const phone = data.get("email_or_phone") as string;
 
     if (!name) {
-      setError(getTranslation("name_is_required") || "Name is required");
+      setError("Name is required");
       return;
     }
 
     if (!password) {
-      setError(
-        getTranslation("password_is_required") || "Password is required"
-      );
+      setError("Password is required");
       return;
     }
 
     const phoneValidation = validateBangladeshiPhone(phone);
     if (!phoneValidation.isValid) {
-      setError(
-        phoneValidation.error ||
-          getTranslation("invalid_phone_number") ||
-          "Invalid phone number"
-      );
+      setError(phoneValidation.error || "Invalid phone number");
       return;
     }
     setError("");

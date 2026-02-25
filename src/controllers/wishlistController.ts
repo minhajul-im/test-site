@@ -24,22 +24,17 @@ import { useGetWishlistQuery } from "@/api/queries/useGetWishlist";
 import { useEffect } from "react";
 import { revalidateQueryFn } from "@/lib/query-client";
 import { apiErrorHandler } from "@/api/utils/error";
-import { useTranslation } from "@/hooks/useTranslation";
 
 export const useAddToWishlist = (item: ProductType) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getTranslation } = useTranslation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
   const { mutate, isPending } = useAddToWishlistMutation();
   const wishlist = useSelector((state: RootStateType) => state.wishlist);
 
   const fnAddToWishlist = () => {
     if (!isAuthenticated()) {
-      toast.error(
-        getTranslation("please_signin_to_add_an_item_to_your_wishlist") ||
-          "Please signin to add an item to your wishlist"
-      );
+      toast.error("Please signin to add an item to your wishlist");
       navigate("/signin");
       return;
     }
@@ -47,9 +42,7 @@ export const useAddToWishlist = (item: ProductType) => {
     const existingItem = isExistingItem(wishlist?.items, item);
 
     if (existingItem) {
-      toast.error(
-        getTranslation("item_already_in_wishlist") || "Item already in wishlist"
-      );
+      toast.error("Item already in wishlist");
       return;
     }
 
@@ -80,18 +73,10 @@ export const useAddToWishlist = (item: ProductType) => {
         if (res?.result === true) {
           dispatch(addToWishlistFn(data));
           revalidateQueryFn("get_wishlist");
-          toast.success(
-            res?.message ||
-              getTranslation("item_added_to_wishlist") ||
-              "Item added to wishlist"
-          );
+          toast.success(res?.message || "Item added to wishlist");
           stopLoadingFn(item?.id);
         } else {
-          toast.error(
-            res?.message ||
-              getTranslation("something_went_wrong") ||
-              "Something went wrong"
-          );
+          toast.error(res?.message || "Something went wrong");
           stopLoadingFn(item?.id);
           return;
         }
@@ -110,7 +95,6 @@ export const useAddToWishlist = (item: ProductType) => {
 
 export const useRemoveFromWishlist = (item: ProductType | StateSyncType) => {
   const dispatch = useDispatch();
-  const { getTranslation } = useTranslation();
   const { mutate } = useRemoveWishlistMutation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
 
@@ -119,10 +103,7 @@ export const useRemoveFromWishlist = (item: ProductType | StateSyncType) => {
 
   const fnRemoveWishlist = () => {
     if (!isAuthenticated()) {
-      toast.error(
-        getTranslation("please_signin_to_remove_an_item_from_your_wishlist") ||
-          "Please signin to remove an item from your wishlist"
-      );
+      toast.error("Please signin to remove an item from your wishlist");
       return;
     }
 
@@ -134,20 +115,12 @@ export const useRemoveFromWishlist = (item: ProductType | StateSyncType) => {
           onSuccess: (res) => {
             if (res?.result === true) {
               stopLoadingFn(item?.id);
-              toast.success(
-                res?.message ||
-                  getTranslation("item_removed_from_wishlist") ||
-                  "Item removed from wishlist"
-              );
+              toast.success(res?.message || "Item removed from wishlist");
 
               dispatch(removeFromWishlistFn(id as number));
               revalidateQueryFn("get_wishlist");
             } else {
-              toast.error(
-                res?.message ||
-                  getTranslation("something_went_wrong") ||
-                  "Something went wrong"
-              );
+              toast.error(res?.message || "Something went wrong");
               stopLoadingFn(item?.id);
               return;
             }

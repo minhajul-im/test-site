@@ -5,12 +5,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Contact, Eye, MapPin } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Link } from "react-router-dom";
-import { getImageUrl, keyToValue, slugify } from "@/helper";
-import { useTranslation } from "@/hooks/useTranslation";
+import { keyToValue, slugify } from "@/helper";
+
 import { Skeleton } from "../common/skeleton";
 import { NoDataFound } from "../common/no-data-found";
 import { TooltipWrapper } from "../common/tooltip-wrapper";
 import { Button } from "../ui/button";
+import { OptimizedImage } from "../common/optimized-image";
 
 export const OrderDetailsCard = ({
   order,
@@ -19,8 +20,6 @@ export const OrderDetailsCard = ({
   order: InvoiceType;
   path: string;
 }) => {
-  const { getTranslation } = useTranslation();
-
   if (!order) {
     return <NoDataFound />;
   }
@@ -69,11 +68,8 @@ export const OrderDetailsCard = ({
                   className="flex gap-4 border-b pb-0.5 last:border-b-0"
                   key={index}>
                   <div className="w-16 h-16 md:w-20 md:h-20 relative rounded-lg flex overflow-hidden items-center justify-center">
-                    <img
-                      src={
-                        getImageUrl(item?.product_thumbnail_image) ||
-                        "/placeholder.svg"
-                      }
+                    <OptimizedImage
+                      src={item?.product_thumbnail_image || ""}
                       className="absolute w-full h-full object-cover"
                       alt={item?.product_name}
                     />
@@ -92,11 +88,11 @@ export const OrderDetailsCard = ({
                       </Badge>
                     )}
                     <div className="flex items-center gap-2 text-xs md:text-sm text-foreground font-medium">
-                      {getTranslation("quantity") || "Quantity"}:
+                      {"Quantity"}:
                       <span className="font-bold">{item?.quantity}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs md:text-sm text-foreground font-medium">
-                      {getTranslation("price") || "Price"}:
+                      {"Price"}:
                       <span className="font-bold"> {item?.price || 0}</span>
                     </div>
                   </div>
@@ -114,17 +110,13 @@ export const OrderDetailsCard = ({
           transition={{ duration: 0.6, delay: 0.7 }}>
           <Card className="shadow-lg p-0 gap-4">
             <CardContent className="space-y-4 p-3 md:p-4">
-              <h2 className="text-lg font-bold">
-                {getTranslation("invoice_details") || "Invoice Details"}
-              </h2>
+              <h2 className="text-lg font-bold">{"Invoice Details"}</h2>
               <div className="flex gap-2 items-center">
                 <div className="text-sm text-muted-foreground">
-                  {getTranslation("transaction_id") || "Transaction ID"}:{" "}
-                  {order?.order_code || "N/A"}
+                  {"Transaction ID"}: {order?.order_code || "N/A"}
                 </div>
                 <Link to={`${path}/${order?.order_code}`}>
-                  <TooltipWrapper
-                    text={getTranslation("track_order") || "Track Order"}>
+                  <TooltipWrapper text={"Track Order"}>
                     <Button variant="ghost" size="icon" className="size-8">
                       <Eye className="w-4 h-4 text-blue-600" />
                     </Button>
@@ -134,39 +126,31 @@ export const OrderDetailsCard = ({
 
               <div className="space-y-2">
                 <div className="flex justify-between text-sm font-medium">
-                  <span>{getTranslation("order_date") || "Order Date"}:</span>
+                  <span>{"Order Date"}:</span>
                   <span>{order?.order_date || "N/A"}</span>
                 </div>
                 <div className="flex justify-between text-sm font-medium">
-                  <span>
-                    {getTranslation("order_status") || "Order Status"}:
-                  </span>
+                  <span>{"Order Status"}:</span>
                   <Badge className="text-xs uppercase font-medium">
                     {order?.order_status || "N/A"}
                   </Badge>
                 </div>
                 <div className="flex justify-between text-sm font-medium">
-                  <span>
-                    {getTranslation("payment_method") || "Payment Method"}:
-                  </span>
+                  <span>{"Payment Method"}:</span>
                   <span>{keyToValue(order?.payment_method || "")}</span>
                 </div>
                 <div className="flex justify-between text-blue-600 text-sm font-medium">
-                  <span>
-                    {getTranslation("shipping_cost") || "Shipping Cost"}:
-                  </span>
+                  <span>{"Shipping Cost"}:</span>
                   <span>{order?.shipping_cost || 0}</span>
                 </div>
                 <div className="flex justify-between text-sm font-medium">
-                  <span>{getTranslation("sub_total") || "Sub Total"}:</span>
+                  <span>{"Sub Total"}:</span>
                   <span>{order?.subtotal || 0}</span>
                 </div>
 
                 <div className="border-t pt-2 z-10 text-sm">
                   <div className="flex justify-between font-semibold text-lg">
-                    <span>
-                      {getTranslation("order_total") || "Order Total"}:
-                    </span>
+                    <span>{"Order Total"}:</span>
                     <span>{order?.grand_total || 0}</span>
                   </div>
                 </div>

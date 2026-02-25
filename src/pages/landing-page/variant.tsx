@@ -8,8 +8,6 @@ import {
   getUniqueSizes,
   getVariant,
 } from "@/helper";
-import { Minus, Plus } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
 import { useCampaignAddToCart } from "@/controllers/campaignController";
 
@@ -35,23 +33,10 @@ export const LandingVariantCard = ({
   setSelectedSize,
   setDisplayPrice,
 }: Props) => {
-  const { getTranslation } = useTranslation();
-
   const { isLoading, fnAddToCart } = useCampaignAddToCart(
     product as unknown as ProductType,
     quantity
   );
-
-  const handleQuantityChange = (
-    newQuantity: number,
-    e: React.MouseEvent
-  ): void => {
-    e.stopPropagation();
-    const currentStock = getCurrentStock(product, selectedColor, selectedSize);
-    if (newQuantity >= 1 && newQuantity <= currentStock?.stock) {
-      setQuantity(newQuantity);
-    }
-  };
 
   const handleColorSelect = (color: string, e: React.MouseEvent): void => {
     e.stopPropagation();
@@ -107,6 +92,12 @@ export const LandingVariantCard = ({
       setSelectedColor(firstVariant?.color_code);
       setSelectedSize(firstVariant?.size_name);
       setDisplayPrice(firstVariant?.variant_price_string);
+    } else {
+      setDisplayPrice(
+        `${product?.currency_symbol}${product?.calculable_price}` ||
+          product?.main_price ||
+          "৳0"
+      );
     }
   }, [product, setDisplayPrice, setSelectedColor, setSelectedSize]);
 
@@ -115,7 +106,7 @@ export const LandingVariantCard = ({
     if (quantity > currentStock?.stock && currentStock?.stock > 0) {
       setQuantity(currentStock?.stock);
     } else if (currentStock?.stock === 0) {
-      setQuantity(1);
+      setQuantity(0);
     }
   }, [selectedColor, selectedSize, product, quantity, setQuantity]);
 
@@ -156,16 +147,13 @@ export const LandingVariantCard = ({
       {product?.variants &&
         product?.variants?.length > 0 &&
         getUniqueSizes(product)?.length > 0 && (
-          <div className="flex items-center gap-2 mb-1 md:mb-2">
-            <span className="text-sm font-medium">
-              {getTranslation("sizes") || "Sizes"}:
-            </span>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center flex-wrap gap-2 mb-1 md:mb-2">
+            <span className="text-sm font-medium">{"Sizes"}:</span>
+            <div className="flex items-center flex-wrap gap-2">
               {getUniqueSizes(product)?.map((size) => (
                 <Button
                   key={size}
                   variant={selectedSize === size ? "default" : "outline"}
-                  size="icon-sm"
                   disabled={isLoading}
                   onClick={(e) => handleSizeSelect(size, e)}
                   className={cn(
@@ -206,53 +194,15 @@ export const LandingVariantCard = ({
                   !isOutOfStock && "text-green-600"
                 )}>
                 {isOutOfStock
-                  ? getTranslation("out_of_stock") || "Out of stock"
+                  ? "Out of stock"
                   : !isOutOfStock &&
-                    `${currentStock?.stock} ${currentStock?.unit} ${
-                      getTranslation("in_stock") || "in stock"
-                    }`}
+                    `${currentStock?.stock} ${
+                      currentStock?.unit
+                    } ${"in stock"}`}
               </span>
             </div>
           );
         })()}
-      </div>
-
-      <div className="flex items-center gap-2">
-        <label className="text-sm font-medium">
-          {getTranslation("quantity") || "Quantity"}:
-        </label>
-        <div className="flex items-center gap-3">
-          {(() => {
-            const currentStock = getCurrentStock(
-              product,
-              selectedColor,
-              selectedSize
-            );
-            return (
-              <>
-                <Button
-                  variant="outline"
-                  size="icon-sm"
-                  onClick={(e) => handleQuantityChange(quantity - 1, e)}
-                  disabled={quantity <= 1}
-                  aria-label="Decrease quantity">
-                  <Minus className="w-4 h-4" />
-                </Button>
-                <span className="w-12 text-foreground text-center text-xs md:text-sm font-medium">
-                  {quantity}
-                </span>
-                <Button
-                  variant="outline"
-                  size="icon-sm"
-                  onClick={(e) => handleQuantityChange(quantity + 1, e)}
-                  disabled={quantity >= currentStock?.stock}
-                  aria-label="Increase quantity">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </>
-            );
-          })()}
-        </div>
       </div>
     </>
   );

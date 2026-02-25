@@ -13,11 +13,9 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import type { RootStateType } from "@/redux/store";
 import { useSelector } from "react-redux";
-import { useTranslation } from "@/hooks/useTranslation";
 
 export const Coupon = ({ couponCode }: { couponCode?: string }) => {
   const navigate = useNavigate();
-  const { getTranslation } = useTranslation();
   const cart = useSelector((state: RootStateType) => state.cart?.items?.length);
   const [coupon, setCoupon] = useState(couponCode || "");
   const { mutate, isPending } = useCouponApplyMutation();
@@ -52,9 +50,7 @@ export const Coupon = ({ couponCode }: { couponCode?: string }) => {
     <div>
       <ButtonGroup className="w-full h-10">
         <Input
-          placeholder={
-            getTranslation("enter_coupon_code") || "Enter Coupon code"
-          }
+          placeholder={"Enter Coupon code"}
           className={cn(
             "h-9 md:h-10",
             couponCode && "cursor-not-allowed bg-accent"
@@ -73,18 +69,18 @@ export const Coupon = ({ couponCode }: { couponCode?: string }) => {
           {loading ? (
             <>
               <Spinner />
-              {getTranslation("processing") || "Processing..."}
+              {"Processing..."}
             </>
           ) : couponCode ? (
-            getTranslation("remove") || "Remove"
+            "Remove"
           ) : (
-            getTranslation("apply") || "Apply"
+            "Apply"
           )}
         </Button>
       </ButtonGroup>
       {couponCode && (
         <div className="text-sm text-green-600 font-medium flex items-center gap-1">
-          {getTranslation("coupon_code_applied") || "Coupon code applied"}:{" "}
+          {"Coupon code applied"}:{" "}
           <span className="font-bold">[{couponCode}]</span>
         </div>
       )}

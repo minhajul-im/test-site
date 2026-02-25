@@ -9,17 +9,15 @@ import type { ProductType } from "@/type";
 import { BaseLayout } from "@/components/layout/base-layout";
 import type { PaginationDataType } from "@/components/common/pagination-wrapper";
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { FilterProduct } from "@/components/common/filter-product";
 import { useState } from "react";
 
 export const ProductsPage = () => {
-  const { getTranslation } = useTranslation();
   const [filters, setFilters] = useState<Record<string, unknown>>({ page: 1 });
   const { data, isLoading } = useGetAllProducts(filters);
 
   const products = (data?.data as ProductType[]) || [];
-  const paginationData = (data as { meta: PaginationDataType })?.meta;
+  const paginationData = (data as { meta: PaginationDataType })?.meta || {};
 
   const handlePageChange = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));
@@ -28,13 +26,10 @@ export const ProductsPage = () => {
 
   return (
     <>
-      <SeoWrapper title={getTranslation("all_products") || "All Products"} />
+      <SeoWrapper title={"All Products"} />
       <BaseLayout>
         <div className="flex items-center justify-between mt-8 md:mt-10 mb-4">
-          <SectionTitle
-            title={getTranslation("all_products") || "All Products"}
-            className=""
-          />
+          <SectionTitle title={"All Products"} className="" />
           <FilterProduct filters={filters} setFilters={setFilters} />
         </div>
 
@@ -60,12 +55,10 @@ export const ProductsPage = () => {
               ))}
           </CardLayout>
         ) : (
-          <NoDataFound
-            title={getTranslation("no_products_found") || "No products found"}
-          />
+          <NoDataFound title={"No products found"} />
         )}
 
-        {paginationData && (
+        {Object.keys(paginationData)?.length > 0 && products?.length > 0 && (
           <PaginationWrapper
             paginationData={paginationData}
             onPageChange={handlePageChange}

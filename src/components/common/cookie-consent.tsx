@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { X, Cookie, Settings, Shield, BarChart3 } from "lucide-react";
 import { useCookie } from "@/hooks/useCookie";
-import { useTranslation } from "@/hooks/useTranslation";
 
 export const CookieConsent = () => {
   const {
@@ -19,7 +18,6 @@ export const CookieConsent = () => {
     updateCookiePreferences,
     cookiePreferences,
   } = useCookie();
-  const { getTranslation } = useTranslation();
   const [showDetails, setShowDetails] = useState(false);
 
   if (!showCookieBanner) return null;
@@ -31,14 +29,13 @@ export const CookieConsent = () => {
           <div className="flex items-center gap-2">
             <Cookie className="h-5 w-5 text-amber-600" />
             <CardTitle className="text-base md:text-lg text-foreground font-semibold">
-              🍪 {getTranslation("amazing_cookies") || "Amazing Cookies!"}
+              🍪 {"Amazing Cookies!"}
             </CardTitle>
           </div>
           <CardDescription className="text-muted-foreground text-xs md:text-sm">
-            {getTranslation(
-              "we_use_cookies_to_enhance_your_experience_and_provide_amazing_features"
-            ) ||
-              "We use cookies to enhance your experience and provide amazing features!"}
+            {
+              "We use cookies to enhance your experience and provide amazing features!"
+            }
           </CardDescription>
         </CardHeader>
 
@@ -54,14 +51,14 @@ export const CookieConsent = () => {
                   onClick={acceptCookies}
                   className="flex-1 bg-primary hover:bg-primary/90"
                   size="sm">
-                  {getTranslation("accept_all") || "Accept All"}
+                  {"Accept All"}
                 </Button>
                 <Button
                   onClick={declineCookies}
                   variant="outline"
                   className="flex-1"
                   size="sm">
-                  {getTranslation("decline") || "Decline"}
+                  {"Decline"}
                 </Button>
               </div>
               <Button
@@ -70,7 +67,7 @@ export const CookieConsent = () => {
                 size="sm"
                 className="w-full text-xs">
                 <Settings className="h-3 w-3 mr-1" />
-                {getTranslation("customize_settings") || "Customize Settings"}
+                {"Customize Settings"}
               </Button>
             </div>
           ) : (
@@ -153,14 +150,14 @@ export const CookieConsent = () => {
               </div>
               <div className="flex items-center justify-between gap-2 pt-2">
                 <Button onClick={acceptCookies} className="flex-1" size="sm">
-                  {getTranslation("save_preferences") || "Save Preferences"}
+                  {"Save Preferences"}
                 </Button>
                 <Button
                   onClick={declineCookies}
                   variant="outline"
                   className="flex-1"
                   size="sm">
-                  {getTranslation("decline_all") || "Decline All"}
+                  {"Decline All"}
                 </Button>
               </div>
             </div>

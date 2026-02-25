@@ -1,25 +1,34 @@
 import type { ProductType } from "@/type";
-import { useTranslation } from "@/hooks/useTranslation";
 import { BaseLayout } from "@/components/layout/base-layout";
-import { SectionTitle } from "@/components/common/section-title";
+import { HomeSectionTitle } from "@/components/common/section-title";
 import { CardLayout } from "@/components/common/card-layout";
 import { ProductCard, ProductCardSkeleton } from "@/components/card/product";
 import { AnimationWrapper } from "@/components/common/animation-wrapper";
 import { NoDataFound } from "@/components/common/no-data-found";
+import {
+  PaginationWrapper,
+  type PaginationDataType,
+} from "../common/pagination-wrapper";
 
 interface Props {
   title: string;
   products: ProductType[];
   isLoading: boolean;
+  pagination: PaginationDataType;
+  onPageChange: (page: number) => void;
 }
 
-export const ProductsCard = ({ title, products, isLoading }: Props) => {
-  const { getTranslation } = useTranslation();
-
+export const ProductsSection = ({
+  title,
+  products,
+  isLoading,
+  pagination,
+  onPageChange,
+}: Props) => {
   return (
     <BaseLayout>
       <section className="mb-10 md:mb-20 container mx-auto mt-10">
-        <SectionTitle title={title} />
+        <HomeSectionTitle title={title} />
         <CardLayout>
           {isLoading ? (
             Array.from({ length: 12 }).map((_, i) => (
@@ -37,15 +46,18 @@ export const ProductsCard = ({ title, products, isLoading }: Props) => {
               </AnimationWrapper>
             ))
           ) : (
-            <div className="w-full">
-              <NoDataFound
-                title={
-                  getTranslation("no_products_found") || "No products found"
-                }
-              />
+            <div className="col-span-full px-4">
+              <NoDataFound title={"No products found"} />
             </div>
           )}
         </CardLayout>
+
+        {Object.keys(pagination)?.length > 0 && products?.length > 0 && (
+          <PaginationWrapper
+            paginationData={pagination}
+            onPageChange={onPageChange}
+          />
+        )}
       </section>
     </BaseLayout>
   );

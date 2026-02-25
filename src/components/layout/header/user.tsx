@@ -10,7 +10,7 @@ import {
   isAuthenticated,
 } from "@/helper";
 import { useEffect } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
+
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
 import { ProfileCard } from "@/components/card/profile";
@@ -23,12 +23,14 @@ interface Props {
 export const UserProfile = ({ variant = "desktop" }: Props) => {
   const location = useLocation();
   const { data } = useGetUserQuery();
-  const { getTranslation } = useTranslation();
   const user = data?.user as unknown as UserType;
+
   useEffect(() => {
     if (!getGuestUserId() && !isAuthenticated()) {
       const guestUserId = getUUID();
-      localStorage.setItem("guest_user_id", guestUserId);
+      setTimeout(() => {
+        localStorage.setItem("guest_user_id", guestUserId);
+      }, 5000);
     }
   }, []);
 
@@ -39,7 +41,7 @@ export const UserProfile = ({ variant = "desktop" }: Props) => {
       <Button
         variant="ghost"
         size="icon-lg"
-        className={cn("focus:outline-none rounded-full! overflow-hidden")}
+        className={cn("focus:outline-none rounded-full! overflow-hidden group")}
         asChild>
         <Link to={linkTo}>
           {isAuthenticated() ? (
@@ -50,7 +52,10 @@ export const UserProfile = ({ variant = "desktop" }: Props) => {
               </AvatarFallback>
             </Avatar>
           ) : (
-            <UserRound className="h-6 w-6" />
+            <UserRound
+              className="h-6 w-6 group-hover:text-primary"
+              strokeWidth={2.5}
+            />
           )}
         </Link>
       </Button>
@@ -78,7 +83,7 @@ export const UserProfile = ({ variant = "desktop" }: Props) => {
                     ? "text-primary"
                     : "text-foreground"
                 )}>
-                {getTranslation("account") || "Account"}
+                {"Account"}
               </span>
             </button>
           </SheetTrigger>
@@ -94,8 +99,11 @@ export const UserProfile = ({ variant = "desktop" }: Props) => {
         to={linkTo}
         className="flex flex-col items-center justify-center min-w-0 flex-1">
         <UserRound className={cn("h-5 w-5 mb-1 text-foreground")} />
-        <span className={cn("text-[10px] font-medium text-foreground")}>
-          {getTranslation("account") || "Account"}
+        <span
+          className={cn(
+            "text-[10px] font-medium text-foreground hover:text-primary"
+          )}>
+          Account
         </span>
       </Link>
     );

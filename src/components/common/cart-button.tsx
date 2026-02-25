@@ -5,7 +5,7 @@ import { useAddToCart, useRemoveFromCart } from "@/controllers/cartController";
 import { Spinner } from "../ui/spinner";
 import { cn } from "@/lib/utils";
 import { useRemoveFromWishlist } from "@/controllers/wishlistController";
-import { useTranslation } from "@/hooks/useTranslation";
+
 interface Props {
   product: ProductType;
   quantity?: number;
@@ -31,7 +31,6 @@ export const CartButton = ({
   onHideModal,
   productId,
 }: Props) => {
-  const { getTranslation } = useTranslation();
   const { isLoading, fnAddToCart } = useAddToCart(
     product,
     quantity,
@@ -69,9 +68,7 @@ export const CartButton = ({
         )}
         size="xs">
         <ShoppingCart className="h-4 w-4 md:mr-2" />
-        <span className="hidden md:block">
-          {getTranslation("move_to_cart") || "Move to Cart"}
-        </span>
+        <span className="hidden md:block">{"Move to Cart"}</span>
       </Button>
     );
   }
@@ -100,9 +97,7 @@ export const CartButton = ({
         ) : (
           <>
             <ShoppingCart className="h-4 w-4 hidden md:block" />
-            <span className="text-[10px]">
-              {getTranslation("add_to_cart") || "Add to Cart"}
-            </span>
+            <span className="text-[10px]">Add to cart</span>
           </>
         )}
       </Button>
@@ -129,12 +124,12 @@ export const CartButton = ({
       disabled={isLoading}>
       {isLoading ? (
         <>
-          <Spinner /> {getTranslation("processing") || "Processing..."}
+          <Spinner /> {"Processing..."}
         </>
       ) : (
         <>
           {style[type].icon}
-          {getTranslation("add_to_cart") || "Add to Cart"}
+          {"Add to cart"}
         </>
       )}
     </Button>
@@ -147,7 +142,6 @@ interface PropsRemove {
 }
 
 export const RemoveCartButton = ({ item, type }: PropsRemove) => {
-  const { getTranslation } = useTranslation();
   const { removeLoading, fnRemoveCart } = useRemoveFromCart(item);
   if (type === "CART_DESKTOP") {
     return (
@@ -158,7 +152,7 @@ export const RemoveCartButton = ({ item, type }: PropsRemove) => {
         disabled={removeLoading}
         className="text-muted-foreground hover:text-red-600 hover:bg-red-50 p-2">
         <Trash2 className="h-4 w-4 mr-1" />
-        {getTranslation("remove") || "Remove"}
+        {"Remove"}
       </Button>
     );
   }

@@ -1,13 +1,5 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { useTranslation } from "@/hooks/useTranslation";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { cn } from '@/lib/utils';
 
 export interface PaginationDataType {
   current_page: number;
@@ -30,13 +22,8 @@ interface PaginationWrapperProps {
   className?: string;
 }
 
-export const PaginationWrapper = ({
-  paginationData,
-  onPageChange,
-  className = "mb-10 mt-10 md:mb-20 container mx-auto",
-}: PaginationWrapperProps) => {
-  const { getTranslation } = useTranslation();
-  const { current_page, last_page, links } = paginationData;
+export const PaginationWrapper = ({ paginationData, onPageChange, className = 'mb-10 mt-10 md:mb-20 container mx-auto' }: PaginationWrapperProps) => {
+  const { current_page, last_page } = paginationData;
 
   const handlePageClick = (page: number) => {
     if (page !== current_page && page >= 1 && page <= last_page) {
@@ -44,20 +31,158 @@ export const PaginationWrapper = ({
     }
   };
 
-  const getPageNumber = (url: string | null): number | null => {
-    if (!url) return null;
-    const urlParams = new URLSearchParams(url.split("?")[1]);
-    const page = urlParams.get("page");
-    return page ? parseInt(page, 10) : null;
+  const generatePaginationLinks = () => {
+    const paginationItems = [];
+
+    if (last_page <= 5) {
+      for (let i = 1; i <= last_page; i++) {
+        paginationItems.push({
+          page: i,
+          label: i?.toString(),
+          active: current_page === i,
+        });
+      }
+    } else if (last_page >= 6 && last_page <= 20) {
+      if (current_page <= 3) {
+        for (let i = 1; i <= 3; i++) {
+          paginationItems.push({
+            page: i,
+            label: i?.toString(),
+            active: current_page === i,
+          });
+        }
+
+        if (last_page > 4) {
+          paginationItems.push({
+            page: null,
+            label: '...',
+            active: false,
+          });
+        }
+
+        if (last_page > 3) {
+          paginationItems.push({
+            page: last_page - 1,
+            label: (last_page - 1)?.toString(),
+            active: current_page === last_page - 1,
+          });
+        }
+
+        paginationItems.push({
+          page: last_page,
+          label: last_page?.toString(),
+          active: current_page === last_page,
+        });
+      } else if (current_page >= last_page - 2) {
+        paginationItems.push({
+          page: 1,
+          label: '1'.toString(),
+          active: current_page === 1,
+        });
+
+        if (last_page > 4) {
+          paginationItems.push({
+            page: null,
+            label: '...',
+            active: false,
+          });
+        }
+
+        for (let i = last_page - 2; i <= last_page; i++) {
+          paginationItems.push({
+            page: i,
+            label: i?.toString(),
+            active: current_page === i,
+          });
+        }
+      } else {
+        paginationItems.push({
+          page: 1,
+          label: '1',
+          active: current_page === 1,
+        });
+
+        paginationItems.push({
+          page: null,
+          label: '...',
+          active: false,
+        });
+
+        for (let i = current_page - 1; i <= current_page + 1; i++) {
+          paginationItems.push({
+            page: i,
+            label: i.toString(),
+            active: current_page === i,
+          });
+        }
+
+        paginationItems.push({
+          page: null,
+          label: '...',
+          active: false,
+        });
+
+        paginationItems.push({
+          page: last_page,
+          label: last_page?.toString(),
+          active: current_page === last_page,
+        });
+      }
+    } else {
+      const delta = 2;
+
+      if (last_page > 0) {
+        paginationItems.push({
+          page: 1,
+          label: '1',
+          active: current_page === 1,
+        });
+      }
+
+      if (current_page > 4) {
+        paginationItems.push({
+          page: null,
+          label: '...',
+          active: false,
+        });
+      }
+
+      for (let i = Math.max(2, current_page - delta); i <= Math.min(last_page - 1, current_page + delta); i++) {
+        if (i !== 1 && i !== last_page && i !== 2) {
+          paginationItems.push({
+            page: i,
+            label: i?.toString(),
+            active: current_page === i,
+          });
+        }
+      }
+
+      if (current_page < last_page - 3) {
+        paginationItems.push({
+          page: null,
+          label: '...',
+          active: false,
+        });
+      }
+
+      if (last_page > 1) {
+        paginationItems.push({
+          page: last_page,
+          label: last_page?.toString(),
+          active: current_page === last_page,
+        });
+      }
+    }
+
+    return paginationItems;
   };
 
-  const previousLabel = getTranslation("_previous") || "« Previous";
-  const nextLabel = getTranslation("next_") || "Next »";
+  const paginationItems = generatePaginationLinks();
 
   return (
     <section className={className}>
       <Pagination>
-        <PaginationContent>
+        <PaginationContent className={cn('flex items-center flex-wrap px-4')}>
           <PaginationItem>
             <PaginationPrevious
               onClick={(e) => {
@@ -66,42 +191,33 @@ export const PaginationWrapper = ({
                   handlePageClick(current_page - 1);
                 }
               }}
-              className={
-                current_page <= 1
-                  ? "pointer-events-none opacity-50"
-                  : "cursor-pointer"
-              }
+              className={current_page <= 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
             />
           </PaginationItem>
 
-          {links
-            .filter(
-              (link) => link.label !== previousLabel && link.label !== nextLabel
-            )
-            ?.map((link, index) => {
-              const pageNumber = getPageNumber(link.url);
-              if (!pageNumber) return null;
-
+          {paginationItems?.map((item, index) => {
+            if (item.page === null) {
               return (
-                <PaginationItem key={index}>
+                <PaginationItem key={`ellipsis-${index}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              );
+            } else {
+              return (
+                <PaginationItem key={item.page}>
                   <PaginationLink
-                    isActive={link.active}
+                    isActive={item.active}
                     onClick={(e) => {
                       e.preventDefault();
-                      handlePageClick(pageNumber);
+                      handlePageClick(item.page!);
                     }}
                     className="cursor-pointer">
-                    {link.label}
+                    {item.label}
                   </PaginationLink>
                 </PaginationItem>
               );
-            })}
-
-          {current_page < last_page - 2 && (
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-          )}
+            }
+          })}
 
           <PaginationItem>
             <PaginationNext
@@ -111,11 +227,7 @@ export const PaginationWrapper = ({
                   handlePageClick(current_page + 1);
                 }
               }}
-              className={
-                current_page >= last_page
-                  ? "pointer-events-none opacity-50"
-                  : "cursor-pointer"
-              }
+              className={current_page >= last_page ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
             />
           </PaginationItem>
         </PaginationContent>

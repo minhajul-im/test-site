@@ -1,5 +1,5 @@
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
+
 import { SectionTitle } from "@/components/common/section-title";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { BreadcrumbWrapper } from "@/components/common/breadcrumb-wrapper";
@@ -13,7 +13,7 @@ import { OrderTrackSkeleton } from "./components/skeleton";
 export const OrderTrackIdPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getTranslation } = useTranslation();
+
   const { data, isLoading } = useGetOrderTrack();
 
   const orderData =
@@ -25,33 +25,23 @@ export const OrderTrackIdPage = () => {
 
   return (
     <>
-      <SeoWrapper
-        title={`${getTranslation("track_order") || "Track Order"} ${
-          id ? ": " + id : ""
-        }`}
-      />
+      <SeoWrapper title={`Track Order ${id ? ": " + id : ""}`} />
       <DashboardLayout>
         <div className="mx-4 md:mx-0 mb-4">
           <BreadcrumbWrapper
             type="dashboard"
             items={[
               {
-                title: getTranslation("track_order") || "Track Order",
+                title: "Track Order",
                 path: "/dashboard/track-order",
               },
               {
-                title: `${getTranslation("track_order") || "Track Order"} ${
-                  id ? ": " + id : ""
-                }`,
+                title: `Track Order ${id ? ": " + id : ""}`,
               },
             ]}
           />
         </div>
-        <SectionTitle
-          title={`${getTranslation("track_order") || "Track Order"} ${
-            id ? ": " + id : ""
-          }`}
-        />
+        <SectionTitle title={`Track Order ${id ? ": " + id : ""}`} />
 
         <div className="mx-4 md:mx-0">
           {isLoading ? (

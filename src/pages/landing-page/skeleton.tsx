@@ -16,7 +16,7 @@ export const LandingSkeleton = () => {
         </div>
 
         <div className="space-y-6">
-          <Skeleton className="h-64 md:h-80 w-full rounded-xl" />
+          <Skeleton className="aspect-video w-full rounded-xl" />
           <div className="flex justify-center">
             <Skeleton className="h-12 w-40 rounded-full" />
           </div>
@@ -26,7 +26,7 @@ export const LandingSkeleton = () => {
           <Skeleton className="h-10 w-1/3 mx-auto rounded-lg" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[...Array(3)].map((_, index) => (
-              <Skeleton key={index} className="h-64 rounded-xl" />
+              <Skeleton key={index} className="aspect-[16/20] rounded-lg" />
             ))}
           </div>
           <div className="flex justify-center">
@@ -34,15 +34,15 @@ export const LandingSkeleton = () => {
           </div>
         </div>
 
-        <div className="py-8">
-          <Skeleton className="h-32 w-full rounded-2xl" />
+        <div className="py-8 flex justify-center">
+          <Skeleton className="h-52 max-w-xl rounded-xl" />
         </div>
 
         <div className="space-y-6">
           <Skeleton className="h-8 w-1/4 mx-auto rounded-lg" />
           <div className="flex justify-center gap-4">
             {[...Array(4)].map((_, index) => (
-              <Skeleton key={index} className="h-20 w-16 rounded-lg" />
+              <Skeleton key={index} className="size-20 rounded-lg" />
             ))}
           </div>
         </div>
@@ -51,7 +51,7 @@ export const LandingSkeleton = () => {
           <Skeleton className="h-10 w-1/4 mx-auto rounded-lg" />
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[...Array(4)].map((_, index) => (
-              <Skeleton key={index} className="h-24 rounded-lg" />
+              <Skeleton key={index} className="h-32 rounded-lg" />
             ))}
           </div>
         </div>
@@ -60,16 +60,16 @@ export const LandingSkeleton = () => {
           <Skeleton className="h-10 w-1/3 mx-auto rounded-lg" />
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {[...Array(5)].map((_, index) => (
-              <Skeleton key={index} className="h-96 rounded-lg" />
+              <Skeleton key={index} className="aspect-[16/24] rounded-lg" />
             ))}
           </div>
           <div className="flex justify-center">
-            <Skeleton className="h-12 w-40 rounded-full" />
+            <Skeleton className="h-14 w-40 rounded-full" />
           </div>
         </div>
 
         <div className="space-y-6">
-          <Skeleton className="h-10 w-1/2 mx-auto rounded-lg" />
+          <Skeleton className="h-12 w-1/2 mx-auto rounded-lg" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[...Array(4)].map((_, index) => (
               <div

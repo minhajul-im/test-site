@@ -11,7 +11,6 @@ import { isAuthenticated, isExistingItem } from "@/helper";
 import { Button } from "../ui/button";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "@/hooks/useTranslation";
 import { TooltipWrapper } from "./tooltip-wrapper";
 
 interface Props {
@@ -30,7 +29,6 @@ export const WishlistButton = ({
   onRemove,
 }: Props) => {
   const navigate = useNavigate();
-  const { getTranslation } = useTranslation();
   const { addLoading, fnAddToWishlist } = useAddToWishlist(product);
   const { removeLoading, fnRemoveWishlist } = useRemoveFromWishlist(
     product as unknown as StateSyncType
@@ -45,10 +43,7 @@ export const WishlistButton = ({
       return;
     } else {
       if (!isAuthenticated()) {
-        toast.error(
-          getTranslation("please_login_to_add_to_wishlist") ||
-            "Please login to add to wishlist"
-        );
+        toast.error("Please login to add to wishlist");
         navigate("/signin");
         return;
       } else {
@@ -101,7 +96,7 @@ export const WishlistButton = ({
               : "text-muted-foreground hover:text-red-600"
           )}
         />
-        {getTranslation("save_for_later") || "Save for later"}
+        Save for later
       </Button>
     );
   }
@@ -118,19 +113,13 @@ export const WishlistButton = ({
           removeLoading ? "opacity-50 cursor-not-allowed" : ""
         )}>
         <Trash2 className="h-4 w-4 md:mr-2" />
-        <span className="hidden md:block">
-          {getTranslation("remove") || "Remove"}
-        </span>
+        <span className="hidden md:block">"Remove"</span>
       </Button>
     );
   }
 
   return (
-    <TooltipWrapper
-      text={
-        getTranslation("sign_in_to_add_to_your_wishlist") ||
-        "Sign in to add to your wishlist"
-      }>
+    <TooltipWrapper text={"Sign in to add to your wishlist"}>
       <button
         onClick={isWishListed ? fnRemoveWishlist : fnAddToWishlist}
         disabled={addLoading || removeLoading}

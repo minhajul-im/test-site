@@ -19,7 +19,6 @@ import {
   removeFromCampaign,
   setCartItemsCampaign,
 } from "@/redux/slice/campaignSlice";
-import { useTranslation } from "@/hooks/useTranslation";
 import type { RootStateType } from "@/redux/store";
 import { useGetCampaignCartQuery } from "@/api/queries/useGetCart";
 import { useEffect } from "react";
@@ -114,7 +113,6 @@ export const useCampaignAddToCart = (
 
 export const useCampaignRemoveCart = (item: ProductType | StateSyncType) => {
   const dispatch = useDispatch();
-  const { getTranslation } = useTranslation();
   const { mutate, isPending } = useRemoveCartMutation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
   const camp = useSelector((state: RootStateType) => state.campaign);
@@ -133,18 +131,11 @@ export const useCampaignRemoveCart = (item: ProductType | StateSyncType) => {
               revalidateQueryFn("get_cart_campaign");
               revalidateQueryFn("get_campaign_summary");
 
-              toast.success(
-                getTranslation("item_removed_from_cart") ||
-                  "Item removed from cart"
-              );
+              toast.success("Item removed from cart");
 
               stopLoadingFn(item?.id);
             } else {
-              toast.error(
-                res?.message ||
-                  getTranslation("something_went_wrong") ||
-                  "Something went wrong"
-              );
+              toast.error(res?.message || "Something went wrong");
               stopLoadingFn(item?.id);
               return;
             }
@@ -166,7 +157,6 @@ export const useCampaignRemoveCart = (item: ProductType | StateSyncType) => {
 export const useCampaignIncrementCart = (item: ProductType | StateSyncType) => {
   const dispatch = useDispatch();
   const { mutate } = useUpdateCartMutation();
-  const { getTranslation } = useTranslation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
   const campaign = useSelector((state: RootStateType) => state.campaign?.items);
 
@@ -174,9 +164,7 @@ export const useCampaignIncrementCart = (item: ProductType | StateSyncType) => {
     const existingItem = isExistingItem(campaign, item as ProductType);
 
     if (!existingItem) {
-      toast.error(
-        getTranslation("item_not_found_in_cart") || "Item not found in cart"
-      );
+      toast.error("Item not found in cart");
       return;
     }
 
@@ -189,20 +177,12 @@ export const useCampaignIncrementCart = (item: ProductType | StateSyncType) => {
       onSuccess: (res) => {
         if (res?.result === true) {
           dispatch(incrementCampaign(existingItem.id as number));
-          toast.success(
-            res?.message ||
-              getTranslation("item_incremented_in_cart") ||
-              "Item incremented in cart"
-          );
+          toast.success(res?.message || "Item incremented in cart");
           revalidateQueryFn("get_cart_campaign");
           revalidateQueryFn("get_campaign_summary");
           stopLoadingFn(item?.id);
         } else {
-          toast.error(
-            res?.message ||
-              getTranslation("something_went_wrong") ||
-              "Something went wrong"
-          );
+          toast.error(res?.message || "Something went wrong");
           stopLoadingFn(item?.id);
           return;
         }
@@ -222,7 +202,6 @@ export const useCampaignIncrementCart = (item: ProductType | StateSyncType) => {
 export const useCampaignDecrementCart = (item: ProductType | StateSyncType) => {
   const dispatch = useDispatch();
   const { mutate } = useUpdateCartMutation();
-  const { getTranslation } = useTranslation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
   const campaign = useSelector((state: RootStateType) => state.campaign?.items);
 
@@ -230,17 +209,12 @@ export const useCampaignDecrementCart = (item: ProductType | StateSyncType) => {
     const existingItem = isExistingItem(campaign, item as ProductType);
 
     if (!existingItem) {
-      toast.error(
-        getTranslation("item_not_found_in_cart") || "Item not found in cart"
-      );
+      toast.error("Item not found in cart");
       return;
     }
 
     if (existingItem.quantity <= 1) {
-      toast.error(
-        getTranslation("cannot_decrease_quantity_below_1") ||
-          "Cannot decrease quantity below 1"
-      );
+      toast.error("Cannot decrease quantity below 1");
       return;
     }
 
@@ -253,20 +227,12 @@ export const useCampaignDecrementCart = (item: ProductType | StateSyncType) => {
       onSuccess: (res) => {
         if (res?.result === true) {
           dispatch(decrementCampaign(existingItem.id as number));
-          toast.success(
-            res?.message ||
-              getTranslation("item_decremented_in_cart") ||
-              "Item decremented in cart"
-          );
+          toast.success(res?.message || "Item decremented in cart");
           revalidateQueryFn("get_cart_campaign");
           revalidateQueryFn("get_campaign_summary");
           stopLoadingFn(item?.id);
         } else {
-          toast.error(
-            res?.message ||
-              getTranslation("something_went_wrong") ||
-              "Something went wrong"
-          );
+          toast.error(res?.message || "Something went wrong");
           stopLoadingFn(item?.id);
           return;
         }

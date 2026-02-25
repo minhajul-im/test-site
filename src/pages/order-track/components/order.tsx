@@ -1,4 +1,3 @@
-import { useTranslation } from "@/hooks/useTranslation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +19,7 @@ import { OrderTrackSkeleton } from "./skeleton";
 
 export const OrderTrack = ({ path }: { path: string }) => {
   const [error, setError] = useState("");
-  const { getTranslation } = useTranslation();
+
   const [orderCode, setOrderCode] = useState("");
   const { mutate, isPending } = useTrackOrderMutation();
   const [orderData, setOrderData] = useState<OrderDataType | null>(null);
@@ -28,10 +27,7 @@ export const OrderTrack = ({ path }: { path: string }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!orderCode.trim()) {
-      setError(
-        getTranslation("please_enter_an_order_code") ||
-          "Please enter an order code"
-      );
+      setError("Please enter an order code");
       return;
     }
 
@@ -48,20 +44,13 @@ export const OrderTrack = ({ path }: { path: string }) => {
             setOrderData(transformedData);
           } else {
             setError(
-              res?.message ||
-                getTranslation(
-                  "order_not_found_please_check_your_order_code"
-                ) ||
-                "Order not found. Please check your order code."
+              res?.message || "Order not found. Please check your order code."
             );
             setOrderData(null);
           }
         },
         onError: (error) => {
-          setError(
-            getTranslation("order_not_found_please_check_your_order_code") ||
-              "Order not found. Please check your order code."
-          );
+          setError("Order not found. Please check your order code.");
           setOrderData(null);
           return apiErrorHandler(error);
         },
@@ -105,12 +94,12 @@ export const OrderTrack = ({ path }: { path: string }) => {
                     {isPending ? (
                       <>
                         <Spinner />
-                        {getTranslation("processing") || "Processing..."}
+                        {"Processing..."}
                       </>
                     ) : (
                       <>
                         <Search className="w-4 h-4 mr-2" />
-                        {getTranslation("search") || "Search"}
+                        {"Search"}
                       </>
                     )}
                   </Button>
@@ -148,7 +137,6 @@ interface Props {
   path: string;
 }
 export const OrderTrackCard = ({ orderData, isPending, path }: Props) => {
-  const { getTranslation } = useTranslation();
   return (
     <AnimatePresence mode="wait">
       {orderData ? (
@@ -170,14 +158,8 @@ export const OrderTrackCard = ({ orderData, isPending, path }: Props) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}>
           <NoDataFound
-            title={
-              getTranslation("enter_order_code_to_track") ||
-              "Enter Order Code to Track"
-            }
+            title={"Enter Order Code to Track"}
             description={
-              getTranslation(
-                "please_enter_your_order_code_above_to_track_your_order_status"
-              ) ||
               "Please enter your order code above to track your order status."
             }
           />

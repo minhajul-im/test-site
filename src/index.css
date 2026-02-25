@@ -124,19 +124,9 @@ html {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "Roboto", sans-serif;
   }
 }
-
-/* Only for the example layout 1536px */
-/* @layer utilities {
-  @media (min-width: 1537px) {
-    .container {
-      max-width: 100%;
-      padding-left: 50px;
-      padding-right: 50px;
-    }
-  }
-} */
 
 .scrollbar-hide {
   -ms-overflow-style: none;
@@ -146,7 +136,6 @@ html {
   display: none;
 }
 
-/* NProgress customization
 #nprogress .bar {
   background: var(--primary) !important;
   height: 3px !important;
@@ -160,7 +149,6 @@ html {
   border-top-color: var(--primary) !important;
   border-left-color: var(--primary) !important;
 }
- */
 
 /* Swiper pagination  styles*/
 .mySwiper .swiper-pagination-bullet {
@@ -184,4 +172,20 @@ html {
 }
 .animate-spin-slow {
   animation: spin-slow 3s linear infinite;
+}
+
+/* Add the missing fall animation */
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-fall {
+  animation: fall linear forwards;
 }

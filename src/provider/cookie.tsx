@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { CookieContext, type CookieContextType } from "@/hooks/useCookie";
 import { toast } from "react-hot-toast";
-import { useTranslation } from "@/hooks/useTranslation";
 
 interface CookieProviderProps {
   children: React.ReactNode;
 }
 
 export const CookieProvider: React.FC<CookieProviderProps> = ({ children }) => {
-  const { getTranslation } = useTranslation();
   const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [cookiePreferences, setCookiePreferences] = useState({
     necessary: true,
@@ -37,7 +35,7 @@ export const CookieProvider: React.FC<CookieProviderProps> = ({ children }) => {
     };
     setCookiePreferences(preferences);
     localStorage.setItem("cookie-consent", JSON.stringify(preferences));
-    toast.success(getTranslation("cookies_accepted") || "Cookies accepted");
+    toast.success("Cookies accepted");
     setShowCookieBanner(false);
   };
 
@@ -49,7 +47,7 @@ export const CookieProvider: React.FC<CookieProviderProps> = ({ children }) => {
     };
     setCookiePreferences(preferences);
     localStorage.setItem("cookie-consent", JSON.stringify(preferences));
-    toast.success(getTranslation("cookies_declined") || "Cookies declined");
+    toast.success("Cookies declined");
     setShowCookieBanner(false);
   };
 

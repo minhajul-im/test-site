@@ -1,6 +1,5 @@
 import { SectionTitle } from "@/components/common/section-title";
 import { SeoWrapper } from "@/components/common/seo-wrapper";
-import { useTranslation } from "@/hooks/useTranslation";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { BreadcrumbWrapper } from "@/components/common/breadcrumb-wrapper";
 import { Card } from "@/components/ui/card";
@@ -36,54 +35,51 @@ interface DashboardDataType {
 }
 
 export const DashboardPage = () => {
-  const { getTranslation } = useTranslation();
-
   const { data } = useGetDashboard();
 
   const dashboardData = (data?.dashboard_summary as DashboardDataType) || {};
 
   const stats: DashboardStateType[] = [
     {
-      title: getTranslation("my_orders") || "My Orders",
+      title: "My Orders",
       value: dashboardData?.total_ordered_products || 0,
-      subtitle: getTranslation("all_time_orders") || "All time orders",
+      subtitle: "All time orders",
       icon: ShoppingBag,
       gradient: "from-blue-500 via-blue-600 to-indigo-600",
       bgGradient: "from-blue-500/10 via-blue-600/5 to-transparent",
       iconBg: "bg-gradient-to-br from-blue-500 to-indigo-600",
     },
     {
-      title: getTranslation("pending_orders") || "Pending orders",
+      title: "Pending orders",
       value: dashboardData?.pending_orders_count || 0,
-      subtitle: getTranslation("in_progress") || "In progress",
+      subtitle: "In progress",
       icon: Clock,
       gradient: "from-orange-500 via-amber-500 to-yellow-500",
       bgGradient: "from-orange-500/10 via-amber-500/5 to-transparent",
       iconBg: "bg-gradient-to-br from-orange-500 to-yellow-500",
     },
     {
-      title: getTranslation("completed") || "Completed",
+      title: "Completed",
       value: dashboardData?.delivered_orders_count || 0,
-      subtitle:
-        getTranslation("successful_deliveries") || "Successful deliveries",
+      subtitle: "Successful deliveries",
       icon: CheckCircle2,
       gradient: "from-purple-500 via-violet-500 to-purple-600",
       bgGradient: "from-purple-500/10 via-violet-500/5 to-transparent",
       iconBg: "bg-gradient-to-br from-purple-500 to-purple-600",
     },
     {
-      title: getTranslation("cart_items") || "Cart Items",
+      title: "Cart Items",
       value: dashboardData?.cart_count || 0,
-      subtitle: getTranslation("saved_items") || "Saved items",
+      subtitle: "Saved items",
       icon: ShoppingCart,
       gradient: "from-green-500 via-emerald-500 to-teal-600",
       bgGradient: "from-green-500/10 via-emerald-500/5 to-transparent",
       iconBg: "bg-gradient-to-br from-green-500 to-teal-600",
     },
     {
-      title: getTranslation("wishlist_items") || "Wishlist Items",
+      title: "Wishlist Items",
       value: dashboardData?.wishlist_count || 0,
-      subtitle: getTranslation("saved_items") || "Saved items",
+      subtitle: "Saved items",
       icon: Heart,
       gradient: "from-pink-500 via-rose-500 to-pink-600",
       bgGradient: "from-pink-500/10 via-rose-500/5 to-transparent",
@@ -91,9 +87,9 @@ export const DashboardPage = () => {
     },
 
     {
-      title: getTranslation("loyalty_points") || "Loyalty Points",
+      title: "Loyalty Points",
       value: (dashboardData?.customer_package as unknown as number) || 0,
-      subtitle: getTranslation("available_rewards") || "Available rewards",
+      subtitle: "Available rewards",
       icon: Sparkles,
       gradient: "from-cyan-500 via-blue-500 to-indigo-600",
       bgGradient: "from-cyan-500/10 via-blue-500/5 to-transparent",
@@ -103,22 +99,19 @@ export const DashboardPage = () => {
 
   return (
     <>
-      <SeoWrapper title={getTranslation("my_dashboard") || "My Dashboard"} />
+      <SeoWrapper title={"My Dashboard"} />
       <DashboardLayout>
         <div className="mx-4 md:mx-0 mb-4">
           <BreadcrumbWrapper
             type="dashboard"
             items={[
               {
-                title:
-                  getTranslation("dashboard_overview") || "Dashboard Overview",
+                title: "Dashboard Overview",
               },
             ]}
           />
         </div>
-        <SectionTitle
-          title={getTranslation("my_dashboard") || "My Dashboard"}
-        />
+        <SectionTitle title={"My Dashboard"} />
 
         <div className="mx-4 md:mx-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
