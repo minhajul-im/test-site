@@ -15,10 +15,8 @@ import { TrustBadgeSection } from "./trust-badge";
 import { removeLocalStorage } from "@/helper";
 import React, { useEffect, useMemo } from "react";
 import { useGetHomeProducts } from "@/api/queries/useGetHome";
-
-import * as Sentry from "@sentry/react";
 import { Button } from "@/components/ui/button";
-// Add this button component to your app to test Sentry's error tracking
+
 function ErrorButton() {
   return (
     <Button
