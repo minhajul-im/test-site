@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -24,18 +24,14 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tsbbazar.com/tsb.png" />
-    <meta
-      property="og:title"
-      content="Tsbbazar - Best Online Shopping Store" />
+    <meta property="og:title" content="Tsbbazar - Best Online Shopping Store" />
     <meta
       name="description"
       content="Shop the latest fashion, electronics, beauty, home goods & more at unbeatable prices. ✓ Free shipping ✓ Easy returns ✓ Secure payment" />
     <meta
       name="keywords"
       content="online shopping, e-commerce, buy online, cheap prices, fashion, electronics, free shipping, deals, discounts" />
-    <meta
-      property="og:image"
-      content="https://tsbbazar.com/tsb.png" />
+    <meta property="og:image" content="https://tsbbazar.com/tsb.png" />
     <meta property="og:site_name" content="Tsbbazar" />
 
     <!-- Twitter -->
@@ -50,9 +46,7 @@
     <meta
       name="keywords"
       content="online shopping, e-commerce, buy online, cheap prices, fashion, electronics, free shipping, deals, discounts" />
-    <meta
-      name="twitter:image"
-      content="https://tsbbazar.com/tsb.png" />
+    <meta name="twitter:image" content="https://tsbbazar.com/tsb.png" />
 
     <meta name="robots" content="index, follow" />
 
@@ -91,7 +85,7 @@
 
           fetch(`${BACKEND_URL}/metadata`)
             .then((response) =>
-              response.ok ? response.json() : Promise.reject()
+              response.ok ? response.json() : Promise.reject(),
             )
             .then((cfg) => {
               if (!cfg || !cfg.data) return;
@@ -124,7 +118,7 @@
                 const productId = window.location.pathname.split("/")[2];
                 fetch(`${BACKEND_URL}/product-metadata/${productId}`)
                   .then((response) =>
-                    response?.ok ? response.json() : Promise.reject()
+                    response?.ok ? response.json() : Promise.reject(),
                   )
                   .then((productData) => {
                     if (!productData || !productData?.data) return;
@@ -133,21 +127,21 @@
                     document.title = product?.meta_title || config?.name;
                     setMetaName(
                       "description",
-                      product?.meta_description || config?.description
+                      product?.meta_description || config?.description,
                     );
                     setMetaProperty(
                       "og:title",
-                      product?.meta_title || config?.name
+                      product?.meta_title || config?.name,
                     );
                     setMetaProperty(
                       "og:description",
-                      product?.description || config?.description
+                      product?.description || config?.description,
                     );
                     setMetaProperty(
                       "og:image",
                       product?.image
                         ? `${IMAGE_URL}/${product?.image}`
-                        : config?.metaImage
+                        : config?.metaImage,
                     );
                   })
                   .catch(() => {});
@@ -161,6 +155,10 @@
   <body>
     <main id="root"></main>
     <div id="modal"></div>
+    <div>
+      hare i wanna check if the react app doesn't server then this page will be
+      show this text okay,
+    </div>
     <script type="module" src="/src/app.tsx"></script>
   </body>
 </html>
