@@ -27,7 +27,7 @@ export const HeaderDesktop = ({
 
   return (
     <nav className="hidden md:block bg-background">
-      <div className="h-16 md:flex items-center justify-center w-full px-1 md:px-0 border-b">
+      <div className="h-14 md:flex items-center justify-center w-full px-1 md:px-0 border-b">
         <div className="container flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 justify-start">
             <Logo type="DESKTOP" />

@@ -16,6 +16,21 @@ import { removeLocalStorage } from "@/helper";
 import React, { useEffect, useMemo } from "react";
 import { useGetHomeProducts } from "@/api/queries/useGetHome";
 
+import * as Sentry from "@sentry/react";
+import { Button } from "@/components/ui/button";
+// Add this button component to your app to test Sentry's error tracking
+function ErrorButton() {
+  return (
+    <Button
+      onClick={() => {
+        console.log("This is a test error");
+        throw new Error("This is your first error!");
+      }}>
+      Break the world
+    </Button>
+  );
+}
+
 export const HomePage = () => {
   const { data: homeSections, sectionLoading } = useGetHomeProducts();
 
@@ -86,6 +101,7 @@ export const HomePage = () => {
 
   return (
     <BaseLayout isShowNewsletterSection={true}>
+      <ErrorButton />
       <section className="flex flex-col gap-10 md:gap-20">
         {orderedSections.map((section) => (
           <React.Fragment key={section.key}>{section.component}</React.Fragment>
