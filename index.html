@@ -47,118 +47,30 @@
       name="keywords"
       content="online shopping, e-commerce, buy online, cheap prices, fashion, electronics, free shipping, deals, discounts" />
     <meta name="twitter:image" content="https://tsbbazar.com/tsb.png" />
-
     <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="google" content="nositelinkssearchbox" />
+    <meta name="google" content="notranslate" />
+    <meta name="format-detection" content="telephone=no" />
 
-    <script>
-      (function () {
-        import("https://esm.sh/isbot@5").then((module) => {
-          const isBot = module.isbot(navigator.userAgent);
-
-          if (!isBot) return;
-
-          const BASE_URL = "https://backend.tsbbazar.com";
-          const IMAGE_URL = `${BASE_URL}/public/`;
-          const BACKEND_URL = `${BASE_URL}/api/v2`;
-
-          const setMetaProperty = (property, content) => {
-            if (!content) return;
-            let tag = document.querySelector(`meta[property="${property}"]`);
-            if (!tag) {
-              tag = document.createElement("meta");
-              tag.setAttribute("property", property);
-              document.head.appendChild(tag);
-            }
-            tag.setAttribute("content", content);
-          };
-
-          const setMetaName = (name, content) => {
-            if (!content) return;
-            let tag = document.querySelector(`meta[name="${name}"]`);
-            if (!tag) {
-              tag = document.createElement("meta");
-              tag.setAttribute("name", name);
-              document.head.appendChild(tag);
-            }
-            tag.setAttribute("content", content);
-          };
-
-          fetch(`${BACKEND_URL}/metadata`)
-            .then((response) =>
-              response.ok ? response.json() : Promise.reject(),
-            )
-            .then((cfg) => {
-              if (!cfg || !cfg.data) return;
-              const siteConfig = cfg?.data || {};
-
-              const config = {
-                name: `${siteConfig?.name} | ${siteConfig?.motto}` || "",
-                favicon: `${IMAGE_URL}${siteConfig?.favicon}` || "",
-                logo: `${IMAGE_URL}${siteConfig?.logo}` || "",
-                description: siteConfig?.description || "",
-                keywords: siteConfig?.keywords || "",
-                metaImage: siteConfig?.meta_image_url
-                  ? `${IMAGE_URL}${siteConfig?.meta_image_url}`
-                  : `${IMAGE_URL}${siteConfig?.logo}`,
-              };
-
-              document.title = config?.name;
-              setMetaName("description", config?.description);
-              setMetaName("keywords", config?.keywords);
-              setMetaProperty("og:title", config?.name);
-              setMetaProperty("og:description", config?.description);
-              setMetaProperty("og:image", config?.metaImage);
-              setMetaProperty("og:url", window.location.href);
-              setMetaProperty("og:site_name", config?.name);
-
-              if (
-                window.location.pathname.includes("/products/") &&
-                window.location.pathname.split("/").length >= 3
-              ) {
-                const productId = window.location.pathname.split("/")[2];
-                fetch(`${BACKEND_URL}/product-metadata/${productId}`)
-                  .then((response) =>
-                    response?.ok ? response.json() : Promise.reject(),
-                  )
-                  .then((productData) => {
-                    if (!productData || !productData?.data) return;
-
-                    const product = productData?.data || {};
-                    document.title = product?.meta_title || config?.name;
-                    setMetaName(
-                      "description",
-                      product?.meta_description || config?.description,
-                    );
-                    setMetaProperty(
-                      "og:title",
-                      product?.meta_title || config?.name,
-                    );
-                    setMetaProperty(
-                      "og:description",
-                      product?.description || config?.description,
-                    );
-                    setMetaProperty(
-                      "og:image",
-                      product?.image
-                        ? `${IMAGE_URL}/${product?.image}`
-                        : config?.metaImage,
-                    );
-                  })
-                  .catch(() => {});
-              }
-            })
-            .catch(() => {});
-        });
-      })();
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://tsbbazar.com/",
+        "name": "Tsbbazar",
+        "description": "Best Online Shopping Store for fashion, electronics, and more.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://tsbbazar.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
     </script>
   </head>
   <body>
     <main id="root"></main>
     <div id="modal"></div>
-    <div>
-      hare i wanna check if the react app doesn't server then this page will be
-      show this text okay,
-    </div>
     <script type="module" src="/src/app.tsx"></script>
   </body>
 </html>
