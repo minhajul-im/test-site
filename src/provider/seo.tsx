@@ -4,7 +4,9 @@ import { useConfig } from "@/hooks/useConfig";
 import { getConfig, getImageUrl } from "@/helper";
 
 export const SeoProvider = ({ children }: { children: React.ReactNode }) => {
-  const config = useConfig();
+  const config = useConfig() ?? [];
+
+  // Safely extract config values with fallbacks
   const siteIcon = getConfig(config, "site_icon")?.value as string;
   const siteName = getConfig(config, "website_name")?.value as string;
   const siteMotto = getConfig(config, "site_motto")?.value as string;
@@ -16,16 +18,28 @@ export const SeoProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <React.Fragment>
       <Helmet>
-        <title>{`${siteName} | ${siteMotto}`}</title>
-        <meta name="description" content={description} />
-        <meta name="keywords" content={keywords} />
-        <link rel="icon" href={getImageUrl(siteIcon as string)} />
-        <meta property="og:image" content={getImageUrl(metaImage as string)} />
-        <meta property="og:title" content={title || siteName} />
-        <meta property="og:description" content={description} />
+        <title>{`${siteName || "TSB Bazar"} | ${siteMotto || "Online Shopping"}`}</title>
+        <meta name="description" content={description || ""} />
+        <meta name="keywords" content={keywords || ""} />
+        {siteIcon && <link rel="icon" href={getImageUrl(siteIcon as string)} />}
+        {metaImage && (
+          <>
+            <meta property="og:image" content={getImageUrl(metaImage as string)} />
+            <meta
+              property="og:image:url"
+              content={getImageUrl(metaImage as string)}
+            />
+            <meta
+              property="og:image:secure_url"
+              content={getImageUrl(metaImage as string)}
+            />
+          </>
+        )}
+        <meta property="og:title" content={title || siteName || "TSB Bazar"} />
+        <meta property="og:description" content={description || ""} />
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content={siteName} />
+        <meta property="og:site_name" content={siteName || "TSB Bazar"} />
         <meta property="og:locale" content="en_US" />
         <meta property="og:locale:alternate" content="bn_BD" />
         <meta property="og:image:width" content="1200" />
@@ -34,15 +48,7 @@ export const SeoProvider = ({ children }: { children: React.ReactNode }) => {
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:type" content="image/jpg" />
         <meta property="og:image:type" content="image/webp" />
-        <meta property="og:image:alt" content={title || siteName} />
-        <meta
-          property="og:image:url"
-          content={getImageUrl(metaImage as string)}
-        />
-        <meta
-          property="og:image:secure_url"
-          content={getImageUrl(metaImage as string)}
-        />
+        <meta property="og:image:alt" content={title || siteName || "TSB Bazar"} />
       </Helmet>
       {children}
     </React.Fragment>

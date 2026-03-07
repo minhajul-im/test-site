@@ -4,22 +4,23 @@ import { useConfig } from "@/hooks/useConfig";
 import { getConfig } from "@/helper";
 
 export const GoogleGtmTracker = () => {
-  const config = useConfig();
+  const config = useConfig() ?? [];
 
   const isActive = getConfig(config, "google_analytics")?.value === "1";
+  const gtmId = getConfig(config, "gtm_id")?.value as string;
 
+  // Always call the hooks, but only render if active
+  // This follows React's rules of hooks
   if (!isActive) return null;
 
-  return isActive ? <GtmTracker /> : null;
+  return <GtmTracker gtmId={gtmId} />;
 };
 
-const GtmTracker = () => {
-  const config = useConfig();
+const GtmTracker = ({ gtmId }: { gtmId?: string }) => {
   const location = useLocation();
   const scriptLoadedRef = useRef(false);
   const noscriptLoadedRef = useRef(false);
   const [searchParams] = useSearchParams();
-  const gtmId = getConfig(config, "gtm_id")?.value as string;
 
   const GTM_ID = useCallback(() => gtmId || "GTM-522LcJVXS", [gtmId]);
 

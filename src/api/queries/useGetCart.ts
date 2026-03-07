@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
 import { getGuestUserId, getUserId, setLocalStorage } from "@/helper";
+import { useEffect } from "react";
 
 type QueryType = {
   data: {
@@ -68,7 +69,6 @@ export const useGetCartSummaryQuery = (): QueryType => {
       const response = await apiClient.get(
         `/cart-summary/${getUserId() || getGuestUserId()}`
       );
-      setLocalStorage("coupon_code", response.data?.coupon_code || "");
       return response.data;
     },
     staleTime: 0,
@@ -77,6 +77,13 @@ export const useGetCartSummaryQuery = (): QueryType => {
     refetchOnReconnect: true,
     refetchOnMount: true,
   });
+
+  // Handle side effect outside of queryFn using useEffect
+  useEffect(() => {
+    if (data?.coupon_code !== undefined) {
+      setLocalStorage("coupon_code", data.coupon_code || "");
+    }
+  }, [data?.coupon_code]);
 
   return { data, isLoading, error, refetch };
 };
@@ -86,7 +93,6 @@ export const useGetCampaignSummaryQuery = (): QueryType => {
     queryKey: ["get_campaign_summary"],
     queryFn: async () => {
       const response = await apiClient.get(`/cart-summary/${getGuestUserId()}`);
-      setLocalStorage("coupon_code", response.data?.coupon_code || "");
       return response.data;
     },
     staleTime: 0,
@@ -96,6 +102,13 @@ export const useGetCampaignSummaryQuery = (): QueryType => {
     refetchOnReconnect: true,
     refetchOnMount: true,
   });
+
+  // Handle side effect outside of queryFn using useEffect
+  useEffect(() => {
+    if (data?.coupon_code !== undefined) {
+      setLocalStorage("coupon_code", data.coupon_code || "");
+    }
+  }, [data?.coupon_code]);
 
   return { data, isLoading, error, refetch };
 };

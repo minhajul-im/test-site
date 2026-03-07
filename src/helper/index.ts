@@ -124,10 +124,24 @@ export const htmlToPlainText = (html: string | null | undefined): string => {
     return "";
   }
 
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = html;
+  // Check if we're in a browser environment
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    // Fallback for SSR: simple regex-based stripping
+    return html
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
 
-  return tempDiv.textContent || tempDiv.innerText || "";
+  try {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+    return tempDiv.textContent || tempDiv.innerText || "";
+  } catch {
+    return html;
+  }
 };
 
 export const truncateText = (text: string, maxLength: number = 30): string => {

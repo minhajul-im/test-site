@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useGetConfig } from "@/api/queries/useGetConfig";
 import { ConfigContext, type ConfigType } from "@/hooks/useConfig";
 import { getConfig } from "@/helper";
@@ -11,7 +11,11 @@ import { RootPageLoading } from "@/components/layout/root-loading";
 export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {
   const { data, isLoading, error } = useGetConfig();
 
-  const config = data?.data as ConfigType[];
+  // Memoize config to prevent unnecessary re-renders
+  const config = useMemo(() => {
+    return (data?.data as ConfigType[]) ?? [];
+  }, [data?.data]);
+
   const primaryColor = getConfig(config, "base_color")?.value;
   const secondaryColor = getConfig(config, "base_hov_color")?.value;
 
@@ -24,8 +28,13 @@ export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [primaryColor, secondaryColor]);
 
-  const isMaintenance = getConfig(config, "maintenance_mode")?.value;
+  // Only check maintenance mode when config is loaded
+  const isMaintenance = useMemo(() => {
+    if (!config || config.length === 0) return null;
+    return getConfig(config, "maintenance_mode")?.value;
+  }, [config]);
 
+  // Show maintenance page only when we have confirmed maintenance mode
   if (isMaintenance === "1") {
     return <MaintenancePage />;
   }

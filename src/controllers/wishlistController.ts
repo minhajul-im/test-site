@@ -145,8 +145,9 @@ export const useGetWishlist = () => {
   const { data, isLoading } = useGetWishlistQuery();
 
   useEffect(() => {
+    if (isLoading) return;
+
     if (
-      !isLoading &&
       data &&
       data?.data &&
       Array.isArray(data?.data) &&
@@ -168,7 +169,9 @@ export const useGetWishlist = () => {
       });
 
       dispatch(setWishlistItemsFn(wishlist as StateSyncType[]));
-    } else {
+    }
+    // Only clear wishlist when we have a definitive empty response, not on initial load
+    else if (data !== undefined && data !== null) {
       dispatch(clearWishlistFn());
     }
   }, [data, isLoading, dispatch]);

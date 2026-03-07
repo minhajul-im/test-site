@@ -4,29 +4,29 @@ export const MOBILE_BREAKPOINT = 768;
 export const TABLET_BREAKPOINT = 1279;
 
 export const useIsMobile = () => {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
-    undefined
-  );
+  const [isMobile, setIsMobile] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
     const onChange = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     };
-    mql.addEventListener("change", onChange);
+    // Set initial value after mount
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    mql.addEventListener("change", onChange);
     return () => mql.removeEventListener("change", onChange);
   }, []);
 
-  return !!isMobile;
+  return isMobile;
 };
 
 export const useWindowWidth = () => {
-  const [windowWidth, setWindowWidth] = React.useState<number>(
-    window.innerWidth
-  );
+  const [windowWidth, setWindowWidth] = React.useState<number>(0);
 
   React.useEffect(() => {
+    // Set initial value after mount
+    setWindowWidth(window.innerWidth);
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -44,8 +44,8 @@ export const useInitialLength = () => {
     windowWidth <= MOBILE_BREAKPOINT
       ? 2
       : windowWidth <= TABLET_BREAKPOINT
-      ? 5
-      : 6;
+        ? 5
+        : 6;
 
   return initialLength;
 };

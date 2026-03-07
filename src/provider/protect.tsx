@@ -1,5 +1,5 @@
 import { isAuthenticated } from "@/helper";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 
 export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
   if (!isAuthenticated()) {

@@ -251,12 +251,9 @@ export const useGetCart = () => {
   const { data, isLoading } = useGetCartQuery();
 
   useEffect(() => {
-    if (
-      !isLoading &&
-      data &&
-      data?.length > 0 &&
-      data?.[0]?.cart_items?.length > 0
-    ) {
+    if (isLoading) return;
+
+    if (data && data?.length > 0 && data?.[0]?.cart_items?.length > 0) {
       const cart = data?.[0]?.cart_items?.map((item) => {
         const result: StateSyncType = {
           id: item?.id,
@@ -273,7 +270,9 @@ export const useGetCart = () => {
       });
 
       dispatch(setCartItemsFn(cart as StateSyncType[]));
-    } else {
+    }
+    // Only clear cart when we have a definitive empty response, not on initial load
+    else if (data !== undefined && data !== null) {
       dispatch(clearCartFn());
     }
   }, [data, isLoading, dispatch]);

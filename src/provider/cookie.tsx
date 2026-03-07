@@ -15,15 +15,32 @@ export const CookieProvider: React.FC<CookieProviderProps> = ({ children }) => {
   });
 
   useEffect(() => {
-    const cookieConsent = localStorage.getItem("cookie-consent");
-    if (!cookieConsent) {
-      const timer = setTimeout(() => {
-        setShowCookieBanner(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else {
-      const savedPreferences = JSON.parse(cookieConsent);
-      setCookiePreferences(savedPreferences);
+    try {
+      const cookieConsent = localStorage.getItem("cookie-consent");
+      if (!cookieConsent) {
+        const timer = setTimeout(() => {
+          setShowCookieBanner(true);
+        }, 1000);
+        return () => clearTimeout(timer);
+      } else {
+        try {
+          const savedPreferences = JSON.parse(cookieConsent);
+          if (
+            savedPreferences &&
+            typeof savedPreferences === "object" &&
+            "necessary" in savedPreferences
+          ) {
+            setCookiePreferences(savedPreferences);
+          }
+        } catch {
+          // Invalid JSON in localStorage, remove it and show banner
+          localStorage.removeItem("cookie-consent");
+          setShowCookieBanner(true);
+        }
+      }
+    } catch (error) {
+      // localStorage access failed (e.g., private browsing mode)
+      console.warn("Cookie consent could not be loaded:", error);
     }
   }, []);
 

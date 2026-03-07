@@ -13,5 +13,5 @@ export const useConfig = () => {
     throw new Error("Server is not responding!");
   }
 
-  return context;
+  return context || [];
 };
